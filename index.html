@@ -771,7 +771,7 @@ function applyPeriodFilter(d, period) {
   setClass('s-roas', 'kd ' + (pd.roas >= 1.5 ? 'up' : pd.roas >= 1 ? 'neu' : 'dn'));
   set('s-net', pd.net !== 0 ? (pd.net>=0?'+$':'-$') + Math.abs(Math.round(pd.net)).toLocaleString() : '--');
   setClass('s-net', 'kv ' + (pd.net >= 0 ? 'up' : 'dn'));
-  set('s-units', pd.units > 0 ? pd.units.toLocaleString() : '--');
+  const displayUnits = (period === 'ytd' && (p.ytd_units_api || 0) > 0) ? p.ytd_units_api : pd.units; set('s-units', displayUnits > 0 ? displayUnits.toLocaleString() : '--');
   set('s-skus', pd.label);
   // Month comparison cards
   const mSalesAll = (d.trends||{}).monthly_sales || {};
@@ -1068,6 +1068,7 @@ function renderTrends(d, view) {
     view === 'monthly' ? 'Gross sales and estimated net result by month' : 'Gross sales by week';
 }
 
+const IS_A1 = true;
 async function load() {
   const r = await fetch('data.json');
   const d = await r.json();
@@ -1204,7 +1205,7 @@ function render(d) {
   const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(a1NetSales);
   document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
   document.getElementById('def-peak').textContent = ``;
-  document.getElementById('def-pct').textContent = realPct + '% recovered';
+  if (typeof IS_A1 === 'undefined' || !IS_A1) document.getElementById('def-pct').textContent = realPct + '% recovered';
   document.getElementById('def-pct').className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
   setTimeout(() => document.getElementById('def-bar').style.width = Math.min(100,realPct) + '%', 150);
 
@@ -1272,8 +1273,15 @@ function render(d) {
   else if (goalPctActual < 100) ins.push(['a', `Getting close — ${projStr} projected for the month. ${gapStr} gap remaining.`]);
   else ins.push(['g', `On track to exceed the $10K monthly goal — ${projStr} projected.`]);
   if (daysToBreakeven > 0) ins.push(['a', `Cumulative breakeven projected ${fmtDate(breakevenDate)} — ${daysToBreakeven} days from today based on June trajectory.`]);
-  const topSku = Object.entries(skuSales).sort(([,a],[,b])=>b-a)[0];
-  if (topSku) ins.push(['g', `${topSku[0]} leads at $${topSku[1].toFixed(0)} — ${(topSku[1]/s.gross_sales*100).toFixed(0)}% of gross sales.`]);
+  const curYr = new Date().getFullYear().toString();
+  const ytdSkuSales2026 = {};
+  Object.keys(sb.monthly_sales_by_sku||{}).filter(m=>m.startsWith(curYr)).forEach(m => {
+    Object.entries(sb.monthly_sales_by_sku[m]||{}).forEach(([k,v]) => ytdSkuSales2026[k]=(ytdSkuSales2026[k]||0)+v);
+  });
+  const topSkuData = Object.entries(ytdSkuSales2026).sort(([,a],[,b])=>b-a)[0];
+  const ytdTotal2026 = Object.values(ytdSkuSales2026).reduce((a,b)=>a+b,0);
+  const topSku = topSkuData;
+  if (topSkuData) ins.push(['g', `${topSkuData[0]} leads at $${Math.round(topSkuData[1]).toLocaleString()} — ${(topSkuData[1]/Math.max(1,ytdTotal2026)*100).toFixed(0)}% of 2026 sales.`]);
   if (ads.roas < 1) ins.push(['r', `Blended ROAS of ${ads.roas.toFixed(2)}× means ads are still underwater overall. June improved significantly — keep optimising.`]);
   document.getElementById('s-insights').innerHTML = ins.map(([t,txt])=>
     `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
