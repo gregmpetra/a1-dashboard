@@ -203,7 +203,7 @@
         </div>
       </div>
       <div class="goal-card">
-        <div class="ey">Amazon fees YTD</div>
+        <div class="ey">Net Sales (excl. COGS)</div>
         <div class="num" id="def-num">—</div>
         <div class="sub">cumulative deficit remaining to erase</div>
         <div class="track"><div class="fill fill-a" id="def-bar"></div></div>
@@ -1201,7 +1201,7 @@ function render(d) {
   // Deficit uses settled financial events only - deficit reduces as real profit is banked
   const realDeficit = Math.abs(netResult);
   const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
-  const a1AmazonFees = Math.abs(s.fba_fees||0) + Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(-a1AmazonFees);
+  const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(a1NetSales);
   document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
   document.getElementById('def-peak').textContent = `of $${defStart.toLocaleString()} peak deficit`;
   document.getElementById('def-pct').textContent = realPct + '% recovered';
