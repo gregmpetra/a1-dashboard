@@ -645,9 +645,11 @@ function buildPeriodBar(barId, tabName, onSelect) {
   const current = tabPeriods[tabName] || 'ytd';
 
   const monthNames2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const years = [...new Set(months.map(m => m.slice(0,4)))].sort();
   const options = [
     { id: 'ytd', label: 'YTD' },
-    ...months.map(m => ({ id: 'month_' + m, label: monthNames2[parseInt(m.slice(5))-1] })),
+    ...years.map(y => ({ id: 'year_' + y, label: y })),
+    ...months.map(m => ({ id: 'month_' + m, label: monthNames2[parseInt(m.slice(5))-1] + ' ' + m.slice(2,4) })),
     { id: 'l30', label: '30d' },
     { id: 'l14', label: '14d' },
     { id: 'l7',  label: '7d' },
@@ -701,6 +703,19 @@ function getPeriodData(d, period) {
     return { sales: p.ytd_sales_api || s.gross_sales, adSpend: d.ads.spend,
              units: p.ytd_units_api || totalUnits, fees: Math.abs(s.total_amazon_fees),
              net: s.net_result, label: 'year to date', roas: d.ads.roas };
+  }
+  if (period.startsWith('year_')) {
+    const yr = period.replace('year_', '');
+    const yearMonths = Object.keys(mSales).filter(m => m.startsWith(yr));
+    const ySales = yearMonths.reduce((a,m) => a + (mSales[m]||0), 0);
+    const yFees  = yearMonths.reduce((a,m) => a + Math.abs(mFees[m]||0) + Math.abs(mAwd[m]||0), 0);
+    const yAds   = yearMonths.reduce((a,m) => a + (mAds[m]||0) + ((adsM[m]||{}).spend||0), 0);
+    const yCogs  = yearMonths.reduce((a,m) => a + (mCogs[m]||0), 0);
+    const yNet   = yearMonths.reduce((a,m) => a + monthNet(m), 0);
+    const yUnits = Math.round(totalUnits * (ySales / Math.max(1, p.ytd_sales_api || s.gross_sales)));
+    const yRoas  = yAds > 0 ? Math.round(ySales/yAds*100)/100 : 0;
+    return { sales: ySales, adSpend: yAds, units: yUnits, fees: yFees,
+             net: yNet, label: yr, roas: yRoas };
   }
   if (period.startsWith('month_')) {
     const m = period.replace('month_', '');
@@ -790,6 +805,19 @@ function applyPeriodFilter(d, period) {
   const t2 = d.trends || {};
   const mn2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let costs = [];
+  if (period.startsWith('year_')) {
+    const yr = period.replace('year_', '');
+    const yearMonths = Object.keys(mSales).filter(m => m.startsWith(yr));
+    const ySales = yearMonths.reduce((a,m) => a + (mSales[m]||0), 0);
+    const yFees  = yearMonths.reduce((a,m) => a + Math.abs(mFees[m]||0) + Math.abs(mAwd[m]||0), 0);
+    const yAds   = yearMonths.reduce((a,m) => a + (mAds[m]||0) + ((adsM[m]||{}).spend||0), 0);
+    const yCogs  = yearMonths.reduce((a,m) => a + (mCogs[m]||0), 0);
+    const yNet   = yearMonths.reduce((a,m) => a + monthNet(m), 0);
+    const yUnits = Math.round(totalUnits * (ySales / Math.max(1, p.ytd_sales_api || s.gross_sales)));
+    const yRoas  = yAds > 0 ? Math.round(ySales/yAds*100)/100 : 0;
+    return { sales: ySales, adSpend: yAds, units: yUnits, fees: yFees,
+             net: yNet, label: yr, roas: yRoas };
+  }
   if (period.startsWith('month_')) {
     const m = period.replace('month_', '');
     const mLabel = mn2[parseInt(m.slice(5))-1];
@@ -1734,7 +1762,37 @@ function renderSkuRows(d, period) {
 
   let skuSales, skuUnits, skuFba, skuRef, skuAds;
 
-  if (period.startsWith('month_')) {
+  if (period.startsWith('year_')) {
+    const yr = period.replace('year_', '');
+    const yearMonths = Object.keys(mSales).filter(m => m.startsWith(yr));
+    const ySales = yearMonths.reduce((a,m) => a + (mSales[m]||0), 0);
+    const yFees  = yearMonths.reduce((a,m) => a + Math.abs(mFees[m]||0) + Math.abs(mAwd[m]||0), 0);
+    const yAds   = yearMonths.reduce((a,m) => a + (mAds[m]||0) + ((adsM[m]||{}).spend||0), 0);
+    const yCogs  = yearMonths.reduce((a,m) => a + (mCogs[m]||0), 0);
+    const yNet   = yearMonths.reduce((a,m) => a + monthNet(m), 0);
+    const yUnits = Math.round(totalUnits * (ySales / Math.max(1, p.ytd_sales_api || s.gross_sales)));
+    const yRoas  = yAds > 0 ? Math.round(ySales/yAds*100)/100 : 0;
+    return { sales: ySales, adSpend: yAds, units: yUnits, fees: yFees,
+             net: yNet, label: yr, roas: yRoas };
+  }
+  if (period.startsWith('year_')) {
+    const yr = period.replace('year_', '');
+    const yMonths = Object.keys(sb.monthly_sales_by_sku||{}).filter(m=>m.startsWith(yr));
+    skuSales = {}; skuUnits = {}; skuFba = {}; skuRef = {};
+    yMonths.forEach(m => {
+      Object.entries(sb.monthly_sales_by_sku?.[m]||{}).forEach(([k,v]) => skuSales[k]=(skuSales[k]||0)+v);
+      Object.entries(sb.monthly_units_by_sku?.[m]||{}).forEach(([k,v]) => skuUnits[k]=(skuUnits[k]||0)+v);
+      Object.entries(sb.monthly_fba_by_sku?.[m]||{}).forEach(([k,v]) => skuFba[k]=(skuFba[k]||0)+v);
+      Object.entries(sb.monthly_ref_by_sku?.[m]||{}).forEach(([k,v]) => skuRef[k]=(skuRef[k]||0)+v);
+    });
+    const yAdSpend = Object.keys(mAdsFull).filter(m=>m.startsWith(yr)).reduce((a,m)=>a+(mAdsFull[m]?.spend||0),0);
+    const yTotalSales = Object.values(skuSales).reduce((a,b)=>a+b,0);
+    skuAds = {};
+    Object.keys(skuSales).forEach(name => {
+      const prop = yTotalSales > 0 ? skuSales[name]/yTotalSales : 0;
+      skuAds[name] = { spend: round2(yAdSpend * prop), roas: 0 };
+    });
+  } else if (period.startsWith('month_')) {
     const m = period.replace('month_', '');
     skuSales = sb.monthly_sales_by_sku?.[m] || {};
     skuUnits = sb.monthly_units_by_sku?.[m] || {};
