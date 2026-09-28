@@ -205,7 +205,7 @@
       <div class="goal-card">
         <div class="ey">Net Sales (excl. COGS)</div>
         <div class="num" id="def-num">—</div>
-        <div class="sub">cumulative deficit remaining to erase</div>
+        <div class="sub">gross sales minus FBA + referral fees</div>
         <div class="track"><div class="fill fill-a" id="def-bar"></div></div>
         <div class="prow"><span id="def-peak">—</span><strong id="def-pct">—</strong></div>
       </div>
@@ -1203,7 +1203,7 @@ function render(d) {
   const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
   const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(a1NetSales);
   document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
-  document.getElementById('def-peak').textContent = `of $${defStart.toLocaleString()} peak deficit`;
+  document.getElementById('def-peak').textContent = ``;
   document.getElementById('def-pct').textContent = realPct + '% recovered';
   document.getElementById('def-pct').className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
   setTimeout(() => document.getElementById('def-bar').style.width = Math.min(100,realPct) + '%', 150);
@@ -1614,7 +1614,7 @@ function renderProfitability(d) {
     if (l2 > l1) ins.push(['g', `Net result improved from ${lastTwo[0]} to ${lastTwo[1]} — positive momentum. Keep optimising ad spend to continue the trend.`]);
     else ins.push(['a', `Net result declined from ${lastTwo[0]} to ${lastTwo[1]}. Review ad spend efficiency and AWD storage costs.`]);
   }
-  if (realPct > 0) ins.push(['g', `${realPct}% of the peak deficit has been recovered. At current trajectory, full breakeven by ${document.getElementById('pr-be-date').textContent}.`]);
+  if (realPct > 0) ins.push(['g', `${realPct}% of the  has been recovered. At current trajectory, full breakeven by ${document.getElementById('pr-be-date').textContent}.`]);
   const bestSalesMonth = months.reduce((a,m)=>(mSales[m]||0)>(mSales[a]||0)?m:a, months[0]);
   ins.push(['g', `${bestSalesMonth} was your strongest sales month at $${Math.round(mSales[bestSalesMonth]||0).toLocaleString()}. Use it as the benchmark for future months.`]);
   if (Math.abs(s.awd_storage) + Math.abs(s.awd_transport) + Math.abs(s.awd_processing) > 1500)
