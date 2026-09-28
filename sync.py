@@ -569,7 +569,8 @@ def run():
     metrics_14  = get_sales_metrics(token, day_14_ago, today)
     metrics_7   = get_sales_metrics(token, day_7_ago,  today)
     metrics_mtd = get_sales_metrics(token, today_dt.replace(day=1).isoformat(), today)
-    metrics_ytd = get_sales_metrics(token, cfg.get('launch_date', '2026-01-01'), today)
+    ytd_start = f"{today[:4]}-01-01"  # Always current year for YTD
+    metrics_ytd = get_sales_metrics(token, ytd_start, today)
 
     rolling_30_sales = float(metrics_30[0]['totalSales']['amount'])  if metrics_30  else 0
     rolling_14_sales = float(metrics_14[0]['totalSales']['amount'])  if metrics_14  else 0
