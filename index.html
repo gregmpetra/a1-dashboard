@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For & Against — Amazon Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f6f3; --surface: #ffffff; --surface2: #f1efe8;
+    --border: rgba(0,0,0,0.10); --border2: rgba(0,0,0,0.20);
+    --text: #1a1a18; --muted: #5f5e5a; --faint: #9c9a92;
+    --green: #3b6d11; --green-bg: #eaf3de; --green-mid: #639922;
+    --amber: #854f0b; --amber-bg: #faeeda; --amber-mid: #ba7517;
+    --red: #a32d2d; --red-bg: #fcebeb; --red-mid: #e24b4a;
+    --blue: #0c447c; --blue-bg: #e6f1fb; --blue-mid: #378add;
+    --radius: 12px; --radius-sm: 8px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+  .shell { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; overflow-x: hidden; }
+
+  /* Header */
+  .hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+  .hdr h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .hdr p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted);
+           background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 4px 12px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-mid); }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface2);
+          border-radius: var(--radius-sm); padding: 4px; width: fit-content; }
+  .tab { padding: 8px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
+         border: none; background: transparent; color: var(--muted); transition: all 0.15s; }
+  .tab.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .tab-panel { display: none; overflow: hidden; }
+  .tab-panel.active { display: block; overflow-x: hidden; width: 100%; }
+
+  /* Section label */
+  .sl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+        color: var(--muted); margin: 24px 0 10px; }
+  .sl:first-child { margin-top: 0; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; }
+  .card h3 { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .card .cs { font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+
+  /* Goal cards */
+  .goal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .goal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; }
+  .goal-card .ey { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 10px; }
+  .goal-card .num { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; margin-bottom: 4px; }
+  .goal-card .sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .track { height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; margin-bottom: 8px; }
+  .fill { height: 100%; border-radius: 5px; transition: width 1.6s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .fill-g { background: var(--green-mid); }
+  .fill-a { background: var(--amber-mid); }
+  .prow { display: flex; justify-content: space-between; font-size: 12px; }
+  .prow span { color: var(--muted); }
+  .prow strong { font-weight: 700; }
+
+  /* Breakeven */
+  .be-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .be-stat { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .be-stat .bl { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-weight: 500; }
+  .be-stat .bv { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+  .be-stat .bs { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .tl-track { height: 6px; background: var(--surface2); border-radius: 3px; margin: 24px 0 32px; position: relative; }
+  .tl-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--red-mid), var(--amber-mid), var(--green-mid)); transition: width 1.6s ease; width: 0%; }
+  .tl-markers { display: flex; justify-content: space-between; margin-top: -44px; }
+  .tl-marker { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--surface); margin-bottom: 8px; }
+  .tl-dot-done { background: var(--green-mid); }
+  .tl-dot-now { background: var(--amber-mid); box-shadow: 0 0 0 3px var(--amber-bg); }
+  .tl-dot-future { background: var(--surface2); border-color: var(--border2); }
+  .tl-lbl { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.4; max-width: 80px; }
+  .tl-lbl strong { display: block; font-size: 11px; font-weight: 700; color: var(--text); }
+
+  /* KPI grids */
+  .kpi4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+  .kpi3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .kpi { background: var(--surface2); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .kpi .kl { font-size: 11px; color: var(--muted); margin-bottom: 5px; font-weight: 500; }
+  .kpi .kv { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+  .kpi .kd { font-size: 11px; margin-top: 4px; }
+  .up { color: var(--green); } .dn { color: var(--red); } .neu { color: var(--muted); }
+
+  /* Two / three col */
+  .two-col { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; margin-bottom: 14px; min-width: 0; overflow: hidden; }
+  .two-col > * { min-width: 0; overflow: hidden; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+  /* SKU table */
+  .sku-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .table-wrap { overflow-x: auto; width: 100%; }
+  .sku-table th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: 0.06em; color: var(--muted); padding: 0 10px 10px 0; border-bottom: 2px solid var(--border2); }
+  .sku-table th:not(:first-child) { text-align: right; }
+  .sku-table td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .sku-table td:not(:first-child) { text-align: right; }
+  .sku-table tr:last-child td { border-bottom: none; }
+  .sku-table .sku-name { font-weight: 600; color: var(--text); }
+  .sku-table .sku-sub { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .margin-bar { height: 4px; background: var(--surface2); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+  .margin-fill { height: 100%; border-radius: 2px; background: var(--green-mid); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-weight: 700; font-size: 11px; }
+  .pill-g { background: var(--green-bg); color: var(--green); }
+  .pill-a { background: var(--amber-bg); color: var(--amber); }
+  .pill-r { background: var(--red-bg); color: var(--red); }
+  .pill-b { background: var(--blue-bg); color: var(--blue); }
+
+  /* Campaign table */
+  .camp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .camp-table th { text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: 0.06em; color: var(--muted); padding: 0 8px 10px 0; border-bottom: 2px solid var(--border2); }
+  .camp-table th:not(:first-child) { text-align: right; }
+  .camp-table td { padding: 9px 8px 9px 0; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .camp-table td:not(:first-child) { text-align: right; }
+  .camp-table tr:last-child td { border-bottom: none; }
+
+  /* Insights */
+  .insights { display: flex; flex-direction: column; gap: 10px; }
+  .insight { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .i-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .i-g { background: var(--green-mid); } .i-a { background: var(--amber-mid); } .i-r { background: var(--red-mid); }
+
+  /* Cost rows */
+  .cost-rows { display: flex; flex-direction: column; gap: 6px; }
+  .cost-row { display: flex; justify-content: space-between; align-items: center;
+              padding: 8px 10px; background: var(--surface2); border-radius: var(--radius-sm); }
+  .cost-row .cl { font-size: 12px; color: var(--muted); }
+  .cost-row .cv { font-size: 12px; font-weight: 700; }
+  .cost-pct { font-size: 10px; color: var(--faint); font-weight: 400; margin-left: 4px; }
+
+  /* P&L table */
+  .pl-table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+  .pl-table tr { border-bottom: 1px solid var(--border); }
+  .pl-table tr:last-child { border-bottom: none; }
+  .pl-table td { padding: 7px 0; }
+  .pl-table td:last-child { text-align: right; font-weight: 600; }
+  .pl-table .sh td { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+                     color: var(--muted); padding-top: 14px; padding-bottom: 4px; }
+  .pl-table .tr td { font-weight: 700; border-top: 2px solid var(--border2); padding-top: 10px; font-size: 13px; }
+
+  .stamp { font-size: 11px; color: var(--faint); margin-top: 28px; text-align: center; }
+
+  .filter-btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+                cursor: pointer; border: 1px solid var(--border); background: transparent;
+                color: var(--muted); transition: all 0.15s; }
+  .filter-btn.active { background: var(--surface); color: var(--text);
+                       border-color: var(--border2); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .period-bar { display: flex; gap: 4px; flex-wrap: wrap; }
+  .month-pill { padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 600;
+                cursor: pointer; border: 1px solid var(--border); background: transparent;
+                color: var(--muted); transition: all 0.15s; white-space: nowrap; }
+  .month-pill.active { background: var(--surface); color: var(--text);
+                       border-color: var(--border2); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .tab-period-bar { display: flex; align-items: center; justify-content: space-between;
+                    margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 720px) {
+    .goal-row, .kpi4, .kpi3, .two-col, .three-col, .be-grid { grid-template-columns: 1fr; }
+    .tl-markers { gap: 16px; flex-wrap: wrap; justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="hdr">
+    <div>
+      <h1 id="acct-name">For &amp; Against</h1>
+      <p id="date-range">Loading...</p>
+    </div>
+    <span class="badge" id="source-badge"><span class="dot"></span>Settlement reports + Ads CSV</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('sales')">Sales &amp; Goals</button>
+    <button class="tab" onclick="switchTab('sku')">SKU Performance</button>
+    <button class="tab" onclick="switchTab('coo')">COO Dashboard</button>
+    <button class="tab" onclick="switchTab('trends')">Trends</button>
+    <button class="tab" onclick="switchTab('profitability')">Profitability</button>
+    <button class="tab" onclick="switchTab('inventory')">Inventory</button>
+  </div>
+
+  <!-- ============ TAB 1: SALES & GOALS ============ -->
+  <div class="tab-panel active" id="tab-sales">
+
+    <div class="sl">Goals &amp; targets</div>
+    <div class="goal-row">
+      <div class="goal-card">
+        <div class="ey" id="goal-month-label">Monthly sales goal</div>
+        <div class="num" id="goal-num">—</div>
+        <div class="sub">actual MTD · <span id="month-pct-label">—</span> through the month</div>
+        <div class="track"><div class="fill fill-g" id="goal-bar"></div></div>
+        <div class="prow"><span id="goal-days-label">—</span><strong id="goal-pct">—</strong></div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:11px;color:var(--muted)">Projected full month</span>
+          <span style="font-size:14px;font-weight:700;color:var(--muted)" id="proj-monthly">—</span>
+        </div>
+      </div>
+      <div class="goal-card">
+        <div class="ey">Deficit countdown</div>
+        <div class="num" id="def-num">—</div>
+        <div class="sub">cumulative deficit remaining to erase</div>
+        <div class="track"><div class="fill fill-a" id="def-bar"></div></div>
+        <div class="prow"><span id="def-peak">—</span><strong id="def-pct">—</strong></div>
+      </div>
+    </div>
+
+    <div class="sl">Road to breakeven</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="be-grid">
+        <div class="be-stat">
+          <div class="bl">Cumulative net result</div>
+          <div class="bv" id="be-net">—</div>
+          <div class="bs">all periods to date</div>
+        </div>
+        <div class="be-stat">
+          <div class="bl">Recent net / period</div>
+          <div class="bv" id="be-rate">—</div>
+          <div class="bs">14-day settlement rate</div>
+        </div>
+        <div class="be-stat">
+          <div class="bl">Projected breakeven</div>
+          <div class="bv" id="be-date" style="color:var(--amber-mid)">—</div>
+          <div class="bs">if current rate holds</div>
+        </div>
+        <div class="be-stat">
+          <div class="bl">Days remaining</div>
+          <div class="bv" id="be-days">—</div>
+          <div class="bs">to cumulative zero</div>
+        </div>
+      </div>
+      <div class="tl-track"><div class="tl-fill" id="tl-fill"></div></div>
+      <div class="tl-markers" id="tl-markers"></div>
+    </div>
+
+    <div class="tab-period-bar">
+      <div class="sl" style="margin:0">Period snapshot</div>
+      <div class="period-bar" id="sales-period-bar"></div>
+    </div>
+    <!-- Month comparison -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;" id="month-compare-row">
+      <div class="card" style="padding:16px;">
+        <div class="kl" style="font-size:11px;color:var(--muted);margin-bottom:6px;">vs last month</div>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <span id="vs-last-val" style="font-size:22px;font-weight:700;">—</span>
+          <span id="vs-last-pct" style="font-size:13px;font-weight:600;">—</span>
+        </div>
+        <div id="vs-last-label" style="font-size:11px;color:var(--muted);margin-top:2px;">—</div>
+      </div>
+      <div class="card" style="padding:16px;">
+        <div class="kl" style="font-size:11px;color:var(--muted);margin-bottom:6px;">best month</div>
+        <div style="display:flex;align-items:baseline;gap:8px;">
+          <span id="best-month-val" style="font-size:22px;font-weight:700;">—</span>
+          <span id="best-month-name" style="font-size:13px;color:var(--muted);">—</span>
+        </div>
+        <div id="best-month-label" style="font-size:11px;color:var(--muted);margin-top:2px;">— vs current run rate</div>
+      </div>
+    </div>
+    </div>
+    <div class="kpi4">
+      <div class="kpi"><div class="kl">Gross sales</div><div class="kv" id="s-sales">—</div><div class="kd neu" id="s-period-label">year to date</div></div>
+      <div class="kpi"><div class="kl">Ad spend</div><div class="kv" id="s-spend">—</div><div class="kd" id="s-roas">—</div></div>
+      <div class="kpi"><div class="kl">Net result</div><div class="kv" id="s-net">—</div><div class="kd neu">after all costs</div></div>
+      <div class="kpi"><div class="kl">Units sold</div><div class="kv" id="s-units">—</div><div class="kd neu" id="s-skus">—</div></div>
+    </div>
+
+    <!-- Cost breakdown for selected period -->
+    <div class="card" style="margin-bottom:14px;" id="period-cost-breakdown">
+      <h3 id="breakdown-title">Cost breakdown — year to date</h3>
+      <div class="cs">Where the money goes in this period</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px;" id="breakdown-grid"></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Sales by product</h3>
+        <div class="cs">Gross revenue per SKU, all loaded periods</div>
+        <div style="position:relative;height:240px;">
+          <canvas id="skuChart" role="img" aria-label="Sales by SKU bar chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Key signals</h3>
+        <div class="cs">What the numbers are telling you</div>
+        <div class="insights" id="s-insights"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 2: SKU PERFORMANCE ============ -->
+  <div class="tab-panel" id="tab-sku">
+
+    <div class="sl">SKU performance — all periods</div>
+    <div class="card" style="margin-bottom:14px;overflow:hidden">
+      <h3>Revenue, margin &amp; ad attribution by product</h3>
+      <div class="cs">Margin = revenue after COGS and Amazon fees. Ad sales from Ads CSV — attribution window may overlap.</div>
+      <div class="tab-period-bar" style="margin-bottom:12px;">
+        <div style="font-size:11px;color:var(--muted);">Filter by period</div>
+        <div class="period-bar" id="sku-period-bar"></div>
+      </div>
+      <div class="table-wrap"><table class="sku-table" id="sku-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Units</th>
+            <th>Revenue</th>
+            <th>COGS</th>
+            <th>FBA + Referral</th>
+            <th>Ad spend</th>
+            <th>Net profit</th>
+            <th>Net %</th>
+            <th>Ad ROAS</th>
+          </tr>
+        </thead>
+        <tbody id="sku-tbody"></tbody>
+      </table></div>
+    </div>
+
+    <div class="sl">Ad spend by campaign vs SKU</div>
+    <div class="two-col">
+      <div class="card">
+        <h3>Campaign breakdown</h3>
+        <div class="cs">Spend, revenue and ROAS per campaign</div>
+        <table class="camp-table">
+          <thead><tr><th>Campaign</th><th>Spend</th><th>Ad sales</th><th>Orders</th><th>ROAS</th></tr></thead>
+          <tbody id="sku-camp-body"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Ad efficiency</h3>
+        <div class="cs">Overall ads performance this period</div>
+        <div class="kpi3" style="margin-bottom:16px">
+          <div class="kpi"><div class="kl">Total spend</div><div class="kv" id="ad-spend">—</div></div>
+          <div class="kpi"><div class="kl">Ad sales</div><div class="kv" id="ad-sales">—</div></div>
+          <div class="kpi"><div class="kl">Blended ROAS</div><div class="kv" id="ad-roas">—</div></div>
+        </div>
+        <div class="insights" id="ad-insights"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 3: COO DASHBOARD ============ -->
+  <div class="tab-panel" id="tab-coo">
+
+    <div class="tab-period-bar">
+      <div class="sl" style="margin:0">Executive summary</div>
+      <div class="period-bar" id="coo-period-bar"></div>
+    </div>
+    <div class="kpi4" style="margin-bottom:14px">
+      <div class="kpi"><div class="kl">Gross sales YTD</div><div class="kv" id="c-sales">—</div><div class="kd neu">Jan – today</div></div>
+      <div class="kpi"><div class="kl">Net result YTD</div><div class="kv" id="c-net">—</div><div class="kd neu">after all costs</div></div>
+      <div class="kpi"><div class="kl">Deficit remaining</div><div class="kv" id="c-costs">—</div><div class="kd neu" id="c-costs-sub">of peak</div></div>
+      <div class="kpi"><div class="kl">Breakeven ETA</div><div class="kv" id="c-eta" style="font-size:16px">—</div><div class="kd neu" id="c-days">—</div></div>
+    </div>
+    <div class="kpi4" style="margin-bottom:14px">
+      <div class="kpi"><div class="kl">This month sales</div><div class="kv" id="c-mtd">—</div><div class="kd neu" id="c-mtd-sub">—</div></div>
+      <div class="kpi"><div class="kl">Monthly target</div><div class="kv">$10,000</div><div class="kd neu">gross sales goal</div></div>
+      <div class="kpi"><div class="kl">ROAS</div><div class="kv" id="c-roas">—</div><div class="kd neu">ad return on spend</div></div>
+      <div class="kpi"><div class="kl">Units sold YTD</div><div class="kv" id="c-units">—</div><div class="kd neu">all SKUs</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Full P&amp;L — all loaded periods</h3>
+        <div class="cs">Every cost category from settlement reports + ads CSV</div>
+        <div class="table-wrap"><table class="pl-table" id="pl-table"></table></div>
+      </div>
+      <div class="card">
+        <h3>Cost breakdown</h3>
+        <div class="cs">All outgoings as % of total costs</div>
+        <div class="cost-rows" id="cost-rows"></div>
+      </div>
+    </div>
+
+    <div class="sl">Deficit recovery timeline</div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="be-grid">
+        <div class="be-stat"><div class="bl">Peak deficit</div><div class="bv" id="c-peak">—</div><div class="bs">starting point</div></div>
+        <div class="be-stat"><div class="bl">Current deficit</div><div class="bv dn" id="c-deficit">—</div><div class="bs">remaining to erase</div></div>
+        <div class="be-stat"><div class="bl">Recovered so far</div><div class="bv up" id="c-recovered">—</div><div class="bs">net positive swing</div></div>
+        <div class="be-stat"><div class="bl">Projected date</div><div class="bv" id="c-be-date" style="color:var(--amber-mid);font-size:16px">—</div><div class="bs">at current trajectory</div></div>
+      </div>
+      <div class="tl-track"><div class="tl-fill" id="coo-tl-fill"></div></div>
+      <div class="tl-markers" id="coo-tl-markers"></div>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 4: TRENDS ============ -->
+  <div class="tab-panel" id="tab-trends">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div class="sl" style="margin:0">Account trends</div>
+      <div style="display:flex;gap:6px;">
+        <button class="filter-btn active" onclick="setView('monthly')">Monthly</button>
+        <button class="filter-btn" onclick="setView('weekly')">Weekly</button>
+      </div>
+    </div>
+
+    <div class="kpi4" style="margin-bottom:14px;">
+      <div class="kpi"><div class="kl">Best month</div><div class="kv" id="tr-best-month">—</div><div class="kd neu" id="tr-best-month-label">—</div></div>
+      <div class="kpi"><div class="kl">Month-on-month growth</div><div class="kv" id="tr-mom">—</div><div class="kd neu">latest vs prior month</div></div>
+      <div class="kpi"><div class="kl">ROAS this period</div><div class="kv" id="tr-roas">—</div><div class="kd" id="tr-roas-label">—</div></div>
+      <div class="kpi"><div class="kl">First profitable month</div><div class="kv" style="font-size:16px">Mar 2026</div><div class="kd neu">$116 net positive</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Sales &amp; profitability trend</h3>
+      <div class="cs" id="sales-trend-label">Gross sales and estimated net result by period</div>
+      <div style="position:relative;height:260px;">
+        <canvas id="salesTrendChart" role="img" aria-label="Sales and net result trend chart"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;"></span>Gross sales</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#e24b4a;"></span>Net result</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:4px;border-radius:2px;background:#ba7517;"></span>ROAS (right axis)</span>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:14px;">
+      <div class="card">
+        <h3>Cost breakdown trend</h3>
+        <div class="cs">Ad spend, FBA fees and AWD costs by month</div>
+        <div style="position:relative;height:220px;">
+          <canvas id="costTrendChart" role="img" aria-label="Cost breakdown trend chart"></canvas>
+        </div>
+        <div style="display:flex;gap:14px;margin-top:12px;font-size:11px;color:var(--muted);flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#ba7517;"></span>Ad spend (est.)</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#378add;"></span>FBA + referral</span>
+          <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#888780;"></span>AWD costs</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Ad performance</h3>
+        <div class="cs">ROAS and spend — ads CSV period only</div>
+        <div style="margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:12px;color:var(--muted)">Total ad spend</span>
+            <span style="font-size:14px;font-weight:700;" id="ad-total-spend">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:12px;color:var(--muted)">Ad-attributed sales</span>
+            <span style="font-size:14px;font-weight:700;" id="ad-total-sales">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:12px;color:var(--muted)">Blended ROAS</span>
+            <span style="font-size:14px;font-weight:700;" id="ad-blended-roas">—</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:12px;color:var(--muted)">Total clicks</span>
+            <span style="font-size:14px;font-weight:700;" id="ad-total-clicks">—</span>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px;">ROAS by month</div>
+          <div id="monthly-roas-list" style="font-size:12px;"></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px;">Best campaign</div>
+          <div id="best-campaign" style="font-size:12px;color:var(--muted);">—</div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:8px;">Needs attention</div>
+          <div id="worst-campaign" style="font-size:12px;color:var(--muted);">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Period-over-period summary</h3>
+      <div class="cs">Monthly comparison — all loaded periods</div>
+      <table class="sku-table" id="period-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Gross sales</th>
+            <th>Est. fees</th>
+            <th>Est. net</th>
+            <th>vs prior</th>
+          </tr>
+        </thead>
+        <tbody id="period-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 5: PROFITABILITY ============ -->
+  <div class="tab-panel" id="tab-profitability">
+
+    <div class="sl">Profitability — period by period</div>
+
+    <div class="kpi4" style="margin-bottom:14px;">
+      <div class="kpi"><div class="kl">Cumulative net result</div><div class="kv" id="pr-net">—</div><div class="kd neu">all periods</div></div>
+      <div class="kpi"><div class="kl">Best month</div><div class="kv" id="pr-best">—</div><div class="kd neu" id="pr-best-label">—</div></div>
+      <div class="kpi"><div class="kl">Trend</div><div class="kv" id="pr-trend">—</div><div class="kd neu">last 2 months</div></div>
+      <div class="kpi"><div class="kl">Deficit remaining</div><div class="kv" id="pr-deficit">—</div><div class="kd neu" id="pr-deficit-pct">—</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Monthly P&amp;L — cumulative progression</h3>
+      <div class="cs">Each bar shows gross sales. The line tracks cumulative net result — moving toward zero means moving toward profitability.</div>
+      <div style="position:relative;height:280px;">
+        <canvas id="profitChart" role="img" aria-label="Monthly profitability progression chart"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#639922;"></span>Gross sales</span>
+        <span style="display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:2px;background:#e24b4a;border-radius:50%;"></span>Cumulative net (line)</span>
+      </div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:14px;">
+      <div class="card">
+        <h3>Monthly summary</h3>
+        <div class="cs">Gross sales, estimated costs and net result per month</div>
+        <table class="sku-table" id="monthly-pl-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Gross sales</th>
+              <th>Est. costs</th>
+              <th>Net result</th>
+              <th>vs prior</th>
+              <th>Cumulative</th>
+            </tr>
+          </thead>
+          <tbody id="monthly-pl-body"></tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>What this tells us</h3>
+        <div class="cs">Reading the profitability trend</div>
+        <div class="insights" id="profit-insights"></div>
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:10px;">Breakeven projection</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;">
+              <span style="color:var(--muted)">Peak deficit</span>
+              <span style="font-weight:700;" id="pr-peak">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;">
+              <span style="color:var(--muted)">Recovered so far</span>
+              <span style="font-weight:700;color:var(--green);" id="pr-recovered">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;">
+              <span style="color:var(--muted)">Still to recover</span>
+              <span style="font-weight:700;color:var(--amber);" id="pr-remaining">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;">
+              <span style="color:var(--muted)">Projected date</span>
+              <span style="font-weight:700;" id="pr-be-date">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ TAB 6: INVENTORY ============ -->
+  <div class="tab-panel" id="tab-inventory">
+
+    <div class="sl">Inventory tracker</div>
+
+    <div class="kpi4" style="margin-bottom:14px;">
+      <div class="kpi">
+        <div class="kl">Active SKUs</div>
+        <div class="kv" id="inv-active">—</div>
+        <div class="kd neu">with stock or sales</div>
+      </div>
+      <div class="kpi">
+        <div class="kl">Out of stock</div>
+        <div class="kv" id="inv-oos" style="color:var(--red)">—</div>
+        <div class="kd neu">needs immediate reorder</div>
+      </div>
+      <div class="kpi">
+        <div class="kl">Reorder soon</div>
+        <div class="kv" id="inv-warn" style="color:var(--amber)">—</div>
+        <div class="kd neu">under 45 days stock</div>
+      </div>
+      <div class="kpi">
+        <div class="kl">Total units in FBA</div>
+        <div class="kv" id="inv-total">—</div>
+        <div class="kd neu">across all SKUs</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Stock status by SKU</h3>
+      <div class="cs">Based on 30-day sales velocity from SP-API. Reorder threshold: 45 days.</div>
+      <div class="table-wrap"><table class="sku-table" id="inv-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>In stock</th>
+            <th>Daily rate</th>
+            <th>Days remaining</th>
+            <th>Status</th>
+            <th>Reorder by</th>
+          </tr>
+        </thead>
+        <tbody id="inv-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h3>Stock health chart</h3>
+        <div class="cs">Days of stock remaining per active SKU</div>
+        <div style="position:relative;height:260px;">
+          <canvas id="invChart" role="img" aria-label="Days of stock remaining bar chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Reorder planner</h3>
+        <div class="cs">Recommended actions based on current velocity</div>
+        <div class="insights" id="inv-insights"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="stamp" id="stamp">—</div>
+</div>
+
+<script>
+let currentView = 'monthly';
+let currentPeriod = 'ytd';
+let tabPeriods = { sales: 'ytd', sku: 'ytd', coo: 'ytd', trends: 'monthly', profitability: 'ytd', inventory: 'ytd' };
+
+function buildPeriodBar(barId, tabName, onSelect) {
+  const bar = document.getElementById(barId);
+  if (!bar || !globalData) return;
+  const mSales = (globalData.trends || {}).monthly_sales || {};
+  const months = Object.keys(mSales).sort();
+  const current = tabPeriods[tabName] || 'ytd';
+
+  const monthNames2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const options = [
+    { id: 'ytd', label: 'YTD' },
+    ...months.map(m => ({ id: 'month_' + m, label: monthNames2[parseInt(m.slice(5))-1] })),
+    { id: 'l30', label: '30d' },
+    { id: 'l14', label: '14d' },
+    { id: 'l7',  label: '7d' },
+  ];
+
+  bar.innerHTML = options.map(o => 
+    `<button class="month-pill ${current === o.id ? 'active' : ''}" 
+      onclick="selectTabPeriod('${tabName}','${o.id}')">${o.label}</button>`
+  ).join('');
+}
+
+function selectTabPeriod(tabName, period) {
+  tabPeriods[tabName] = period;
+  const barId = tabName + '-period-bar';
+  buildPeriodBar(barId, tabName);
+  if (!globalData) return;
+  if (tabName === 'sales') applyPeriodFilter(globalData, period);
+  if (tabName === 'sku') renderSkuRows(globalData, period);
+  if (tabName === 'coo') renderCooTab(globalData, period);
+}
+
+function getPeriodData(d, period) {
+  const s = d.summary;
+  const p = d.progress;
+  const t = d.trends || {};
+  const mSales = t.monthly_sales || {};
+  const mNet   = t.monthly_net   || {};
+  const mFees  = t.monthly_fees  || {};
+  const mAwd   = t.monthly_awd   || {};
+  const mAds   = t.monthly_ads   || {};
+  const mCogs  = t.monthly_cogs  || {};
+  const adsM   = d.ads.monthly   || {};
+  const totalUnits = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
+
+  function monthNet(m) {
+    const sal = mSales[m] || 0;
+    const fee = mFees[m] || 0;
+    const awd = mAwd[m] || 0;
+    const ad  = mAds[m] || (adsM[m]||{}).spend || 0;
+    const cog = mCogs[m] || 0;
+    return sal + fee + awd - ad - cog;
+  }
+
+  function monthRoas(m) {
+    const sp = mAds[m] || (adsM[m]||{}).spend || 0;
+    const sa = (adsM[m]||{}).sales || 0;
+    return sp > 0 ? Math.round(sa/sp*100)/100 : 0;
+  }
+
+  if (period === 'ytd') {
+    return { sales: p.ytd_sales_api || s.gross_sales, adSpend: d.ads.spend,
+             units: p.ytd_units_api || totalUnits, fees: Math.abs(s.total_amazon_fees),
+             net: s.net_result, label: 'year to date', roas: d.ads.roas };
+  }
+  if (period.startsWith('month_')) {
+    const m = period.replace('month_', '');
+    const sp = mAds[m] || (adsM[m]||{}).spend || 0;
+    const msales = mSales[m] || 0;
+    const munits = Math.round(totalUnits * (msales / Math.max(1, s.gross_sales)));
+    return { sales: msales, adSpend: sp, units: munits,
+             fees: Math.abs(mFees[m]||0) + Math.abs(mAwd[m]||0),
+             net: monthNet(m), label: m, roas: monthRoas(m) };
+  }
+  if (period === 'mtd') {
+    const cm = d.date_range.end.slice(0, 7);
+    const sp = mAds[cm] || (adsM[cm]||{}).spend || 0;
+    const msales = p.mtd_sales || mSales[cm] || 0;
+    return { sales: msales, adSpend: sp, units: p.mtd_units || 0,
+             fees: Math.abs(mFees[cm]||0) + Math.abs(mAwd[cm]||0),
+             net: monthNet(cm), label: 'this month', roas: monthRoas(cm) };
+  }
+  // Rolling periods — estimate costs proportionally from YTD
+  function rollingData(salesAmt, units, label) {
+    const ratio = salesAmt / Math.max(1, p.ytd_sales_api || s.gross_sales);
+    const adSpend = d.ads.spend * ratio;
+    const fees = Math.abs(s.total_amazon_fees) * ratio;
+    const cogs = Math.abs(s.cogs) * ratio;
+    const net = salesAmt - adSpend - fees - cogs;
+    const roas = adSpend > 0 ? Math.round(salesAmt/adSpend*100)/100 : 0;
+    return { sales: salesAmt, adSpend: Math.round(adSpend), units,
+             fees: Math.round(fees), net: Math.round(net), label, roas };
+  }
+  if (period === 'l30') return rollingData(p.rolling_30d_sales||0, p.rolling_30d_units||0, 'last 30 days');
+  if (period === 'l14') return rollingData(p.rolling_14d_sales||0, p.rolling_14d_units||0, 'last 14 days');
+  if (period === 'l7')  return rollingData(p.rolling_7d_sales||0,  0, 'last 7 days');
+  return { sales: p.ytd_sales_api || s.gross_sales, adSpend: d.ads.spend,
+           units: totalUnits, fees: Math.abs(s.total_amazon_fees), net: s.net_result,
+           label: 'YTD', roas: d.ads.roas };
+}
+
+function setPeriod(period) {
+  currentPeriod = period;
+  tabPeriods['sales'] = period;
+  if (globalData) { buildPeriodBar('sales-period-bar', 'sales'); applyPeriodFilter(globalData, period); }
+}
+
+function applyPeriodFilter(d, period) {
+  const p = d.progress;
+  const pd = getPeriodData(d, period);
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
+  set('s-sales', pd.sales > 0 ? '$' + Math.round(pd.sales).toLocaleString() : '--');
+  set('s-period-label', pd.label);
+  set('s-spend', pd.adSpend > 0 ? '$' + Math.round(pd.adSpend).toLocaleString() : '--');
+  set('s-roas', pd.roas > 0 ? pd.roas.toFixed(2) + 'x ROAS' : '--');
+  setClass('s-roas', 'kd ' + (pd.roas >= 1.5 ? 'up' : pd.roas >= 1 ? 'neu' : 'dn'));
+  set('s-net', pd.net !== 0 ? (pd.net>=0?'+$':'-$') + Math.abs(Math.round(pd.net)).toLocaleString() : '--');
+  setClass('s-net', 'kv ' + (pd.net >= 0 ? 'up' : 'dn'));
+  set('s-units', pd.units > 0 ? pd.units.toLocaleString() : '--');
+  set('s-skus', pd.label);
+  // Month comparison cards
+  const mSalesAll = (d.trends||{}).monthly_sales || {};
+  const allMonths = Object.keys(mSalesAll).sort();
+  if (allMonths.length >= 2) {
+    const currentM = allMonths[allMonths.length-1];
+    const prevM = allMonths[allMonths.length-2];
+    const currSales = p.mtd_sales || mSalesAll[currentM] || 0;
+    const prevSales = mSalesAll[prevM] || 0;
+    const diff = currSales - prevSales;
+    const pct = prevSales > 0 ? ((diff/prevSales)*100).toFixed(0) : 0;
+    const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const fmtM = m => mn[parseInt(m.slice(5))-1] + ' ' + m.slice(0,4);
+    set('vs-last-val', '$' + Math.round(currSales).toLocaleString());
+    const vsEl = document.getElementById('vs-last-pct');
+    if (vsEl) { vsEl.textContent = (diff>=0?'+':'')+pct+'%'; vsEl.className = diff>=0?'up':'dn'; }
+    set('vs-last-label', 'vs ' + fmtM(prevM) + ' ($' + Math.round(prevSales).toLocaleString() + ')');
+    const completed = allMonths.slice(0,-1);
+    const best = completed.length > 0 ?
+      completed.reduce((a,m) => (mSalesAll[m]||0) > (mSalesAll[a]||0) ? m : a, completed[0]) : currentM;
+    const bestSales = mSalesAll[best] || 0;
+    set('best-month-val', '$' + Math.round(bestSales).toLocaleString());
+    set('best-month-name', fmtM(best));
+    const projFull = Math.round(currSales / Math.max(1, p.mtd_days) * 30);
+    const gap = Math.round(bestSales - projFull);
+    set('best-month-label', gap > 0 ? '$'+gap.toLocaleString()+' below best month' : 'On pace to beat best month!');
+  }
+
+  // Cost breakdown grid
+  const s2 = d.summary;
+  const t2 = d.trends || {};
+  const mn2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let costs = [];
+  if (period.startsWith('month_')) {
+    const m = period.replace('month_', '');
+    const mLabel = mn2[parseInt(m.slice(5))-1];
+    document.getElementById('breakdown-title').textContent = 'Cost breakdown — ' + mLabel;
+    const mFees2 = t2.monthly_fees || {};
+    const mAwd2  = t2.monthly_awd  || {};
+    const mAds2  = t2.monthly_ads  || {};
+    const mCogs2 = t2.monthly_cogs || {};
+    const mPromos2 = t2.monthly_promos || {};
+    const mRefunds2 = t2.monthly_refunds || {};
+    const mSub2 = t2.monthly_subscription || {};
+    costs = [
+      { label: 'Amazon fees', val: Math.abs(mFees2[m]||0), color: '#e24b4a' },
+      { label: 'AWD logistics', val: Math.abs(mAwd2[m]||0), color: '#ba7517' },
+      { label: 'Ad spend', val: Math.abs(mAds2[m]||0), color: '#c17f2a' },
+      { label: 'COGS', val: Math.abs(mCogs2[m]||0), color: '#888' },
+      { label: 'Promotions', val: Math.abs(mPromos2[m]||0), color: '#a06080' },
+      { label: 'Refunds', val: Math.abs(mRefunds2[m]||0), color: '#c0605a' },
+      { label: 'Subscription', val: Math.abs(mSub2[m]||0), color: '#999' },
+    ].filter(c => c.val > 0);
+  } else {
+    const label = period === 'ytd' ? 'year to date' : period === 'l30' ? 'last 30 days' : period === 'l14' ? 'last 14 days' : 'last 7 days';
+    document.getElementById('breakdown-title').textContent = 'Cost breakdown — ' + label;
+    const ratio = pd.sales / Math.max(1, p.ytd_sales_api || s2.gross_sales);
+    costs = [
+      { label: 'Amazon fees', val: Math.abs(s2.fba_fees) + Math.abs(s2.referral_fees), color: '#e24b4a' },
+      { label: 'AWD logistics', val: Math.abs(s2.awd_storage) + Math.abs(s2.awd_transport) + Math.abs(s2.awd_processing), color: '#ba7517' },
+      { label: 'Ad spend', val: Math.abs(s2.ad_spend), color: '#c17f2a' },
+      { label: 'COGS', val: Math.abs(s2.cogs), color: '#888' },
+      { label: 'Promotions', val: Math.abs(s2.promotions), color: '#a06080' },
+      { label: 'Refunds', val: Math.abs(s2.refunds), color: '#c0605a' },
+      { label: 'Subscription', val: Math.abs(s2.subscription), color: '#999' },
+    ].filter(c => c.val > 0).map(c => ({...c, val: period === 'ytd' ? c.val : Math.round(c.val * ratio)}));
+  }
+  const totalCosts = costs.reduce((a,c)=>a+c.val,0);
+  document.getElementById('breakdown-grid').innerHTML = costs.map(c => `
+    <div style="background:var(--surface);border-radius:8px;padding:12px;">
+      <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${c.label}</div>
+      <div style="font-size:18px;font-weight:700;color:${c.color};">-$${Math.round(c.val).toLocaleString()}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px;">${totalCosts>0?Math.round(c.val/totalCosts*100)+'% of costs':''}</div>
+      <div style="height:3px;background:var(--border);border-radius:2px;margin-top:6px;">
+        <div style="height:3px;background:${c.color};border-radius:2px;width:${totalCosts>0?Math.min(100,Math.round(c.val/totalCosts*100)):0}%;"></div>
+      </div>
+    </div>`).join('');
+}
+let globalData = null;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['sales','sku','coo','trends','profitability','inventory'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'trends' && globalData) renderTrends(globalData, currentView);
+  if (name === 'profitability' && globalData) renderProfitability(globalData);
+  if (name === 'inventory' && globalData) renderInventory(globalData);
+  if (name === 'sku' && globalData) { buildPeriodBar('sku-period-bar','sku'); renderSkuRows(globalData, tabPeriods['sku']); }
+  if (name === 'coo' && globalData) { buildPeriodBar('coo-period-bar','coo'); }
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll('.filter-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['monthly','weekly'][i] === view);
+  });
+  if (globalData) renderTrends(globalData, view);
+}
+
+let salesTrendChart = null;
+let costTrendChart = null;
+
+function renderTrends(d, view) {
+  const t = d.trends;
+  const s = d.summary;
+  const ads = d.ads;
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC = isDark ? '#888780' : '#5f5e5a';
+
+  // Pick data based on view
+  const salesData = view === 'monthly' ? t.monthly_sales : t.weekly_sales;
+  const labels = Object.keys(salesData);
+  const salesVals = Object.values(salesData).map(v => Math.round(v));
+
+  // Net values — monthly only, weekly estimated proportionally
+  const netVals = view === 'monthly'
+    ? labels.map(l => Math.round(t.monthly_net[l] || 0))
+    : labels.map(l => {
+        const wSales = salesData[l] || 0;
+        const wAds = d.ads.weekly || {};
+        const wSpend = wAds[l] ? wAds[l].spend : 0;
+        const totalSales = Object.values(t.weekly_sales).reduce((a,b)=>a+b,0);
+        const cogsEst = totalSales > 0 ? Math.abs(s.cogs) * (wSales / totalSales) : 0;
+        const feesEst = totalSales > 0 ? Math.abs(s.total_amazon_fees) * (wSales / totalSales) : 0;
+        return Math.round(wSales - wSpend - cogsEst - feesEst);
+      });
+
+  // KPIs
+  const monthSales = Object.entries(t.monthly_sales);
+  if (monthSales.length > 0) {
+    const best = monthSales.reduce((a,b) => b[1]>a[1]?b:a);
+    document.getElementById('tr-best-month').textContent = '$' + Math.round(best[1]).toLocaleString();
+    document.getElementById('tr-best-month-label').textContent = best[0];
+  }
+  if (monthSales.length >= 2) {
+    const last = monthSales[monthSales.length-1][1];
+    const prev = monthSales[monthSales.length-2][1];
+    const mom = prev > 0 ? ((last - prev) / prev * 100).toFixed(0) : 0;
+    const el = document.getElementById('tr-mom');
+    el.textContent = (mom >= 0 ? '+' : '') + mom + '%';
+    el.className = 'kv ' + (mom >= 0 ? 'up' : 'dn');
+  }
+  document.getElementById('tr-roas').textContent = ads.roas.toFixed(2) + '×';
+  document.getElementById('tr-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  document.getElementById('tr-roas-label').textContent = ads.roas >= 1.5 ? 'Strong' : ads.roas >= 1 ? 'Breakeven' : 'Below breakeven';
+
+  // Sales trend chart — with ROAS on secondary axis when monthly
+  const adData = view === 'monthly' ? (d.ads.monthly || {}) : (d.ads.weekly || {});
+  const roasVals = labels.map(l => adData[l] ? parseFloat(adData[l].roas.toFixed(2)) : null);
+  const hasRoas = roasVals.some(v => v !== null);
+
+  if (salesTrendChart) { salesTrendChart.destroy(); salesTrendChart = null; }
+  const datasets = [
+    { label: 'Gross sales', data: salesVals, backgroundColor: '#639922', borderRadius: 4, borderSkipped: false, order: 3, yAxisID: 'y' },
+    { label: 'Net result', data: netVals, type: 'line', borderColor: '#e24b4a',
+      backgroundColor: 'transparent', pointBackgroundColor: '#e24b4a',
+      pointRadius: 4, tension: 0.3, order: 2, yAxisID: 'y' }
+  ];
+  if (hasRoas) {
+    datasets.push({ label: 'ROAS', data: roasVals, type: 'line', borderColor: '#ba7517',
+      backgroundColor: 'transparent', pointBackgroundColor: '#ba7517', borderDash: [4,3],
+      pointRadius: 4, tension: 0.3, order: 1, yAxisID: 'y2' });
+  }
+  salesTrendChart = new Chart(document.getElementById('salesTrendChart'), {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => {
+          if (ctx.dataset.label === 'ROAS') return ` ROAS: ${ctx.parsed.y}×`;
+          const sign = ctx.parsed.y < 0 ? '-' : '+';
+          return ` ${ctx.dataset.label}: ${sign}$${Math.abs(ctx.parsed.y).toLocaleString()}`;
+        }}}
+      },
+      scales: {
+        x: { ticks:{color:lblC,font:{size:11},autoSkip:false,maxRotation:30}, grid:{display:false}, border:{display:false} },
+        y: { ticks:{color:lblC,font:{size:11},callback:v=>(v<0?'-':'')+'$'+Math.abs(v).toLocaleString()}, grid:{color:gridC}, border:{display:false} },
+        y2: { position:'right', display: hasRoas, ticks:{color:'#ba7517',font:{size:11},callback:v=>v+'×'},
+              grid:{display:false}, border:{display:false}, min: 0, max: 3 }
+      }
+    }
+  });
+
+  // Cost trend chart — monthly, use real ad data if available
+  const mLabels = Object.keys(t.monthly_sales);
+  const monthlyAds = d.ads.monthly || {};
+  const adSpendEst = mLabels.map(m => {
+    if (monthlyAds[m]) return Math.round(monthlyAds[m].spend);
+    const share = (t.monthly_sales[m] || 0) / Math.max(1, Object.values(t.monthly_sales).reduce((a,b)=>a+b,0));
+    return Math.round(Math.abs(s.ad_spend) * share);
+  });
+  const feeVals = mLabels.map(m => Math.round(Math.abs(t.monthly_fees[m] || 0)));
+  const awdVals = mLabels.map(m => Math.round(Math.abs(t.monthly_awd[m] || 0)));
+
+  if (costTrendChart) { costTrendChart.destroy(); costTrendChart = null; }
+  costTrendChart = new Chart(document.getElementById('costTrendChart'), {
+    type: 'bar',
+    data: {
+      labels: mLabels,
+      datasets: [
+        { label: 'Ad spend (est.)', data: adSpendEst, backgroundColor: '#ba7517', borderRadius: 4, borderSkipped: false, stack: 'costs' },
+        { label: 'FBA + referral', data: feeVals, backgroundColor: '#378add', borderRadius: 0, borderSkipped: false, stack: 'costs' },
+        { label: 'AWD costs', data: awdVals, backgroundColor: '#888780', borderRadius: 0, borderSkipped: false, stack: 'costs' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}` }}
+      },
+      scales: {
+        x: { ticks:{color:lblC,font:{size:11}}, grid:{display:false}, border:{display:false}, stacked: true },
+        y: { ticks:{color:lblC,font:{size:11},callback:v=>'$'+v.toLocaleString()}, grid:{color:gridC}, border:{display:false}, stacked: true }
+      }
+    }
+  });
+
+  // Ad panel
+  document.getElementById('ad-total-spend').textContent = '$' + ads.spend.toLocaleString();
+  document.getElementById('ad-total-sales').textContent = '$' + ads.sales.toLocaleString();
+  document.getElementById('ad-blended-roas').textContent = ads.roas.toFixed(2) + '×';
+  document.getElementById('ad-blended-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  document.getElementById('ad-total-clicks').textContent = ads.clicks.toLocaleString();
+
+  const best = [...ads.campaigns].filter(c=>c.spend>20).sort((a,b)=>(b.roas||0)-(a.roas||0))[0];
+  const worst = [...ads.campaigns].filter(c=>c.spend>50).sort((a,b)=>(a.roas||0)-(b.roas||0))[0];
+  // Monthly ROAS list
+  const mRoasList = document.getElementById('monthly-roas-list');
+  if (mRoasList) {
+    const mAds = d.ads.monthly || {};
+    mRoasList.innerHTML = Object.entries(mAds).sort().map(([m, v]) => {
+      const cls = v.roas >= 1.5 ? 'up' : v.roas >= 1 ? 'neu' : 'dn';
+      const bar = Math.min(100, Math.round(v.roas / 3 * 100));
+      return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <span style="color:var(--muted)">${m}</span>
+        <span style="display:flex;align-items:center;gap:8px;">
+          <span style="width:60px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">
+            <span style="display:block;height:100%;width:${bar}%;background:${v.roas>=1.5?'#639922':v.roas>=1?'#ba7517':'#e24b4a'};border-radius:2px;"></span>
+          </span>
+          <span class="${cls}" style="font-weight:700;font-size:12px;">${v.roas.toFixed(2)}×</span>
+        </span>
+      </div>`;
+    }).join('');
+  }
+
+  if (best) document.getElementById('best-campaign').innerHTML =
+    `<strong style="color:var(--text)">${best['Campaign name']}</strong><br>$${best.spend.toFixed(0)} spend · ${(best.roas||0).toFixed(2)}× ROAS · ${best.orders} orders`;
+  if (worst) document.getElementById('worst-campaign').innerHTML =
+    `<strong style="color:var(--text)">${worst['Campaign name']}</strong><br>$${worst.spend.toFixed(0)} spend · ${(worst.roas||0).toFixed(2)}× ROAS — consider pausing or restructuring`;
+
+  // Period table
+  const months = Object.keys(t.monthly_sales).sort();
+  let tableHtml = '';
+  for (let i = 0; i < months.length; i++) {
+    const m = months[i];
+    const sal = t.monthly_sales[m] || 0;
+    const fees = Math.abs(t.monthly_fees[m] || 0);
+    const awd = Math.abs(t.monthly_awd[m] || 0);
+    const net = t.monthly_net[m] || 0;
+    const prev = i > 0 ? (t.monthly_sales[months[i-1]] || 0) : null;
+    const vsPrior = prev !== null && prev > 0 ? ((sal - prev) / prev * 100).toFixed(0) : null;
+    const vsCls = vsPrior === null ? 'neu' : vsPrior >= 0 ? 'up' : 'dn';
+    const vsStr = vsPrior === null ? '—' : (vsPrior >= 0 ? '+' : '') + vsPrior + '%';
+    tableHtml += `<tr>
+      <td><strong>${m}</strong></td>
+      <td>$${Math.round(sal).toLocaleString()}</td>
+      <td style="color:var(--red)">–$${Math.round(fees + awd).toLocaleString()}</td>
+      <td class="${net>=0?'up':'dn'}">${net>=0?'+':'–'}$${Math.abs(Math.round(net)).toLocaleString()}</td>
+      <td class="${vsCls}">${vsStr}</td>
+    </tr>`;
+  }
+  document.getElementById('period-tbody').innerHTML = tableHtml;
+  document.getElementById('sales-trend-label').textContent =
+    view === 'monthly' ? 'Gross sales and estimated net result by month' : 'Gross sales by week';
+}
+
+async function load() {
+  const r = await fetch('data.json');
+  const d = await r.json();
+  render(d);
+}
+
+function fmt(v, dec=0) {
+  const s = Math.abs(v).toLocaleString('en-US', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+  return (v < 0 ? '–$' : '$') + s;
+}
+function fmtDate(d) {
+  return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+}
+function addDays(date, days) {
+  const d = new Date(date); d.setDate(d.getDate() + days); return d;
+}
+
+// COGS map and fee estimates for SKU margin calc
+const DISPLAY_NAME_FIX = {
+  'FNA606-2LP': 'Amber & Sandalwood Refill Pouch 2L',
+  'FNA606-600': 'Amber & Sandalwood Lotion 600ml',
+};
+const COGS_MAP = {
+  'Santal & Vetiver Body Wash 500ml': 2.40,
+  'Amber & Sandalwood Body Wash 500ml': 2.40,
+  'Bergamot & Hinoki Body Lotion 500ml': 2.90,
+  'Amber & Sandalwood Body Lotion 500ml': 2.90,
+  'Bergamot & Hinoki Refill Pouch 2L': 4.90,
+  'Amber & Sandalwood Gallon Case': 30.00,
+  'Bergamot & Hinoki Gallon Case': 30.00,
+  'Santal & Vetiver Gallon Case': 30.00,
+  'Bergamot & Hinoki Deodorant': 1.81,
+  'Santal & Vetiver Deodorant': 1.81,
+  'Tobacco & Vanilla Deodorant': 1.81,
+  'Bundle/Other': 2.40,
+};
+const FEE_MAP = {
+  'Santal & Vetiver Body Wash 500ml': 8.27,
+  'Amber & Sandalwood Body Wash 500ml': 8.27,
+  'Bergamot & Hinoki Body Lotion 500ml': 7.62,
+  'Amber & Sandalwood Body Lotion 500ml': 7.62,
+  'Bergamot & Hinoki Refill Pouch 2L': 10.71,
+  'Amber & Sandalwood Gallon Case': 37.12,
+  'Bergamot & Hinoki Gallon Case': 37.12,
+  'Santal & Vetiver Gallon Case': 37.12,
+  'Bergamot & Hinoki Deodorant': 6.04,
+  'Santal & Vetiver Deodorant': 6.04,
+  'Tobacco & Vanilla Deodorant': 6.04,
+  'Bundle/Other': 8.27,
+};
+// Ad sales by ASIN mapped to product name (approximate)
+const ASIN_TO_SKU = {
+  'B0GHT7YVVP': 'Santal & Vetiver Body Wash 500ml',
+  'B0C82VV6ZB': 'Amber & Sandalwood Body Wash 500ml',
+  'B0GQD48SSW': 'Amber & Sandalwood Gallon Case',
+  'B0GQD9VY6Y': 'Santal & Vetiver Gallon Case',
+  'B0CMVW995C': 'Bergamot & Hinoki Gallon Case',
+};
+
+function render(d) {
+  const s = d.summary;
+  const p = d.progress;
+  const ads = d.ads;
+  const cfg = d.config;
+  const skuSales = d.sku_breakdown.sales;
+  const skuUnits = d.sku_breakdown.units;
+  const skuCogs = d.sku_breakdown.cogs_by_sku;
+
+  document.getElementById('acct-name').textContent = cfg.account_name || 'For & Against';
+  document.getElementById('date-range').textContent =
+    `${d.date_range.start} – ${d.date_range.end}  ·  All statement periods loaded`;
+
+  // ---- SHARED CALCULATIONS ----
+  const startDate = new Date(d.date_range.start);
+  const endDate = new Date(d.date_range.end);
+  const days = Math.max(1, Math.round((endDate - startDate) / (1000*60*60*24)));
+  // MTD: use progress.mtd_days (day of month) from SP-API, not total period days
+  const mtdDaysElapsed = p.mtd_days || new Date(d.date_range.end).getDate();
+  const mtdSalesAmt = p.mtd_sales || cfg.mtd_sales || s.gross_sales;
+  const dailyRate = mtdSalesAmt / Math.max(1, mtdDaysElapsed);
+  const monthlyRate = Math.round(dailyRate * 30);
+  const goalTarget = cfg.goal_monthly || 10000;
+  const goalPct = Math.min(100, Math.round(monthlyRate / goalTarget * 100));
+
+  // deficit_start from config is the baseline; use whichever is larger (actual deficit may have grown)
+  const netResult = s.net_result;
+  const defStart = Math.max(p.deficit_start, Math.abs(netResult));
+  // deficit_start IS the total deficit (net_result = -3532 means deficit = 3532)
+  // As net improves toward 0, deficit shrinks. Currently net = -3532 so remaining = 3532.
+  // Each period we generate positive net, it chips away at the deficit.
+  // For now deficit_start = current deficit until SP-API tracks running total.
+  const defRemaining = defStart;
+  const pctRecov = 0;
+
+  // Recent net rate — use June as forward indicator
+  const juneSales = 5140.40, juneDays = 18, juneAdSpend = 1446.06;
+  const avgDailyCosts = (Math.abs(s.fba_fees) + Math.abs(s.referral_fees) + Math.abs(s.awd_storage) +
+    Math.abs(s.awd_transport) + Math.abs(s.awd_processing) + Math.abs(s.subscription) + Math.abs(s.cogs)) / days;
+  const juneNetPerDay = (juneSales - juneAdSpend - avgDailyCosts * juneDays) / juneDays;
+  const netPerPeriod = juneNetPerDay * 14;
+  const daysToBreakeven = defRemaining > 0 && netPerPeriod > 0 ? Math.ceil(defRemaining / juneNetPerDay) : 0;
+  const breakevenDate = addDays(new Date(), daysToBreakeven);
+
+  const milestones = [
+    { label: 'Launch', date: 'Jan 2026', done: true },
+    { label: 'First profit', date: 'Mar 2026', done: true },
+    { label: '8 SKUs live', date: 'Jun 2026', done: true },
+    { label: 'Breakeven', date: fmtDate(breakevenDate), done: false, now: true },
+    { label: '$10K / mo', date: 'Est. Aug 2026', done: false },
+  ];
+
+  // ---- TAB 1: SALES & GOALS ----
+  // MTD actual sales and month progress
+  const daysInMonth = 30;
+  const monthPct = Math.round(mtdDaysElapsed / daysInMonth * 100);
+  const mtdGoalPct = Math.min(100, Math.round(mtdSalesAmt / goalTarget * 100));
+  const projMonthly = Math.round(mtdSalesAmt / mtdDaysElapsed * daysInMonth);
+
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const currentMonth = monthNames[new Date(d.date_range.end).getMonth()];
+  const mlabel = document.getElementById('goal-month-label');
+  if (mlabel) mlabel.textContent = 'Monthly sales goal — ' + currentMonth + ' progress';
+  document.getElementById('goal-num').textContent = '$' + Math.round(mtdSalesAmt).toLocaleString();
+  document.getElementById('goal-pct').textContent = mtdGoalPct + '% of $10K goal';
+  document.getElementById('goal-pct').className = mtdGoalPct >= 100 ? 'up' : mtdGoalPct >= 70 ? 'neu' : 'dn';
+  document.getElementById('month-pct-label').textContent = monthPct + '%';
+  document.getElementById('goal-days-label').textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
+  document.getElementById('proj-monthly').textContent = '$' + projMonthly.toLocaleString() + ' est. full month';
+  setTimeout(() => document.getElementById('goal-bar').style.width = mtdGoalPct + '%', 150);
+
+  // Deficit uses settled financial events only - deficit reduces as real profit is banked
+  const realDeficit = Math.abs(netResult);
+  const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
+  document.getElementById('def-num').textContent = realDeficit > 1 ? fmt(realDeficit) : 'Breakeven!';
+  document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
+  document.getElementById('def-peak').textContent = `of $${defStart.toLocaleString()} peak deficit`;
+  document.getElementById('def-pct').textContent = realPct + '% recovered';
+  document.getElementById('def-pct').className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
+  setTimeout(() => document.getElementById('def-bar').style.width = Math.min(100,realPct) + '%', 150);
+
+  document.getElementById('be-net').textContent = fmt(netResult, 2);
+  document.getElementById('be-net').className = 'bv ' + (netResult >= 0 ? 'up' : 'dn');
+  document.getElementById('be-rate').textContent = fmt(netPerPeriod, 0) + ' / 14d';
+  document.getElementById('be-rate').className = 'bv ' + (netPerPeriod >= 0 ? 'up' : 'dn');
+  document.getElementById('be-date').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
+  document.getElementById('be-days').textContent = daysToBreakeven > 0 ? daysToBreakeven : '0';
+
+  function renderTimeline(fillId, markersId, pct, milestones) {
+    setTimeout(() => document.getElementById(fillId).style.width = Math.min(95, Math.max(5, pct)) + '%', 200);
+    document.getElementById(markersId).innerHTML = milestones.map(m => `
+      <div class="tl-marker">
+        <div class="tl-dot ${m.done ? 'tl-dot-done' : m.now ? 'tl-dot-now' : 'tl-dot-future'}"></div>
+        <div class="tl-lbl"><strong>${m.label}</strong>${m.date}</div>
+      </div>`).join('');
+  }
+  renderTimeline('tl-fill', 'tl-markers', 58, milestones);
+
+  applyPeriodFilter(d, currentPeriod);
+  document.getElementById('s-spend').textContent = fmt(ads.spend);
+  // Update gross sales KPI to show Sales API YTD if available
+  if (p.ytd_sales_api && p.ytd_sales_api > s.gross_sales) {
+    const ytdEl = document.getElementById('kpi-sales');
+    if (ytdEl) ytdEl.textContent = fmt(p.ytd_sales_api);
+  }
+  document.getElementById('s-roas').textContent = ads.roas.toFixed(2) + '× ROAS';
+  document.getElementById('s-roas').className = 'kd ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  document.getElementById('s-net').textContent = fmt(netResult, 2);
+  document.getElementById('s-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+  const totalUnits = Object.values(skuUnits).reduce((a,b)=>a+b,0);
+  document.getElementById('s-units').textContent = totalUnits;
+  document.getElementById('s-skus').textContent = Object.keys(skuSales).length + ' active SKUs';
+
+  // SKU chart
+  const lbls = Object.keys(skuSales);
+  const vals = Object.values(skuSales);
+  const order = vals.map((_,i)=>i).sort((a,b)=>vals[a]-vals[b]);
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC = isDark ? '#888780' : '#5f5e5a';
+  new Chart(document.getElementById('skuChart'), {
+    type: 'bar',
+    data: {
+      labels: order.map(i => lbls[i].length > 24 ? lbls[i].slice(0,22)+'…' : lbls[i]),
+      datasets: [{ data: order.map(i=>vals[i]), backgroundColor: '#639922', borderRadius: 4, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>' $'+ctx.parsed.x.toFixed(0)}}},
+      scales: {
+        x: { ticks:{color:lblC,font:{size:10},callback:v=>'$'+v}, grid:{color:gridC}, border:{display:false} },
+        y: { ticks:{color:lblC,font:{size:10}}, grid:{display:false}, border:{display:false} }
+      }
+    }
+  });
+
+  // Insights tab 1
+  const ins = [];
+  const projStr = '$' + projMonthly.toLocaleString();
+  const gapStr = '$' + Math.max(0, goalTarget - projMonthly).toLocaleString();
+  const goalPctActual = Math.min(100, Math.round(projMonthly / goalTarget * 100));
+  if (goalPctActual < 70) ins.push(['a', `Projected full month of ${projStr} is ${goalPctActual}% of the $10K goal. Need ${gapStr} more.`]);
+  else if (goalPctActual < 100) ins.push(['a', `Getting close — ${projStr} projected for the month. ${gapStr} gap remaining.`]);
+  else ins.push(['g', `On track to exceed the $10K monthly goal — ${projStr} projected.`]);
+  if (daysToBreakeven > 0) ins.push(['a', `Cumulative breakeven projected ${fmtDate(breakevenDate)} — ${daysToBreakeven} days from today based on June trajectory.`]);
+  const topSku = Object.entries(skuSales).sort(([,a],[,b])=>b-a)[0];
+  if (topSku) ins.push(['g', `${topSku[0]} leads at $${topSku[1].toFixed(0)} — ${(topSku[1]/s.gross_sales*100).toFixed(0)}% of gross sales.`]);
+  if (ads.roas < 1) ins.push(['r', `Blended ROAS of ${ads.roas.toFixed(2)}× means ads are still underwater overall. June improved significantly — keep optimising.`]);
+  document.getElementById('s-insights').innerHTML = ins.map(([t,txt])=>
+    `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
+
+  // ---- TAB 2: SKU PERFORMANCE ----
+  // Build SKU rows with real ad data and per-SKU fees
+  const adsBySku = d.sku_breakdown.ads_by_sku || {};
+  const fbaFeesBySku = d.sku_breakdown.fba_fees_by_sku || {};
+  const refFeesBySku = d.sku_breakdown.referral_fees_by_sku || {};
+
+  const skuRows = Object.entries(skuSales).sort(([,a],[,b])=>b-a).map(([name, rev]) => {
+    const units = skuUnits[name] || 0;
+    const cogs = (COGS_MAP[name] || 0) * units;
+    const fbaFee = Math.abs(fbaFeesBySku[name] || (FEE_MAP[name] || 0) * units * 0.6);
+    const refFee = Math.abs(refFeesBySku[name] || (FEE_MAP[name] || 0) * units * 0.4);
+    const totalFees = fbaFee + refFee;
+    const skuAds = adsBySku[name] || {};
+    const adSpend = skuAds.spend || 0;
+    const adRoas = skuAds.roas || 0;
+    const netProfit = rev - cogs - totalFees - adSpend;
+    const netPct = rev > 0 ? Math.round(netProfit / rev * 100) : 0;
+    const netPillCls = netPct >= 30 ? 'pill-g' : netPct >= 0 ? 'pill-a' : 'pill-r';
+    const roasPillCls = adRoas >= 1.5 ? 'pill-g' : adRoas >= 1 ? 'pill-a' : 'pill-r';
+
+    // Recommendations
+    let reco = '';
+    if (adSpend > 0 && adRoas < 1) reco = '⚠ Ads underwater';
+    else if (adSpend > 0 && adRoas >= 2) reco = '✓ Strong ROAS';
+    else if (adSpend === 0 && units > 0) reco = '○ No ads running';
+
+    return `<tr>
+      <td>
+        <div class="sku-name">${name}</div>
+        <div class="sku-sub">${units} units · $${rev>0&&units>0?(rev/units).toFixed(2):'0'} avg</div>
+        ${reco ? `<div style="font-size:10px;margin-top:2px;color:${adRoas<1&&adSpend>0?'var(--red)':'var(--green)'}">${reco}</div>` : ''}
+      </td>
+      <td><strong>${units}</strong></td>
+      <td><strong>${fmt(rev, 2)}</strong></td>
+      <td class="dn">${fmt(-cogs, 2)}</td>
+      <td class="dn">${fmt(-totalFees, 2)}</td>
+      <td class="dn">${adSpend > 0 ? fmt(-adSpend, 2) : '—'}</td>
+      <td><strong class="${netProfit>=0?'up':'dn'}">${fmt(netProfit, 2)}</strong></td>
+      <td><span class="pill ${netPillCls}">${netPct}%</span></td>
+      <td>${adRoas > 0 ? `<span class="pill ${roasPillCls}">${adRoas.toFixed(2)}×</span>` : '—'}</td>
+    </tr>`;
+  });
+
+  // Add totals row
+  const totalRev = Object.values(skuSales).reduce((a,b)=>a+b,0);
+  const totalCogs = Object.entries(skuSales).reduce((a,[n])=>a+(COGS_MAP[n]||0)*(skuUnits[n]||0),0);
+  const totalFees2 = Object.keys(skuSales).reduce((a,n)=>a+Math.abs(fbaFeesBySku[n]||0)+Math.abs(refFeesBySku[n]||0),0);
+  const totalAdSpend = Object.values(adsBySku).reduce((a,v)=>a+(v.spend||0),0);
+  const totalNet = totalRev - totalCogs - totalFees2 - totalAdSpend;
+  skuRows.push(`<tr style="border-top:2px solid var(--border2);font-weight:700;">
+    <td>TOTAL</td><td>${Object.values(skuUnits).reduce((a,b)=>a+b,0)}</td>
+    <td>${fmt(totalRev,2)}</td><td class="dn">${fmt(-totalCogs,2)}</td>
+    <td class="dn">${fmt(-totalFees2,2)}</td><td class="dn">${fmt(-totalAdSpend,2)}</td>
+    <td class="${totalNet>=0?'up':'dn'}">${fmt(totalNet,2)}</td><td></td><td></td>
+  </tr>`);
+
+  document.getElementById('sku-tbody').innerHTML = skuRows.join('');
+
+  // Campaign table tab 2
+  document.getElementById('sku-camp-body').innerHTML = ads.campaigns.map(c => {
+    const roas = c.roas || 0;
+    const cls = roas >= 1.5 ? 'pill-g' : roas >= 0.8 ? 'pill-a' : 'pill-r';
+    const name = c['Campaign name'].length > 30 ? c['Campaign name'].slice(0,28)+'…' : c['Campaign name'];
+    return `<tr>
+      <td>${name}</td>
+      <td>$${c.spend.toFixed(0)}</td>
+      <td>$${(c.sales||0).toFixed(0)}</td>
+      <td>${c.orders||0}</td>
+      <td><span class="pill ${cls}">${roas.toFixed(2)}×</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('ad-spend').textContent = fmt(ads.spend);
+  document.getElementById('ad-sales').textContent = fmt(ads.sales);
+  document.getElementById('ad-roas').textContent = ads.roas.toFixed(2) + '×';
+  document.getElementById('ad-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+
+  const adIns = [];
+  const bestCamp = [...ads.campaigns].sort((a,b)=>(b.roas||0)-(a.roas||0))[0];
+  const worstCamp = [...ads.campaigns].filter(c=>c.spend>50).sort((a,b)=>(a.roas||0)-(b.roas||0))[0];
+  if (bestCamp) adIns.push(['g', `Best performer: "${bestCamp['Campaign name']}" at ${(bestCamp.roas||0).toFixed(2)}× ROAS — consider increasing budget here.`]);
+  if (worstCamp && (worstCamp.roas||0) < 0.8) adIns.push(['r', `"${worstCamp['Campaign name']}" is at ${(worstCamp.roas||0).toFixed(2)}× ROAS on $${worstCamp.spend.toFixed(0)} spend — pause or restructure.`]);
+  adIns.push(['a', `${ads.clicks} clicks generated ${ads.orders} orders — ${(ads.orders/ads.clicks*100).toFixed(1)}% click-to-purchase rate.`]);
+  document.getElementById('ad-insights').innerHTML = adIns.map(([t,txt])=>
+    `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
+
+  // ---- TAB 3: COO DASHBOARD ----
+  document.getElementById('c-sales').textContent = fmt(p.ytd_sales_api || s.gross_sales);
+  document.getElementById('c-net').textContent = fmt(netResult, 2);
+  document.getElementById('c-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+  // Net result here is from financial events only - use full net including Sales API
+  const fullNet = netResult - (p.ytd_sales_api > s.gross_sales ? p.ytd_sales_api - s.gross_sales : 0);
+  const realDef = Math.max(0, defStart + Math.abs(fullNet) * -1 + defStart);
+  const trueDeficit = Math.max(0, defStart - (p.ytd_sales_api || s.gross_sales) + 
+    Math.abs(s.total_amazon_fees) + Math.abs(s.cogs) + Math.abs(s.ad_spend));
+  const displayDef = Math.max(0, defStart + netResult - (p.ytd_sales_api && p.ytd_sales_api > s.gross_sales ? 
+    p.ytd_sales_api - s.gross_sales : 0));
+  const realPctCoo = Math.min(100, Math.max(0, Math.round((defStart - displayDef) / defStart * 100)));
+  document.getElementById('c-costs').textContent = displayDef > 0 ? fmt(displayDef) : 'Breakeven reached';
+  document.getElementById('c-costs').className = 'kv ' + (displayDef > 0 ? 'dn' : 'up');
+  document.getElementById('c-costs-sub').textContent = realPctCoo + '% recovered of $' + defStart.toLocaleString();
+  document.getElementById('c-eta').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
+  document.getElementById('c-days').textContent = daysToBreakeven > 0 ? daysToBreakeven + ' days remaining' : 'Breakeven achieved';
+  // New MTD, ROAS, units fields
+  const cmth = d.date_range.end.slice(0,7);
+  const mtdVal = d.progress.mtd_sales || (d.trends.monthly_sales||{})[cmth] || 0;
+  document.getElementById('c-mtd').textContent = fmt(mtdVal);
+  document.getElementById('c-mtd-sub').textContent = 'of $10,000 goal (' + Math.round(mtdVal/10000*100) + '%)';
+  document.getElementById('c-mtd').className = 'kv ' + (mtdVal >= 10000 ? 'up' : mtdVal >= 5000 ? 'neu' : 'dn');
+  document.getElementById('c-roas').textContent = ads.roas.toFixed(2) + '×';
+  document.getElementById('c-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  const totalUnitsYtd = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
+  document.getElementById('c-units').textContent = totalUnitsYtd.toLocaleString();
+
+  // P&L table
+  const plSections = [
+    { name: 'Order related', rows: [
+      ['Gross sales', p.ytd_sales_api || s.gross_sales],
+      ['Shipping income', s.shipping_income],
+      ['FBA fulfillment fees', s.fba_fees],
+      ['Referral / commission fees', s.referral_fees],
+      ['Promotional rebates', s.promotions],
+      ['Refunds', s.refunds],
+      ['Refund fee credits', s.refund_fee_credit],
+      ['Product COGS', s.cogs],
+      ['Other order', s.other_order || 0],
+    ]},
+    { name: 'Logistics', rows: [
+      ['FBA inventory storage fees', s.fba_storage],
+      ['FBA long-term storage fees', s.fba_storage_lt],
+      ['FBA removal / disposal', (s.fba_removal||0) + (s.fba_disposal||0)],
+      ['Inbound transportation', s.inbound_transport || 0],
+      ['Liquidations', s.liquidations || 0],
+      ['Inventory reimbursements', s.reimbursements],
+      ['AWD storage fees', s.awd_storage],
+      ['AWD transportation fees', s.awd_transport],
+      ['AWD processing fees', s.awd_processing],
+    ]},
+    { name: 'Marketing', rows: [
+      ['Cost of advertising', s.ad_spend],
+      ['Vine enrollment', s.vine || 0],
+      ['Subscription', s.subscription],
+    ]},
+  ];
+  // Build P&L with net subtotal after SKU costs
+  let plHtml = '';
+  let runningTotal = 0;
+  for (let si = 0; si < plSections.length; si++) {
+    const sec = plSections[si];
+    plHtml += `<tr class="sh"><td colspan="2">${sec.name}</td></tr>`;
+    let sectionTotal = 0;
+    for (const [label, val] of sec.rows) {
+      if (val === 0) continue;
+      plHtml += `<tr><td style="color:var(--muted)">${label}</td><td class="${val>0?'up':'dn'}">${fmt(val,2)}</td></tr>`;
+      sectionTotal += val;
+    }
+    runningTotal += sectionTotal;
+    // Add net subtotal after Order related section (index 0)
+    if (si === 0) {
+      plHtml += `<tr style="background:var(--surface2);">
+        <td style="font-weight:700;padding:8px 0;">Net after revenue & SKU costs</td>
+        <td style="font-weight:700;text-align:right;" class="${runningTotal>=0?'up':'dn'}">${fmt(runningTotal,2)}</td>
+      </tr>`;
+    }
+  }
+  plHtml += `<tr class="tr"><td>Net result (all costs)</td><td class="${netResult>=0?'up':'dn'}">${fmt(netResult,2)}</td></tr>`;
+  document.getElementById('pl-table').innerHTML = plHtml;
+
+  // Cost breakdown
+  const costs = [
+    ['Ad spend', Math.abs(s.ad_spend)], ['FBA fulfillment', Math.abs(s.fba_fees)],
+    ['AWD processing', Math.abs(s.awd_processing)], ['AWD storage', Math.abs(s.awd_storage)],
+    ['Referral fees', Math.abs(s.referral_fees)], ['COGS', Math.abs(s.cogs)],
+    ['Promotions', Math.abs(s.promotions)], ['AWD transport', Math.abs(s.awd_transport)],
+    ['Subscription', Math.abs(s.subscription)],
+  ].filter(([,v])=>v>0).sort(([,a],[,b])=>b-a);
+  const totalCosts2 = costs.reduce((a,[,v])=>a+v,0);
+  document.getElementById('cost-rows').innerHTML = costs.map(([label,val])=>
+    `<div class="cost-row"><span class="cl">${label}</span>
+     <span class="cv">$${val.toFixed(0)}<span class="cost-pct">${(val/totalCosts2*100).toFixed(0)}%</span></span></div>`
+  ).join('');
+
+  // COO timeline
+  document.getElementById('c-peak').textContent = fmt(defStart);
+  document.getElementById('c-deficit').textContent = fmt(defRemaining);
+  const recovered = defStart - defRemaining;
+  document.getElementById('c-recovered').textContent = fmt(Math.max(0, recovered));
+  document.getElementById('c-be-date').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
+  renderTimeline('coo-tl-fill', 'coo-tl-markers', 58, milestones);
+
+  // Store globally for all tabs
+  globalData = d;
+
+  // Build period bars for all tabs
+  buildPeriodBar('sales-period-bar', 'sales');
+  buildPeriodBar('sku-period-bar', 'sku');
+  buildPeriodBar('coo-period-bar', 'coo');
+  renderCooTab(d, 'ytd');
+
+  // Badge + stamp
+  const gen = new Date(d.generated_at);
+  const isLive = d.source === 'sp-api';
+  const badge = document.getElementById('source-badge');
+  if (badge) badge.innerHTML = isLive
+    ? '<span class="dot"></span>Live SP-API · auto-updates daily'
+    : '<span class="dot"></span>Settlement reports + Ads CSV';
+  document.getElementById('stamp').textContent = isLive
+    ? `Live data via SP-API · Last synced: ${gen.toLocaleString()}`
+    : `Last processed: ${gen.toLocaleString()} · Run process.py to update`;
+}
+
+let profitChart = null;
+
+function renderProfitability(d) {
+  const s = d.summary;
+  const t = d.trends || {};
+  const p = d.progress;
+  const mSales = t.monthly_sales || {};
+  const mFees  = t.monthly_fees  || {};
+  const mAwd   = t.monthly_awd   || {};
+  const mNet   = t.monthly_net   || {};
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC  = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC   = isDark ? '#888780' : '#5f5e5a';
+
+  const months = Object.keys(mSales).sort();
+  const salesVals = months.map(m => Math.round(mSales[m] || 0));
+  const netVals   = months.map(m => Math.round(mNet[m] || 0));
+
+  // Cumulative net line
+  let running = 0;
+  const cumulativeVals = netVals.map(v => { running += v; return Math.round(running); });
+
+  // KPIs
+  const netResult = s.net_result;
+  document.getElementById('pr-net').textContent = (netResult>=0?'+$':'–$') + Math.abs(Math.round(netResult)).toLocaleString();
+  document.getElementById('pr-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+
+  const bestMonth = months.reduce((a,m) => (mSales[m]||0) > (mSales[a]||0) ? m : a, months[0]);
+  document.getElementById('pr-best').textContent = '$' + Math.round(mSales[bestMonth]||0).toLocaleString();
+  document.getElementById('pr-best-label').textContent = bestMonth;
+
+  const defStart = p.deficit_start;
+  const realDeficit = Math.abs(netResult);
+  const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
+  document.getElementById('pr-deficit').textContent = '$' + Math.round(realDeficit).toLocaleString();
+  document.getElementById('pr-deficit-pct').textContent = realPct + '% recovered';
+
+  // Trend: last 2 months
+  if (months.length >= 2) {
+    const last  = mSales[months[months.length-1]] || 0;
+    const prev  = mSales[months[months.length-2]] || 0;
+    const trend = prev > 0 ? ((last-prev)/prev*100).toFixed(0) : 0;
+    document.getElementById('pr-trend').textContent = (trend>=0?'+':'')+trend+'%';
+    document.getElementById('pr-trend').className = 'kv ' + (trend >= 0 ? 'up' : 'dn');
+  }
+
+  // Profitability chart
+  if (profitChart) { profitChart.destroy(); profitChart = null; }
+  profitChart = new Chart(document.getElementById('profitChart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Gross sales', data: salesVals, backgroundColor: '#639922', borderRadius: 4, borderSkipped: false, order: 2, yAxisID: 'y' },
+        { label: 'Cumulative net', data: cumulativeVals, type: 'line', borderColor: '#e24b4a',
+          backgroundColor: 'rgba(226,75,74,0.08)', fill: true,
+          pointBackgroundColor: '#e24b4a', pointRadius: 5, tension: 0.3, order: 1, yAxisID: 'y' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => {
+          const sign = ctx.parsed.y < 0 ? '–$' : '+$';
+          return ` ${ctx.dataset.label}: ${sign}${Math.abs(ctx.parsed.y).toLocaleString()}`;
+        }}}
+      },
+      scales: {
+        x: { ticks:{color:lblC,font:{size:11}}, grid:{display:false}, border:{display:false} },
+        y: { ticks:{color:lblC,font:{size:11},callback:v=>(v<0?'–$':'+$')+Math.abs(v).toLocaleString()},
+             grid:{color:gridC}, border:{display:false} }
+      }
+    }
+  });
+
+  // Monthly P&L table
+  let cumNet = 0;
+  let tableHtml = '';
+  for (let i = 0; i < months.length; i++) {
+    const m = months[i];
+    const sal  = Math.round(mSales[m] || 0);
+    const fees = Math.round(Math.abs(mFees[m] || 0) + Math.abs(mAwd[m] || 0));
+    const net  = Math.round(mNet[m] || 0);
+    cumNet += net;
+    const prev = i > 0 ? (mSales[months[i-1]] || 0) : null;
+    const vsPrior = prev !== null && prev > 0 ? ((sal-prev)/prev*100).toFixed(0) : null;
+    const vsCls = vsPrior === null ? 'neu' : vsPrior >= 0 ? 'up' : 'dn';
+    const vsStr = vsPrior === null ? '—' : (vsPrior>=0?'+':'')+vsPrior+'%';
+    const cumCls = cumNet >= 0 ? 'up' : 'dn';
+    tableHtml += `<tr>
+      <td><strong>${m}</strong></td>
+      <td>$${sal.toLocaleString()}</td>
+      <td style="color:var(--red)">-$${fees.toLocaleString()}</td>
+      <td class="${net>=0?'up':'dn'}">${net>=0?'+':'-'}$${Math.abs(net).toLocaleString()}</td>
+      <td class="${vsCls}">${vsStr}</td>
+      <td class="${cumCls}">${cumNet>=0?'+':'-'}$${Math.abs(cumNet).toLocaleString()}</td>
+    </tr>`;
+  }
+  document.getElementById('monthly-pl-body').innerHTML = tableHtml;
+
+  // Breakeven panel
+  const recovered = defStart - realDeficit;
+  document.getElementById('pr-peak').textContent = '$' + Math.round(defStart).toLocaleString();
+  document.getElementById('pr-recovered').textContent = '+$' + Math.round(Math.max(0,recovered)).toLocaleString();
+  document.getElementById('pr-remaining').textContent = '$' + Math.round(realDeficit).toLocaleString();
+
+  // Projected breakeven date
+  const recentNet = netVals.slice(-2).reduce((a,b)=>a+b,0) / 2;
+  const daysLeft = recentNet > 0 ? Math.ceil(realDeficit / (recentNet/30)) : 999;
+  const beDate = new Date(); beDate.setDate(beDate.getDate() + daysLeft);
+  document.getElementById('pr-be-date').textContent = daysLeft < 999
+    ? beDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+    : 'Needs positive net';
+  document.getElementById('pr-be-date').style.color = daysLeft < 999 ? 'var(--amber)' : 'var(--muted)';
+
+  // Insights
+  const ins = [];
+  const lastTwo = months.slice(-2);
+  if (lastTwo.length === 2) {
+    const l1 = mNet[lastTwo[0]] || 0;
+    const l2 = mNet[lastTwo[1]] || 0;
+    if (l2 > l1) ins.push(['g', `Net result improved from ${lastTwo[0]} to ${lastTwo[1]} — positive momentum. Keep optimising ad spend to continue the trend.`]);
+    else ins.push(['a', `Net result declined from ${lastTwo[0]} to ${lastTwo[1]}. Review ad spend efficiency and AWD storage costs.`]);
+  }
+  if (realPct > 0) ins.push(['g', `${realPct}% of the peak deficit has been recovered. At current trajectory, full breakeven by ${document.getElementById('pr-be-date').textContent}.`]);
+  const bestSalesMonth = months.reduce((a,m)=>(mSales[m]||0)>(mSales[a]||0)?m:a, months[0]);
+  ins.push(['g', `${bestSalesMonth} was your strongest sales month at $${Math.round(mSales[bestSalesMonth]||0).toLocaleString()}. Use it as the benchmark for future months.`]);
+  if (Math.abs(s.awd_storage) + Math.abs(s.awd_transport) + Math.abs(s.awd_processing) > 1500)
+    ins.push(['a', `AWD costs remain the largest single cost drag after ad spend. Review inventory levels to reduce storage fees.`]);
+  document.getElementById('profit-insights').innerHTML = ins.map(([t,txt])=>
+    `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
+}
+
+let invChart = null;
+
+function renderInventory(d) {
+  const inv = d.inventory || {};
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC  = isDark ? '#888780' : '#5f5e5a';
+
+  // Filter to active SKUs only (has stock OR has sales)
+  const active = Object.entries(inv).filter(([name, data]) =>
+    data.in_stock > 0 || data.daily_rate > 0
+  ).sort(([,a],[,b]) => {
+    // Sort: OOS first, then by days remaining ascending
+    if (a.in_stock === 0 && b.in_stock > 0) return -1;
+    if (b.in_stock === 0 && a.in_stock > 0) return 1;
+    return a.days_remaining - b.days_remaining;
+  });
+
+  const oos     = active.filter(([,d]) => d.in_stock === 0 && d.daily_rate > 0);
+  const warning = active.filter(([,d]) => d.in_stock > 0 && d.days_remaining < 45 && d.days_remaining !== 999);
+  const totalUnits = active.reduce((a,[,d]) => a + d.in_stock, 0);
+
+  document.getElementById('inv-active').textContent  = active.length;
+  document.getElementById('inv-oos').textContent     = oos.length;
+  document.getElementById('inv-warn').textContent    = warning.length;
+  document.getElementById('inv-total').textContent   = totalUnits.toLocaleString();
+
+  // Table
+  const today = new Date();
+  let tableHtml = '';
+  for (const [name, data] of active) {
+    const days = data.days_remaining;
+    const isOos = data.in_stock === 0 && data.daily_rate > 0;
+    const isWarn = days < 45 && days !== 999 && !isOos;
+    const isGood = !isOos && !isWarn;
+
+    let statusPill, statusText;
+    if (isOos)  { statusPill = 'pill-r'; statusText = 'Out of stock'; }
+    else if (isWarn) { statusPill = 'pill-a'; statusText = 'Reorder soon'; }
+    else if (days === 999) { statusPill = 'pill-b'; statusText = 'No velocity'; }
+    else { statusPill = 'pill-g'; statusText = 'In stock'; }
+
+    let reorderBy = '—';
+    if (data.daily_rate > 0 && data.in_stock > 0) {
+      const reorderDate = new Date(today);
+      reorderDate.setDate(today.getDate() + Math.max(0, days - 30));
+      reorderBy = reorderDate.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    } else if (isOos) {
+      reorderBy = 'Now';
+    }
+
+    const daysDisplay = days === 999 ? '—' : days === 0 ? '0' : days + 'd';
+    const rateDisplay = data.daily_rate > 0 ? data.daily_rate.toFixed(2) + '/day' : '—';
+
+    tableHtml += `<tr>
+      <td><strong>${name}</strong><br><span style="font-size:10px;color:var(--muted)">${data.sku}</span></td>
+      <td><strong>${data.in_stock}</strong></td>
+      <td class="neu">${rateDisplay}</td>
+      <td class="${isOos?'dn':isWarn?'neu':''}">${daysDisplay}</td>
+      <td><span class="pill ${statusPill}">${statusText}</span></td>
+      <td style="font-weight:${isOos?'700':'400'};color:${isOos?'var(--red)':isWarn?'var(--amber)':'var(--muted)'}">${reorderBy}</td>
+    </tr>`;
+  }
+  document.getElementById('inv-tbody').innerHTML = tableHtml;
+
+  // Chart — only SKUs with velocity and not 999 days
+  const chartSkus = active.filter(([,d]) => d.daily_rate > 0 && d.days_remaining !== 999);
+  const chartLabels = chartSkus.map(([name]) => name.length > 20 ? name.slice(0,18)+'…' : name);
+  const chartVals   = chartSkus.map(([,d]) => Math.min(d.days_remaining, 200));
+  const chartColors = chartSkus.map(([,d]) =>
+    d.in_stock === 0 ? '#e24b4a' : d.days_remaining < 45 ? '#ba7517' : '#639922'
+  );
+
+  if (invChart) { invChart.destroy(); invChart = null; }
+  invChart = new Chart(document.getElementById('invChart'), {
+    type: 'bar',
+    data: {
+      labels: chartLabels,
+      datasets: [{
+        data: chartVals,
+        backgroundColor: chartColors,
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => {
+          const orig = chartSkus[ctx.dataIndex][1].days_remaining;
+          return orig === 999 ? ' No velocity data' : ` ${orig} days remaining`;
+        }}}
+      },
+      scales: {
+        x: { ticks:{color:lblC,font:{size:10},callback:v=>v+'d'}, grid:{color:gridC}, border:{display:false},
+             max: 200 },
+        y: { ticks:{color:lblC,font:{size:10}}, grid:{display:false}, border:{display:false} }
+      }
+    }
+  });
+
+  // Annotations
+  const annot = document.createElement('div');
+  annot.style.cssText = 'font-size:11px;color:var(--muted);margin-top:8px;';
+  annot.textContent = 'Chart capped at 200 days for readability. Red = OOS, Amber = reorder soon, Green = healthy.';
+
+  // Insights
+  const ins = [];
+  if (oos.length > 0) {
+    ins.push(['r', `${oos.map(([n])=>n).join(', ')} ${oos.length===1?'is':'are'} out of stock with active sales velocity — reorder immediately to avoid lost revenue.`]);
+  }
+  if (warning.length > 0) {
+    ins.push(['a', `${warning.map(([n])=>n).join(', ')} ${warning.length===1?'has':'have'} under 45 days of stock remaining. Place reorder within the next 2 weeks to avoid stockout.`]);
+  }
+  const topSku = active.filter(([,d])=>d.daily_rate>0).sort(([,a],[,b])=>b.daily_rate-a.daily_rate)[0];
+  if (topSku) ins.push(['g', `${topSku[0]} is your fastest moving SKU at ${topSku[1].daily_rate.toFixed(2)} units/day — ${topSku[1].days_remaining} days of stock remaining.`]);
+  const highStock = active.filter(([,d])=>d.days_remaining>365&&d.daily_rate>0);
+  if (highStock.length > 0) ins.push(['a', `${highStock.map(([n])=>n).join(', ')} ${highStock.length===1?'has':'have'} over 365 days of stock — consider whether AWD storage costs are justified.`]);
+
+  document.getElementById('inv-insights').innerHTML = ins.map(([t,txt])=>
+    `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
+}
+
+function renderSkuRows(d, period) {
+  period = period || tabPeriods['sku'] || 'ytd';
+  const sb = d.sku_breakdown;
+  const mAdsFull = d.ads.monthly || {};
+  const COGS_PER_UNIT = {};
+  // Build COGS per unit from YTD data
+  const ytdUnits = sb.units || {};
+  const ytdCogs  = sb.cogs_by_sku || {};
+  for (const [name, cogs] of Object.entries(ytdCogs)) {
+    const u = ytdUnits[name] || 0;
+    COGS_PER_UNIT[name] = u > 0 ? cogs / u : 0;
+  }
+
+  let skuSales, skuUnits, skuFba, skuRef, skuAds;
+
+  if (period.startsWith('month_')) {
+    const m = period.replace('month_', '');
+    skuSales = sb.monthly_sales_by_sku?.[m] || {};
+    skuUnits = sb.monthly_units_by_sku?.[m] || {};
+    skuFba   = sb.monthly_fba_by_sku?.[m]   || {};
+    skuRef   = sb.monthly_ref_by_sku?.[m]   || {};
+    // Attribute monthly ads only to SKUs that are actually advertised (appear in ads_by_sku)
+    const mAdSpend = (mAdsFull[m]||{}).spend || 0;
+    const advertisedSkus = Object.keys(sb.ads_by_sku || {});
+    const advertisedSales = advertisedSkus.reduce((a,n) => a + (skuSales[n]||0), 0);
+    skuAds = {};
+    for (const name of advertisedSkus) {
+      const rev = skuSales[name] || 0;
+      const proportion = advertisedSales > 0 ? rev / advertisedSales : 0;
+      const fullAds = sb.ads_by_sku?.[name] || {};
+      skuAds[name] = { spend: round2(mAdSpend * proportion), roas: fullAds.roas || 0 };
+    }
+  } else {
+    // YTD or rolling — use full period data
+    skuSales = sb.sales || {};
+    skuUnits = sb.units || {};
+    skuFba   = sb.fba_fees_by_sku   || {};
+    skuRef   = sb.referral_fees_by_sku || {};
+    skuAds   = sb.ads_by_sku || {};
+    if (period === 'l30' || period === 'l14' || period === 'l7') {
+      const pd = getPeriodData(d, period);
+      const ratio = pd.sales / Math.max(1, d.progress.ytd_sales_api || d.summary.gross_sales);
+      skuSales = Object.fromEntries(Object.entries(sb.sales||{}).map(([k,v])=>[k, round2(v*ratio)]));
+      skuUnits = Object.fromEntries(Object.entries(sb.units||{}).map(([k,v])=>[k, Math.round(v*ratio)]));
+      skuFba   = Object.fromEntries(Object.entries(skuFba).map(([k,v])=>[k, round2(v*ratio)]));
+      skuRef   = Object.fromEntries(Object.entries(skuRef).map(([k,v])=>[k, round2(v*ratio)]));
+      // Keep ads only for advertised SKUs, scale by ratio
+      skuAds = Object.fromEntries(Object.entries(sb.ads_by_sku||{}).map(([k,v])=>[k,{...v,spend:round2((v.spend||0)*ratio)}]));
+    }
+  }
+
+  function round2(n) { return Math.round(n * 100) / 100; }
+
+  const rows = Object.entries(skuSales).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a).map(([name, rev]) => {
+    const units   = skuUnits[name] || 0;
+    const cogs    = round2((COGS_PER_UNIT[name] || 0) * units);
+    const fbaFee  = Math.abs(skuFba[name] || 0);
+    const refFee  = Math.abs(skuRef[name] || 0);
+    const totalFees = fbaFee + refFee;
+    const adInfo  = skuAds[name] || {};
+    const adSpend = adInfo.spend || 0;
+    const adRoas  = adInfo.roas  || 0;
+    const net     = round2(rev - cogs - totalFees - adSpend);
+    const netPct  = rev > 0 ? Math.round(net / rev * 100) : 0;
+    const netCls  = netPct >= 30 ? 'pill-g' : netPct >= 0 ? 'pill-a' : 'pill-r';
+    const roasCls = adRoas >= 1.5 ? 'pill-g' : adRoas >= 1 ? 'pill-a' : 'pill-r';
+    let reco = '';
+    if (adSpend > 0 && adRoas < 1) reco = '<span style="color:var(--red);font-size:10px;">⚠ Ads underwater</span>';
+    else if (adSpend > 0 && adRoas >= 2) reco = '<span style="color:var(--green);font-size:10px;">✓ Strong ROAS</span>';
+    else if (adSpend === 0 && units > 0) reco = '<span style="color:var(--muted);font-size:10px;">○ No ads running</span>';
+    return `<tr>
+      <td><div class="sku-name">${name}</div>
+          <div class="sku-sub">${units} units${rev>0&&units>0?' · $'+(rev/units).toFixed(2)+' avg':''}</div>
+          ${reco}</td>
+      <td><strong>${units}</strong></td>
+      <td><strong>$${Math.round(rev).toLocaleString()}</strong></td>
+      <td class="dn">-$${Math.round(cogs).toLocaleString()}</td>
+      <td class="dn">-$${Math.round(totalFees).toLocaleString()}</td>
+      <td class="dn">${adSpend>0?'-$'+Math.round(adSpend).toLocaleString():'—'}</td>
+      <td><strong class="${net>=0?'up':'dn'}">${net>=0?'+':'-'}$${Math.abs(Math.round(net)).toLocaleString()}</strong></td>
+      <td><span class="pill ${netCls}">${netPct}%</span></td>
+      <td>${adRoas>0?'<span class="pill '+roasCls+'">'+adRoas.toFixed(2)+'x</span>':'—'}</td>
+    </tr>`;
+  });
+
+  // Totals row
+  const tRev   = Object.values(skuSales).reduce((a,b)=>a+b,0);
+  const tCogs  = Object.entries(skuSales).reduce((a,[n])=>a+(COGS_PER_UNIT[n]||0)*(skuUnits[n]||0),0);
+  const tFees  = Object.keys(skuSales).reduce((a,n)=>a+Math.abs(skuFba[n]||0)+Math.abs(skuRef[n]||0),0);
+  const tAds   = Object.values(skuAds).reduce((a,v)=>a+(v.spend||0),0);
+  const tNet   = tRev - tCogs - tFees - tAds;
+  const tUnits = Object.values(skuUnits).reduce((a,b)=>a+b,0);
+  rows.push(`<tr style="border-top:2px solid var(--border2);font-weight:700;background:var(--surface2);">
+    <td>TOTAL</td><td>${tUnits}</td>
+    <td>$${Math.round(tRev).toLocaleString()}</td>
+    <td class="dn">-$${Math.round(tCogs).toLocaleString()}</td>
+    <td class="dn">-$${Math.round(tFees).toLocaleString()}</td>
+    <td class="dn">-$${Math.round(tAds).toLocaleString()}</td>
+    <td class="${tNet>=0?'up':'dn'}">${tNet>=0?'+':'-'}$${Math.abs(Math.round(tNet)).toLocaleString()}</td>
+    <td></td><td></td>
+  </tr>`);
+
+  document.getElementById('sku-tbody').innerHTML = rows.join('');
+}
+
+function renderCooTab(d, period) {
+  period = period || tabPeriods['coo'] || 'ytd';
+  const s = d.summary;
+  const p = d.progress;
+  const pd = getPeriodData(d, period);
+  const t = d.trends || {};
+  const mFees = t.monthly_fees || {};
+  const mAwd  = t.monthly_awd  || {};
+  const mCogs = t.monthly_cogs || {};
+  const mAds  = t.monthly_ads  || {};
+  // Individual monthly cost categories
+  const mPromos   = t.monthly_promos   || {};
+  const mRefunds  = t.monthly_refunds  || {};
+  const ads   = d.ads;
+
+  // Update KPI cards based on period
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const setClass = (id, cls) => { const el = document.getElementById(id); if (el) el.className = cls; };
+
+  set('c-sales', '$' + Math.round(pd.sales).toLocaleString());
+  set('c-net', (pd.net>=0?'+$':'-$') + Math.abs(Math.round(pd.net)).toLocaleString());
+  setClass('c-net', 'kv ' + (pd.net >= 0 ? 'up' : 'dn'));
+
+  // Deficit always uses YTD settled net
+  const netResult = s.net_result;
+  const defStart  = p.deficit_start;
+  const realDef   = Math.abs(netResult);
+  const realPct   = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDef) / defStart * 100)));
+  set('c-costs', realDef > 1 ? '$' + Math.round(realDef).toLocaleString() : 'Breakeven!');
+  setClass('c-costs', 'kv ' + (realDef > 1 ? 'dn' : 'up'));
+  set('c-costs-sub', realPct + '% recovered of $' + defStart.toLocaleString());
+
+  // Breakeven
+  const recentNet = (Object.values(t.monthly_net||{}).slice(-2).reduce((a,b)=>a+b,0)) / 2;
+  const daysLeft  = recentNet > 0 ? Math.ceil(realDef / (recentNet/30)) : 999;
+  const beDate    = new Date(); beDate.setDate(beDate.getDate() + daysLeft);
+  const beDateStr = daysLeft < 999 ? beDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'Needs positive net';
+  set('c-eta', beDateStr);
+  set('c-days', daysLeft < 999 ? daysLeft + ' days remaining' : 'Focus on profitability');
+
+  // MTD / ROAS / Units
+  set('c-mtd', '$' + Math.round(p.mtd_sales || 0).toLocaleString());
+  set('c-mtd-sub', 'of $10,000 goal (' + Math.round((p.mtd_sales||0)/10000*100) + '%)');
+  setClass('c-mtd', 'kv ' + ((p.mtd_sales||0) >= 10000 ? 'up' : (p.mtd_sales||0) >= 5000 ? 'neu' : 'dn'));
+  set('c-roas', ads.roas.toFixed(2) + 'x');
+  setClass('c-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
+  const totalUnits = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
+  set('c-units', (p.ytd_units_api || totalUnits).toLocaleString());
+
+  // Build P&L sections for selected period
+  let grossSales, fbaFees, refFees, promo, refunds, refundCredit, cogs;
+  let fbaStorage, fbaStorageLt, fbaRemoval, inboundTransport, liquidations, reimbursements;
+  let awdStorage, awdTransport, awdProcessing, adSpend, vine, subscription, shippingIncome;
+
+  if (period === 'ytd' || period === 'l30' || period === 'l14' || period === 'l7') {
+    // Use summary for YTD/rolling (most accurate)
+    grossSales = p.ytd_sales_api || s.gross_sales;
+    fbaFees = s.fba_fees; refFees = s.referral_fees; promo = s.promotions;
+    refunds = s.refunds; refundCredit = s.refund_fee_credit; cogs = s.cogs;
+    fbaStorage = s.fba_storage || 0; fbaStorageLt = s.fba_storage_lt || 0;
+    fbaRemoval = (s.fba_removal||0) + (s.fba_disposal||0);
+    inboundTransport = s.inbound_transport || 0; liquidations = s.liquidations || 0;
+    awdStorage = s.awd_storage; awdTransport = s.awd_transport; awdProcessing = s.awd_processing;
+    adSpend = s.ad_spend; vine = s.vine || 0; subscription = s.subscription;
+    reimbursements = s.reimbursements; shippingIncome = s.shipping_income;
+    if (period !== 'ytd') {
+      const ratio = pd.sales / Math.max(1, p.ytd_sales_api || s.gross_sales);
+      grossSales = pd.sales;
+      fbaFees = Math.round(fbaFees * ratio);
+      refFees = Math.round(refFees * ratio);
+      promo = Math.round(promo * ratio);
+      refunds = Math.round(refunds * ratio);
+      refundCredit = Math.round(refundCredit * ratio);
+      cogs = Math.round(cogs * ratio);
+      adSpend = Math.round(adSpend * ratio);
+      awdStorage = Math.round(awdStorage * ratio);
+      awdTransport = Math.round(awdTransport * ratio);
+      awdProcessing = Math.round(awdProcessing * ratio);
+      subscription = Math.round(subscription * ratio);
+      fbaStorage = Math.round(fbaStorage * ratio);
+      // Zero out one-time non-recurring costs for rolling periods
+      inboundTransport = 0;
+      fbaStorageLt = 0;
+      vine = 0;
+      fbaRemoval = 0;
+      liquidations = 0;
+      reimbursements = 0;
+      shippingIncome = 0;
+    }
+  } else if (period.startsWith('month_')) {
+    const m = period.replace('month_', '');
+    grossSales      = (t.monthly_sales||{})[m] || 0;
+    shippingIncome  = (t.monthly_shipping||{})[m] || 0;
+    reimbursements  = (t.monthly_reimbursements||{})[m] || 0;
+    fbaStorage      = (t.monthly_fba_storage||{})[m] || 0;
+    fbaStorageLt    = (t.monthly_fba_storage_lt||{})[m] || 0;
+    inboundTransport = (t.monthly_inbound||{})[m] || 0;
+    liquidations    = (t.monthly_liquidations||{})[m] || 0;
+    vine            = (t.monthly_vine||{})[m] || 0;
+    fbaRemoval      = 0;
+    // FBA and referral fees — use actual monthly data, fall back to proportional split
+    const mFeeTotal = (mFees[m] || 0);
+    fbaFees = (t.monthly_fba_by_sku ? Object.values(
+      Object.fromEntries(Object.entries(d.sku_breakdown.monthly_fba_by_sku?.[m]||{}).map(([k,v])=>[k,v]))
+    ).reduce((a,b)=>a+b,0) : mFeeTotal * 0.6) || mFeeTotal * 0.6;
+    refFees = (t.monthly_ref_by_sku ? Object.values(
+      Object.fromEntries(Object.entries(d.sku_breakdown.monthly_ref_by_sku?.[m]||{}).map(([k,v])=>[k,v]))
+    ).reduce((a,b)=>a+b,0) : mFeeTotal * 0.4) || mFeeTotal * 0.4;
+    promo           = (t.monthly_promos||{})[m] || 0;
+    refunds         = (t.monthly_refunds||{})[m] || 0;
+    refundCredit    = (t.monthly_refund_cr||{})[m] || 0;
+    cogs            = -(mCogs[m] || 0);
+    awdStorage      = (t.monthly_awd_storage||{})[m] || 0;
+    awdTransport    = (t.monthly_awd_transport||{})[m] || 0;
+    awdProcessing   = (t.monthly_awd_processing||{})[m] || 0;
+    adSpend         = -(mAds[m] || 0);
+    subscription    = (t.monthly_subscription||{})[m] || 0;
+
+  }
+
+  // Rebuild P&L table with updated values
+  const plSections2 = [
+    { name: 'Order related', rows: [
+      ['Gross sales', grossSales || 0],
+      ['Shipping income', shippingIncome || 0],
+      ['FBA fulfillment fees', fbaFees || 0],
+      ['Referral / commission fees', refFees || 0],
+      ['Promotional rebates', promo || 0],
+      ['Refunds', refunds || 0],
+      ['Refund fee credits', refundCredit || 0],
+      ['Product COGS', cogs || 0],
+    ]},
+    { name: 'Logistics', rows: [
+      ['FBA inventory storage fees', fbaStorage || 0],
+      ['FBA long-term storage fees', fbaStorageLt || 0],
+      ['FBA removal / disposal', fbaRemoval || 0],
+      ['Inbound transportation', inboundTransport || 0],
+      ['Liquidations', liquidations || 0],
+      ['Inventory reimbursements', reimbursements || 0],
+      ['AWD storage fees', awdStorage || 0],
+      ['AWD transportation fees', awdTransport || 0],
+      ['AWD processing fees', awdProcessing || 0],
+    ]},
+    { name: 'Marketing', rows: [
+      ['Cost of advertising', adSpend || 0],
+      ['Vine enrollment', vine || 0],
+      ['Subscription', subscription || 0],
+    ]},
+  ];
+
+  let plHtml = '';
+  let running = 0;
+  for (let si = 0; si < plSections2.length; si++) {
+    const sec = plSections2[si];
+    plHtml += `<tr class="sh"><td colspan="2">${sec.name}</td></tr>`;
+    let secTotal = 0;
+    for (const [label, val] of sec.rows) {
+      if (!val || val === 0) continue;
+      plHtml += `<tr><td style="color:var(--muted)">${label}</td><td class="${val>0?'up':'dn'}">${fmt(val,2)}</td></tr>`;
+      secTotal += val;
+    }
+    running += secTotal;
+    if (si === 1) {
+      plHtml += `<tr style="background:var(--surface2);">
+        <td style="font-weight:700;padding:8px 0;">Net after revenue &amp; SKU costs</td>
+        <td style="font-weight:700;text-align:right;" class="${running>=0?'up':'dn'}">${fmt(running,2)}</td>
+      </tr>`;
+    }
+  }
+  const totalNet = plSections2.flatMap(s=>s.rows).reduce((a,[,v])=>a+v,0);
+  plHtml += `<tr class="tr"><td>Net result (all costs)</td><td class="${totalNet>=0?'up':'dn'}">${fmt(totalNet,2)}</td></tr>`;
+  document.getElementById('pl-table').innerHTML = plHtml;
+}
+
+load().catch(e => {
+  document.body.innerHTML = `<div style="padding:40px;font-family:sans-serif;color:#a32d2d">
+    <h2>Could not load data.json</h2><p>Run <code>python3 process.py</code> first.</p><pre>${e}</pre></div>`;
+});
+</script>
+</body>
+</html>
