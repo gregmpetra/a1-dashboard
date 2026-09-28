@@ -1273,14 +1273,7 @@ function render(d) {
   else if (goalPctActual < 100) ins.push(['a', `Getting close — ${projStr} projected for the month. ${gapStr} gap remaining.`]);
   else ins.push(['g', `On track to exceed the $10K monthly goal — ${projStr} projected.`]);
   if (daysToBreakeven > 0) ins.push(['a', `Cumulative breakeven projected ${fmtDate(breakevenDate)} — ${daysToBreakeven} days from today based on June trajectory.`]);
-  const curYr = new Date().getFullYear().toString();
-  const ytdSkuSales2026 = {};
-  Object.keys(sb.monthly_sales_by_sku||{}).filter(m=>m.startsWith(curYr)).forEach(m => {
-    Object.entries(sb.monthly_sales_by_sku[m]||{}).forEach(([k,v]) => ytdSkuSales2026[k]=(ytdSkuSales2026[k]||0)+v);
-  });
-  const topSkuData = Object.entries(ytdSkuSales2026).sort(([,a],[,b])=>b-a)[0];
-  const ytdTotal2026 = Object.values(ytdSkuSales2026).reduce((a,b)=>a+b,0);
-  const topSku = topSkuData;
+
   if (topSkuData) ins.push(['g', `${topSkuData[0]} leads at $${Math.round(topSkuData[1]).toLocaleString()} — ${(topSkuData[1]/Math.max(1,ytdTotal2026)*100).toFixed(0)}% of 2026 sales.`]);
   if (ads.roas < 1) ins.push(['r', `Blended ROAS of ${ads.roas.toFixed(2)}× means ads are still underwater overall. June improved significantly — keep optimising.`]);
   document.getElementById('s-insights').innerHTML = ins.map(([t,txt])=>
