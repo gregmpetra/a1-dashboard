@@ -1197,24 +1197,24 @@ function render(d) {
   document.getElementById('month-pct-label').textContent = monthPct + '%';
   document.getElementById('goal-days-label').textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
   document.getElementById('proj-monthly').textContent = '$' + projMonthly.toLocaleString() + ' est. full month';
-  setTimeout(() => { const gb = document.getElementById('goal-bar'); if(gb) gb.style.width = mtdGoalPct + '%', 150);
+  setTimeout(() => document.getElementById('goal-bar').style.width = mtdGoalPct + '%', 150);
 
   // Deficit uses settled financial events only - deficit reduces as real profit is banked
   const realDeficit = Math.abs(netResult);
   const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
-  const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); (document.getElementById('def-num')||{}).textContent = fmt(a1NetSales);
-  (document.getElementById('def-num')||{}).style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
-  (document.getElementById('def-peak')||{}).textContent = ``;
-  if (typeof IS_A1 === 'undefined' || !IS_A1) (document.getElementById('def-pct')||{}).textContent = realPct + '% recovered';
-  (document.getElementById('def-pct')||{}).className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
-  setTimeout(() => { const db = document.getElementById('def-bar'); if(db) db.style.width = Math.min(100,realPct) + '%'; }, 150);
+  const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(a1NetSales);
+  document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
+  document.getElementById('def-peak').textContent = ``;
+  if (typeof IS_A1 === 'undefined' || !IS_A1) document.getElementById('def-pct').textContent = realPct + '% recovered';
+  document.getElementById('def-pct').className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
+  setTimeout(() => document.getElementById('def-bar').style.width = Math.min(100,realPct) + '%', 150);
 
-  (document.getElementById('be-net')||{}).textContent = fmt(netResult, 2);
-  (document.getElementById('be-net')||{}).className = 'bv ' + (netResult >= 0 ? 'up' : 'dn');
-  (document.getElementById('be-rate')||{}).textContent = fmt(netPerPeriod, 0) + ' / 14d';
-  (document.getElementById('be-rate')||{}).className = 'bv ' + (netPerPeriod >= 0 ? 'up' : 'dn');
-  (document.getElementById('be-date')||{}).textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
-  (document.getElementById('be-days')||{}).textContent = daysToBreakeven > 0 ? daysToBreakeven : '0';
+  document.getElementById('be-net').textContent = fmt(netResult, 2);
+  document.getElementById('be-net').className = 'bv ' + (netResult >= 0 ? 'up' : 'dn');
+  document.getElementById('be-rate').textContent = fmt(netPerPeriod, 0) + ' / 14d';
+  document.getElementById('be-rate').className = 'bv ' + (netPerPeriod >= 0 ? 'up' : 'dn');
+  document.getElementById('be-date').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
+  document.getElementById('be-days').textContent = daysToBreakeven > 0 ? daysToBreakeven : '0';
 
   function renderTimeline(fillId, markersId, pct, milestones) {
     setTimeout(() => document.getElementById(fillId).style.width = Math.min(95, Math.max(5, pct)) + '%', 200);
