@@ -408,7 +408,7 @@ def run():
 
     today      = date.today().isoformat()
     today_dt   = date.today()
-    start_date = cfg.get('launch_date', '2026-01-01')
+    start_date = f"{today[:4]}-01-01"  # Always pull current year only
 
     # Get last closed settlement period date (more precise than hardcoded 14 days)
     print("Getting last closed settlement date...")
