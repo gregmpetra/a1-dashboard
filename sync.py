@@ -393,7 +393,7 @@ def load_config():
         'deficit_start': 0,
         'goal_monthly': 100000,
         'account_name': 'A1 American',
-        'launch_date': '2024-01-01',
+        'launch_date': '2026-01-01',
     }
     if os.path.exists(cfg_path):
         with open(cfg_path) as f:
