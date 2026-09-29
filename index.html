@@ -1274,7 +1274,7 @@ function render(d) {
   else ins.push(['g', `On track to exceed the $10K monthly goal — ${projStr} projected.`]);
   if (daysToBreakeven > 0) ins.push(['a', `Cumulative breakeven projected ${fmtDate(breakevenDate)} — ${daysToBreakeven} days from today based on June trajectory.`]);
 
-  if (topSkuData) ins.push(['g', `${topSkuData[0]} leads at $${Math.round(topSkuData[1]).toLocaleString()} — ${(topSkuData[1]/Math.max(1,ytdTotal2026)*100).toFixed(0)}% of 2026 sales.`]);
+
   if (ads.roas < 1) ins.push(['r', `Blended ROAS of ${ads.roas.toFixed(2)}× means ads are still underwater overall. June improved significantly — keep optimising.`]);
   document.getElementById('s-insights').innerHTML = ins.map(([t,txt])=>
     `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
