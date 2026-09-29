@@ -1192,7 +1192,7 @@ function render(d) {
   const mlabel = document.getElementById('goal-month-label');
   if (mlabel) mlabel.textContent = 'Monthly sales goal — ' + currentMonth + ' progress';
   document.getElementById('goal-num').textContent = '$' + Math.round(mtdSalesAmt).toLocaleString();
-  document.getElementById('goal-pct').textContent = mtdGoalPct + '% of $10K goal';
+  document.getElementById('goal-pct').textContent = mtdGoalPct + '% of $100K goal';
   document.getElementById('goal-pct').className = mtdGoalPct >= 100 ? 'up' : mtdGoalPct >= 70 ? 'neu' : 'dn';
   document.getElementById('month-pct-label').textContent = monthPct + '%';
   document.getElementById('goal-days-label').textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
