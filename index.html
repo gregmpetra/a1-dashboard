@@ -630,6 +630,28 @@
   </div>
 
   <div class="stamp" id="stamp">—</div>
+
+  <!-- TAB: HISTORY -->
+  <div class="tab-panel" id="tab-history">
+    <div class="sl" style="margin-bottom:14px;">Year on year performance</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;" id="history-kpis"></div>
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Monthly sales — all years</h3>
+      <div class="cs">Comparing 2024, 2025 and 2026 month by month</div>
+      <div style="position:relative;height:320px;margin-top:16px;">
+        <canvas id="historyChart"></canvas>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Month by month breakdown</h3>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead id="history-thead"></thead>
+          <tbody id="history-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -875,6 +897,7 @@ function switchTab(name) {
   if (name === 'trends' && globalData) renderTrends(globalData, currentView);
   if (name === 'profitability' && globalData) renderProfitability(globalData);
   if (name === 'inventory' && globalData) renderInventory(globalData);
+  if (name === 'history' && globalData) renderHistoryTab(globalData);
   if (name === 'sku' && globalData) { buildPeriodBar('sku-period-bar','sku'); renderSkuRows(globalData, tabPeriods['sku']); }
   if (name === 'coo' && globalData) { buildPeriodBar('coo-period-bar','coo'); }
 }
@@ -2055,6 +2078,84 @@ function renderCooTab(d, period) {
   const totalNet = plSections2.flatMap(s=>s.rows).reduce((a,[,v])=>a+v,0);
   plHtml += `<tr class="tr"><td>Net result (all costs)</td><td class="${totalNet>=0?'up':'dn'}">${fmt(totalNet,2)}</td></tr>`;
   document.getElementById('pl-table').innerHTML = plHtml;
+}
+
+
+function renderHistoryTab(d) {
+  const t = d.trends || {};
+  const mSales = t.monthly_sales || {};
+  const mNet   = t.monthly_net   || {};
+  const mFees  = t.monthly_fees  || {};
+  const mAds   = t.monthly_ads   || {};
+  const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const years = ['2024','2025','2026'];
+  const colors = { '2024': '#8E8677', '2025': '#639922', '2026': '#014567' };
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC  = isDark ? '#888780' : '#5f5e5a';
+
+  // KPI cards
+  const kpiHtml = years.map(yr => {
+    const yMonths = Object.keys(mSales).filter(m => m.startsWith(yr));
+    const ySales = yMonths.reduce((a,m) => a+(mSales[m]||0), 0);
+    const yNet   = yMonths.reduce((a,m) => a+(mNet[m]||0), 0);
+    const yFees  = yMonths.reduce((a,m) => a+Math.abs(mFees[m]||0), 0);
+    return '<div class="card" style="border-top:4px solid '+colors[yr]+'">' +
+      '<div class="sl" style="margin-bottom:8px;">'+yr+'</div>' +
+      '<div style="font-size:28px;font-weight:800;letter-spacing:-0.02em;">$'+Math.round(ySales).toLocaleString()+'</div>' +
+      '<div class="cs">gross sales</div>' +
+      '<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
+        '<div><div class="cs">Amazon fees</div><div style="font-weight:700;color:var(--red);">-$'+Math.round(yFees).toLocaleString()+'</div></div>' +
+        '<div><div class="cs">Net result</div><div style="font-weight:700;color:'+(yNet>=0?'var(--green)':'var(--red)')+';">'+(yNet>=0?'+':'')+Math.round(yNet).toLocaleString()+'</div></div>' +
+      '</div></div>';
+  }).join('');
+  document.getElementById('history-kpis').innerHTML = kpiHtml;
+
+  // Chart
+  const allMonthNums = [...new Set(Object.keys(mSales).map(m=>m.slice(5)))].sort();
+  const labels = allMonthNums.map(m => mn[parseInt(m)-1]);
+  const datasets = years.map(yr => ({
+    label: yr,
+    data: allMonthNums.map(m => Math.round(mSales[yr+'-'+m]||0)),
+    borderColor: colors[yr],
+    backgroundColor: colors[yr]+'20',
+    fill: false, pointRadius: 4, tension: 0.3,
+  }));
+
+  if (window._historyChart) window._historyChart.destroy();
+  window._historyChart = new Chart(document.getElementById('historyChart'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, labels: { color: lblC, font: { size: 11 } } },
+        tooltip: { callbacks: { label: ctx => ' '+ctx.dataset.label+': $'+ctx.parsed.y.toLocaleString() }}},
+      scales: {
+        x: { ticks:{color:lblC,font:{size:11}}, grid:{display:false}, border:{display:false} },
+        y: { ticks:{color:lblC,font:{size:11},callback:v=>'$'+Math.round(v/1000)+'K'}, grid:{color:gridC}, border:{display:false} }
+      }
+    }
+  });
+
+  // Table
+  document.getElementById('history-thead').innerHTML = '<tr style="border-bottom:2px solid var(--border2);">' +
+    '<th style="text-align:left;padding:8px 12px;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);">Month</th>' +
+    years.map(yr => '<th style="text-align:right;padding:8px 12px;font-size:10px;font-weight:700;color:'+colors[yr]+';">'+yr+' Sales</th><th style="text-align:right;padding:8px 12px;font-size:10px;font-weight:700;color:'+colors[yr]+';">Net</th>').join('') +
+    '<th style="text-align:right;padding:8px 12px;font-size:10px;font-weight:700;color:var(--muted);">YoY 24v25</th></tr>';
+
+  document.getElementById('history-tbody').innerHTML = allMonthNums.map(m => {
+    const cells = years.map(yr => {
+      const sales = mSales[yr+'-'+m]||0;
+      const net   = mNet[yr+'-'+m]||0;
+      return '<td style="text-align:right;padding:8px 12px;border-bottom:1px solid var(--border);">'+(sales>0?'$'+Math.round(sales).toLocaleString():'--')+'</td>' +
+             '<td style="text-align:right;padding:8px 12px;border-bottom:1px solid var(--border);color:'+(net>=0?'var(--green)':'var(--red)')+';">'+(net!==0?(net>=0?'+':'')+Math.round(net/1000)+'K':'--')+'</td>';
+    }).join('');
+    const s24 = mSales['2024-'+m]||0;
+    const s25 = mSales['2025-'+m]||0;
+    const yoy = s24>0 ? Math.round((s25-s24)/s24*100) : null;
+    const yoyStr = yoy!==null ? '<span style="color:'+(yoy>=0?'var(--green)':'var(--red)')+';">'+(yoy>=0?'+':'')+yoy+'%</span>' : '--';
+    return '<tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-weight:600;">'+mn[parseInt(m)-1]+'</td>'+cells+'<td style="text-align:right;padding:8px 12px;border-bottom:1px solid var(--border);">'+yoyStr+'</td></tr>';
+  }).join('');
 }
 
 load().catch(e => {
