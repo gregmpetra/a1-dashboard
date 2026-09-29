@@ -1238,7 +1238,7 @@ function render(d) {
   document.getElementById('s-net').textContent = fmt(netResult, 2);
   document.getElementById('s-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
   const totalUnits = Object.values(skuUnits).reduce((a,b)=>a+b,0);
-  document.getElementById('s-units').textContent = totalUnits;
+  // s-units handled by applyPeriodFilter
   document.getElementById('s-skus').textContent = Object.keys(skuSales).length + ' active SKUs';
 
   // SKU chart
