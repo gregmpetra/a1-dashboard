@@ -639,6 +639,23 @@
 </div>
 
 <script>
+// Safe DOM helpers - never throw on missing elements
+function safeSet(id, val, prop) {
+  const el = document.getElementById(id);
+  if (prop === 'class') el.className = val;
+  else if (prop === 'style.color') el.style.color = val;
+  else if (prop === 'style.width') el.style.width = val;
+  else el.textContent = val;
+}
+function safeStyle(id, prop, val) {
+  const el = document.getElementById(id);
+  if (el) el.style[prop] = val;
+}
+function safeClass(id, cls) {
+  const el = document.getElementById(id);
+  if (el) el.className = cls;
+}
+
 let currentView = 'monthly';
 let currentPeriod = 'ytd';
 let tabPeriods = { sales: 'ytd', sku: 'ytd', coo: 'ytd', trends: 'monthly', profitability: 'ytd', inventory: 'ytd' };
@@ -827,7 +844,7 @@ function applyPeriodFilter(d, period) {
   if (period.startsWith('month_')) {
     const m = period.replace('month_', '');
     const mLabel = mn2[parseInt(m.slice(5))-1];
-    document.getElementById('breakdown-title').textContent = 'Cost breakdown — ' + mLabel;
+    safeSet('breakdown-title', 'Cost breakdown — ' + mLabel);
     const mFees2 = t2.monthly_fees || {};
     const mAwd2  = t2.monthly_awd  || {};
     const mAds2  = t2.monthly_ads  || {};
@@ -846,7 +863,7 @@ function applyPeriodFilter(d, period) {
     ].filter(c => c.val > 0);
   } else {
     const label = period === 'ytd' ? 'year to date' : period === 'l30' ? 'last 30 days' : period === 'l14' ? 'last 14 days' : 'last 7 days';
-    document.getElementById('breakdown-title').textContent = 'Cost breakdown — ' + label;
+    safeSet('breakdown-title', 'Cost breakdown — ' + label);
     const ratio = pd.sales / Math.max(1, p.ytd_sales_api || s2.gross_sales);
     costs = [
       { label: 'Amazon fees', val: Math.abs(s2.fba_fees) + Math.abs(s2.referral_fees), color: '#e24b4a' },
@@ -927,8 +944,8 @@ function renderTrends(d, view) {
   const monthSales = Object.entries(t.monthly_sales);
   if (monthSales.length > 0) {
     const best = monthSales.reduce((a,b) => b[1]>a[1]?b:a);
-    document.getElementById('tr-best-month').textContent = '$' + Math.round(best[1]).toLocaleString();
-    document.getElementById('tr-best-month-label').textContent = best[0];
+    safeSet('tr-best-month', '$' + Math.round(best[1]).toLocaleString());
+    safeSet('tr-best-month-label', best[0]);
   }
   if (monthSales.length >= 2) {
     const last = monthSales[monthSales.length-1][1];
@@ -938,9 +955,9 @@ function renderTrends(d, view) {
     el.textContent = (mom >= 0 ? '+' : '') + mom + '%';
     el.className = 'kv ' + (mom >= 0 ? 'up' : 'dn');
   }
-  document.getElementById('tr-roas').textContent = ads.roas.toFixed(2) + '×';
-  document.getElementById('tr-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
-  document.getElementById('tr-roas-label').textContent = ads.roas >= 1.5 ? 'Strong' : ads.roas >= 1 ? 'Breakeven' : 'Below breakeven';
+  safeSet('tr-roas', ads.roas.toFixed(2) + '×');
+  safeClass('tr-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
+  safeSet('tr-roas-label', ads.roas >= 1.5 ? 'Strong' : ads.roas >= 1 ? 'Breakeven' : 'Below breakeven');
 
   // Sales trend chart — with ROAS on secondary axis when monthly
   const adData = view === 'monthly' ? (d.ads.monthly || {}) : (d.ads.weekly || {});
@@ -1017,11 +1034,11 @@ function renderTrends(d, view) {
   });
 
   // Ad panel
-  document.getElementById('ad-total-spend').textContent = '$' + ads.spend.toLocaleString();
-  document.getElementById('ad-total-sales').textContent = '$' + ads.sales.toLocaleString();
-  document.getElementById('ad-blended-roas').textContent = ads.roas.toFixed(2) + '×';
-  document.getElementById('ad-blended-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
-  document.getElementById('ad-total-clicks').textContent = ads.clicks.toLocaleString();
+  safeSet('ad-total-spend', '$' + ads.spend.toLocaleString());
+  safeSet('ad-total-sales', '$' + ads.sales.toLocaleString());
+  safeSet('ad-blended-roas', ads.roas.toFixed(2) + '×');
+  safeClass('ad-blended-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
+  safeSet('ad-total-clicks', ads.clicks.toLocaleString());
 
   const best = [...ads.campaigns].filter(c=>c.spend>20).sort((a,b)=>(b.roas||0)-(a.roas||0))[0];
   const worst = [...ads.campaigns].filter(c=>c.spend>50).sort((a,b)=>(a.roas||0)-(b.roas||0))[0];
@@ -1071,8 +1088,7 @@ function renderTrends(d, view) {
     </tr>`;
   }
   document.getElementById('period-tbody').innerHTML = tableHtml;
-  document.getElementById('sales-trend-label').textContent =
-    view === 'monthly' ? 'Gross sales and estimated net result by month' : 'Gross sales by week';
+  safeSet('sales-trend-label', view === 'monthly' ? 'Gross sales and estimated net result by month' : 'Gross sales by week');
 }
 
 const IS_A1 = true;
@@ -1144,9 +1160,8 @@ function render(d) {
   const skuUnits = d.sku_breakdown.units;
   const skuCogs = d.sku_breakdown.cogs_by_sku;
 
-  document.getElementById('acct-name').textContent = cfg.account_name || 'For & Against';
-  document.getElementById('date-range').textContent =
-    `${d.date_range.start} – ${d.date_range.end}  ·  All statement periods loaded`;
+  safeSet('acct-name', cfg.account_name || 'For & Against');
+  safeSet('date-range', `${d.date_range.start} – ${d.date_range.end}  ·  All statement periods loaded`);
 
   // ---- SHARED CALCULATIONS ----
   const startDate = new Date(d.date_range.start);
@@ -1198,30 +1213,30 @@ function render(d) {
   const currentMonth = monthNames[new Date(d.date_range.end).getMonth()];
   const mlabel = document.getElementById('goal-month-label');
   if (mlabel) mlabel.textContent = 'Monthly sales goal — ' + currentMonth + ' progress';
-  document.getElementById('goal-num').textContent = '$' + Math.round(mtdSalesAmt).toLocaleString();
-  document.getElementById('goal-pct').textContent = mtdGoalPct + '% of $100K goal';
+  safeSet('goal-num', '$' + Math.round(mtdSalesAmt).toLocaleString());
+  safeSet('goal-pct', mtdGoalPct + '% of $100K goal');
   (document.getElementById('goal-pct')||{className:''}).className = mtdGoalPct >= 100 ? 'up' : mtdGoalPct >= 70 ? 'neu' : 'dn';
   (document.getElementById('month-pct-label')||{textContent:''}).textContent = monthPct + '%';
   (document.getElementById('goal-days-label')||{textContent:''}).textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
   (document.getElementById('proj-monthly')||{textContent:''}).textContent = '$' + projMonthly.toLocaleString() + ' est. full month';
-  setTimeout(() => document.getElementById('goal-bar').style.width = mtdGoalPct + '%', 150);
+  setTimeout(() => safeStyle('goal-bar', 'width', mtdGoalPct + '%', 150));
 
   // Deficit uses settled financial events only - deficit reduces as real profit is banked
   const realDeficit = Math.abs(netResult);
   const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
-  const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); document.getElementById('def-num').textContent = fmt(a1NetSales);
-  document.getElementById('def-num').style.color = realDeficit > 1 ? 'inherit' : 'var(--green)';
-  document.getElementById('def-peak').textContent = ``;
-  if (typeof IS_A1 === 'undefined' || !IS_A1) document.getElementById('def-pct').textContent = realPct + '% recovered';
-  document.getElementById('def-pct').className = realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu';
-  setTimeout(() => document.getElementById('def-bar').style.width = Math.min(100,realPct) + '%', 150);
+  const a1NetSales = (p.ytd_sales_api || s.gross_sales) - Math.abs(s.fba_fees||0) - Math.abs(s.referral_fees||0); safeSet('def-num', fmt(a1NetSales));
+  safeStyle('def-num', 'color', realDeficit > 1 ? 'inherit' : 'var(--green)');
+  safeSet('def-peak', ``);
+  if (typeof IS_A1 === 'undefined' || !IS_A1) safeSet('def-pct', realPct + '% recovered');
+  safeClass('def-pct', realPct >= 50 ? 'up' : realPct > 0 ? 'neu' : 'neu');
+  setTimeout(() => safeStyle('def-bar', 'width', Math.min(100,realPct) + '%', 150));
 
-  document.getElementById('be-net').textContent = fmt(netResult, 2);
-  document.getElementById('be-net').className = 'bv ' + (netResult >= 0 ? 'up' : 'dn');
-  document.getElementById('be-rate').textContent = fmt(netPerPeriod, 0) + ' / 14d';
-  document.getElementById('be-rate').className = 'bv ' + (netPerPeriod >= 0 ? 'up' : 'dn');
-  document.getElementById('be-date').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
-  document.getElementById('be-days').textContent = daysToBreakeven > 0 ? daysToBreakeven : '0';
+  safeSet('be-net', fmt(netResult, 2));
+  safeClass('be-net', 'bv ' + (netResult >= 0 ? 'up' : 'dn'));
+  safeSet('be-rate', fmt(netPerPeriod, 0) + ' / 14d');
+  safeClass('be-rate', 'bv ' + (netPerPeriod >= 0 ? 'up' : 'dn'));
+  safeSet('be-date', daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached');
+  safeSet('be-days', daysToBreakeven > 0 ? daysToBreakeven : '0');
 
   function renderTimeline(fillId, markersId, pct, milestones) {
     setTimeout(() => document.getElementById(fillId).style.width = Math.min(95, Math.max(5, pct)) + '%', 200);
@@ -1234,19 +1249,19 @@ function render(d) {
   renderTimeline('tl-fill', 'tl-markers', 58, milestones);
 
   applyPeriodFilter(d, currentPeriod);
-  document.getElementById('s-spend').textContent = fmt(ads.spend);
+  safeSet('s-spend', fmt(ads.spend));
   // Update gross sales KPI to show Sales API YTD if available
   if (p.ytd_sales_api && p.ytd_sales_api > s.gross_sales) {
     const ytdEl = document.getElementById('kpi-sales');
     if (ytdEl) ytdEl.textContent = fmt(p.ytd_sales_api);
   }
-  document.getElementById('s-roas').textContent = ads.roas.toFixed(2) + '× ROAS';
-  document.getElementById('s-roas').className = 'kd ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
-  document.getElementById('s-net').textContent = fmt(netResult, 2);
-  document.getElementById('s-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+  safeSet('s-roas', ads.roas.toFixed(2) + '× ROAS');
+  safeClass('s-roas', 'kd ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
+  safeSet('s-net', fmt(netResult, 2));
+  safeClass('s-net', 'kv ' + (netResult >= 0 ? 'up' : 'dn'));
   const totalUnits = Object.values(skuUnits).reduce((a,b)=>a+b,0);
   // s-units handled by applyPeriodFilter
-  document.getElementById('s-skus').textContent = Object.keys(skuSales).length + ' active SKUs';
+  safeSet('s-skus', Object.keys(skuSales).length + ' active SKUs');
 
   // SKU chart
   const lbls = Object.keys(skuSales);
@@ -1358,10 +1373,10 @@ function render(d) {
     </tr>`;
   }).join('');
 
-  document.getElementById('ad-spend').textContent = fmt(ads.spend);
-  document.getElementById('ad-sales').textContent = fmt(ads.sales);
-  document.getElementById('ad-roas').textContent = ads.roas.toFixed(2) + '×';
-  document.getElementById('ad-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  safeSet('ad-spend', fmt(ads.spend));
+  safeSet('ad-sales', fmt(ads.sales));
+  safeSet('ad-roas', ads.roas.toFixed(2) + '×');
+  safeClass('ad-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
 
   const adIns = [];
   const bestCamp = [...ads.campaigns].sort((a,b)=>(b.roas||0)-(a.roas||0))[0];
@@ -1373,9 +1388,9 @@ function render(d) {
     `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
 
   // ---- TAB 3: COO DASHBOARD ----
-  document.getElementById('c-sales').textContent = fmt(p.ytd_sales_api || s.gross_sales);
-  document.getElementById('c-net').textContent = fmt(netResult, 2);
-  document.getElementById('c-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+  safeSet('c-sales', fmt(p.ytd_sales_api || s.gross_sales));
+  safeSet('c-net', fmt(netResult, 2));
+  safeClass('c-net', 'kv ' + (netResult >= 0 ? 'up' : 'dn'));
   // Net result here is from financial events only - use full net including Sales API
   const fullNet = netResult - (p.ytd_sales_api > s.gross_sales ? p.ytd_sales_api - s.gross_sales : 0);
   const realDef = Math.max(0, defStart + Math.abs(fullNet) * -1 + defStart);
@@ -1384,21 +1399,21 @@ function render(d) {
   const displayDef = Math.max(0, defStart + netResult - (p.ytd_sales_api && p.ytd_sales_api > s.gross_sales ? 
     p.ytd_sales_api - s.gross_sales : 0));
   const realPctCoo = Math.min(100, Math.max(0, Math.round((defStart - displayDef) / defStart * 100)));
-  document.getElementById('c-costs').textContent = displayDef > 0 ? fmt(displayDef) : 'Breakeven reached';
-  document.getElementById('c-costs').className = 'kv ' + (displayDef > 0 ? 'dn' : 'up');
-  document.getElementById('c-costs-sub').textContent = realPctCoo + '% recovered of $' + defStart.toLocaleString();
-  document.getElementById('c-eta').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
-  document.getElementById('c-days').textContent = daysToBreakeven > 0 ? daysToBreakeven + ' days remaining' : 'Breakeven achieved';
+  safeSet('c-costs', displayDef > 0 ? fmt(displayDef) : 'Breakeven reached');
+  safeClass('c-costs', 'kv ' + (displayDef > 0 ? 'dn' : 'up'));
+  safeSet('c-costs-sub', realPctCoo + '% recovered of $' + defStart.toLocaleString());
+  safeSet('c-eta', daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached');
+  safeSet('c-days', daysToBreakeven > 0 ? daysToBreakeven + ' days remaining' : 'Breakeven achieved');
   // New MTD, ROAS, units fields
   const cmth = d.date_range.end.slice(0,7);
   const mtdVal = d.progress.mtd_sales || (d.trends.monthly_sales||{})[cmth] || 0;
-  document.getElementById('c-mtd').textContent = fmt(mtdVal);
-  document.getElementById('c-mtd-sub').textContent = 'of $10,000 goal (' + Math.round(mtdVal/10000*100) + '%)';
-  document.getElementById('c-mtd').className = 'kv ' + (mtdVal >= 10000 ? 'up' : mtdVal >= 5000 ? 'neu' : 'dn');
-  document.getElementById('c-roas').textContent = ads.roas.toFixed(2) + '×';
-  document.getElementById('c-roas').className = 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn');
+  safeSet('c-mtd', fmt(mtdVal));
+  safeSet('c-mtd-sub', 'of $10,000 goal (' + Math.round(mtdVal/10000*100) + '%)');
+  safeClass('c-mtd', 'kv ' + (mtdVal >= 10000 ? 'up' : mtdVal >= 5000 ? 'neu' : 'dn'));
+  safeSet('c-roas', ads.roas.toFixed(2) + '×');
+  safeClass('c-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
   const totalUnitsYtd = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
-  document.getElementById('c-units').textContent = totalUnitsYtd.toLocaleString();
+  safeSet('c-units', totalUnitsYtd.toLocaleString());
 
   // P&L table
   const plSections = [
@@ -1469,11 +1484,11 @@ function render(d) {
   ).join('');
 
   // COO timeline
-  document.getElementById('c-peak').textContent = fmt(defStart);
-  document.getElementById('c-deficit').textContent = fmt(defRemaining);
+  safeSet('c-peak', fmt(defStart));
+  safeSet('c-deficit', fmt(defRemaining));
   const recovered = defStart - defRemaining;
-  document.getElementById('c-recovered').textContent = fmt(Math.max(0, recovered));
-  document.getElementById('c-be-date').textContent = daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached';
+  safeSet('c-recovered', fmt(Math.max(0, recovered)));
+  safeSet('c-be-date', daysToBreakeven > 0 ? fmtDate(breakevenDate) : 'Reached');
   renderTimeline('coo-tl-fill', 'coo-tl-markers', 58, milestones);
 
   // Store globally for all tabs
@@ -1493,9 +1508,9 @@ function render(d) {
   if (badge) badge.innerHTML = isLive
     ? '<span class="dot"></span>Live SP-API · auto-updates daily'
     : '<span class="dot"></span>Settlement reports + Ads CSV';
-  document.getElementById('stamp').textContent = isLive
+  safeSet('stamp', isLive
     ? `Live data via SP-API · Last synced: ${gen.toLocaleString()}`
-    : `Last processed: ${gen.toLocaleString()} · Run process.py to update`;
+    : `Last processed: ${gen.toLocaleString()} · Run process.py to update`);
 }
 
 let profitChart = null;
@@ -1522,26 +1537,26 @@ function renderProfitability(d) {
 
   // KPIs
   const netResult = s.net_result;
-  document.getElementById('pr-net').textContent = (netResult>=0?'+$':'–$') + Math.abs(Math.round(netResult)).toLocaleString();
-  document.getElementById('pr-net').className = 'kv ' + (netResult >= 0 ? 'up' : 'dn');
+  safeSet('pr-net', (netResult>=0?'+$':'–$') + Math.abs(Math.round(netResult)).toLocaleString());
+  safeClass('pr-net', 'kv ' + (netResult >= 0 ? 'up' : 'dn'));
 
   const bestMonth = months.reduce((a,m) => (mSales[m]||0) > (mSales[a]||0) ? m : a, months[0]);
-  document.getElementById('pr-best').textContent = '$' + Math.round(mSales[bestMonth]||0).toLocaleString();
-  document.getElementById('pr-best-label').textContent = bestMonth;
+  safeSet('pr-best', '$' + Math.round(mSales[bestMonth]||0).toLocaleString());
+  safeSet('pr-best-label', bestMonth);
 
   const defStart = p.deficit_start;
   const realDeficit = Math.abs(netResult);
   const realPct = Math.min(100, Math.max(0, Math.round(Math.max(0, defStart - realDeficit) / defStart * 100)));
-  document.getElementById('pr-deficit').textContent = '$' + Math.round(realDeficit).toLocaleString();
-  document.getElementById('pr-deficit-pct').textContent = realPct + '% recovered';
+  safeSet('pr-deficit', '$' + Math.round(realDeficit).toLocaleString());
+  safeSet('pr-deficit-pct', realPct + '% recovered');
 
   // Trend: last 2 months
   if (months.length >= 2) {
     const last  = mSales[months[months.length-1]] || 0;
     const prev  = mSales[months[months.length-2]] || 0;
     const trend = prev > 0 ? ((last-prev)/prev*100).toFixed(0) : 0;
-    document.getElementById('pr-trend').textContent = (trend>=0?'+':'')+trend+'%';
-    document.getElementById('pr-trend').className = 'kv ' + (trend >= 0 ? 'up' : 'dn');
+    safeSet('pr-trend', (trend>=0?'+':'')+trend+'%');
+    safeClass('pr-trend', 'kv ' + (trend >= 0 ? 'up' : 'dn'));
   }
 
   // Profitability chart
@@ -1601,18 +1616,18 @@ function renderProfitability(d) {
 
   // Breakeven panel
   const recovered = defStart - realDeficit;
-  document.getElementById('pr-peak').textContent = '$' + Math.round(defStart).toLocaleString();
-  document.getElementById('pr-recovered').textContent = '+$' + Math.round(Math.max(0,recovered)).toLocaleString();
-  document.getElementById('pr-remaining').textContent = '$' + Math.round(realDeficit).toLocaleString();
+  safeSet('pr-peak', '$' + Math.round(defStart).toLocaleString());
+  safeSet('pr-recovered', '+$' + Math.round(Math.max(0,recovered)).toLocaleString());
+  safeSet('pr-remaining', '$' + Math.round(realDeficit).toLocaleString());
 
   // Projected breakeven date
   const recentNet = netVals.slice(-2).reduce((a,b)=>a+b,0) / 2;
   const daysLeft = recentNet > 0 ? Math.ceil(realDeficit / (recentNet/30)) : 999;
   const beDate = new Date(); beDate.setDate(beDate.getDate() + daysLeft);
-  document.getElementById('pr-be-date').textContent = daysLeft < 999
+  safeSet('pr-be-date', daysLeft < 999
     ? beDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
-    : 'Needs positive net';
-  document.getElementById('pr-be-date').style.color = daysLeft < 999 ? 'var(--amber)' : 'var(--muted)';
+    : 'Needs positive net');
+  safeStyle('pr-be-date', 'color', daysLeft < 999 ? 'var(--amber)' : 'var(--muted)');
 
   // Insights
   const ins = [];
@@ -1654,10 +1669,10 @@ function renderInventory(d) {
   const warning = active.filter(([,d]) => d.in_stock > 0 && d.days_remaining < 45 && d.days_remaining !== 999);
   const totalUnits = active.reduce((a,[,d]) => a + d.in_stock, 0);
 
-  document.getElementById('inv-active').textContent  = active.length;
-  document.getElementById('inv-oos').textContent     = oos.length;
-  document.getElementById('inv-warn').textContent    = warning.length;
-  document.getElementById('inv-total').textContent   = totalUnits.toLocaleString();
+  safeSet('inv-active', active.length);
+  safeSet('inv-oos', oos.length);
+  safeSet('inv-warn', warning.length);
+  safeSet('inv-total', totalUnits.toLocaleString());
 
   // Table
   const today = new Date();
@@ -2165,7 +2180,7 @@ function renderHomeTab(d) {
   const today = new Date();
   const curM = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0');
   const monthName = mn[today.getMonth()] + ' ' + today.getFullYear();
-  document.getElementById('mtd-month-label').textContent = monthName;
+  safeSet('mtd-month-label', monthName);
 
   // --- MTD ---
   const mtdSales = p.mtd_sales || 0;
@@ -2175,11 +2190,11 @@ function renderHomeTab(d) {
   const goalPct = Math.round(mtdSales / goal * 100);
   const proj = Math.round(mtdSales / daysElapsed * daysInMonth);
 
-  document.getElementById('mtd-sales-big').textContent = '$' + Math.round(mtdSales).toLocaleString();
-  document.getElementById('mtd-goal-sub').textContent = '$' + Math.round(mtdSales).toLocaleString() + ' of $100,000 goal';
-  document.getElementById('mtd-days-label').textContent = daysElapsed + ' of ' + daysInMonth + ' days elapsed';
-  document.getElementById('mtd-goal-pct').textContent = goalPct + '% of goal';
-  document.getElementById('mtd-proj').textContent = '$' + proj.toLocaleString() + ' est. full month';
+  safeSet('mtd-sales-big', '$' + Math.round(mtdSales).toLocaleString());
+  safeSet('mtd-goal-sub', '$' + Math.round(mtdSales).toLocaleString() + ' of $100,000 goal');
+  safeSet('mtd-days-label', daysElapsed + ' of ' + daysInMonth + ' days elapsed');
+  safeSet('mtd-goal-pct', goalPct + '% of goal');
+  safeSet('mtd-proj', '$' + proj.toLocaleString() + ' est. full month');
   setTimeout(() => { const b = document.getElementById('mtd-goal-bar'); if(b) b.style.width = Math.min(100,goalPct)+'%'; }, 200);
   document.getElementById('mtd-goal-bar').style.background = goalPct >= 100 ? 'var(--green)' : goalPct >= 70 ? '#c8a820' : 'var(--red)';
 
@@ -2188,18 +2203,18 @@ function renderHomeTab(d) {
   const prevM = months2026[months2026.length - 2];
   const prevSales = prevM ? (mSales[prevM]||0) : 0;
   const vsPrevPct = prevSales > 0 ? Math.round((mtdSales - prevSales)/prevSales*100) : 0;
-  document.getElementById('mtd-vs-last').textContent = '$' + Math.round(mtdSales).toLocaleString();
+  safeSet('mtd-vs-last', '$' + Math.round(mtdSales).toLocaleString());
   const vsEl = document.getElementById('mtd-vs-last-pct');
   vsEl.textContent = (vsPrevPct>=0?'+':'')+vsPrevPct+'%';
   vsEl.style.color = vsPrevPct >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('mtd-vs-last-label').textContent = 'vs ' + (prevM ? mn[parseInt(prevM.slice(5))-1]+' ($'+Math.round(prevSales).toLocaleString()+')' : '—');
+  safeSet('mtd-vs-last-label', 'vs ' + (prevM ? mn[parseInt(prevM.slice(5))-1]+' ($'+Math.round(prevSales).toLocaleString()+')' : '—'));
 
   // vs best month
   const completedMonths = months2026.filter(m => m < curM);
   const bestM = completedMonths.length > 0 ? completedMonths.reduce((a,m)=>(mSales[m]||0)>(mSales[a]||0)?m:a, completedMonths[0]) : null;
   const bestSales = bestM ? (mSales[bestM]||0) : 0;
-  document.getElementById('mtd-vs-best').textContent = bestSales > 0 ? '$' + Math.round(bestSales).toLocaleString() : '—';
-  document.getElementById('mtd-vs-best-label').textContent = bestM ? mn[parseInt(bestM.slice(5))-1] + ' 2026 (best month)' : '—';
+  safeSet('mtd-vs-best', bestSales > 0 ? '$' + Math.round(bestSales).toLocaleString() : '—');
+  safeSet('mtd-vs-best-label', bestM ? mn[parseInt(bestM.slice(5))-1] + ' 2026 (best month)' : '—');
 
   // MTD costs
   const mtdFees = Math.abs(mFees[curM]||0);
@@ -2233,7 +2248,7 @@ function renderHomeTab(d) {
 
   // --- YTD 2026 ---
   const ytdSales = p.ytd_sales_api || s.gross_sales || 0;
-  document.getElementById('ytd-sales').textContent = '$' + Math.round(ytdSales).toLocaleString();
+  safeSet('ytd-sales', '$' + Math.round(ytdSales).toLocaleString());
 
   // YTD net - sum all 2026 monthly net
   const ytdNet = months2026.reduce((a,m)=>a+(mNet[m]||0),0);
@@ -2246,11 +2261,11 @@ function renderHomeTab(d) {
   const ly2025Months = Object.keys(mSales).filter(m=>m.startsWith('2025') && parseInt(m.slice(5)) <= curMonthNum);
   const lySales = ly2025Months.reduce((a,m)=>a+(mSales[m]||0),0);
   const vsLyPct = lySales > 0 ? Math.round((ytdSales-lySales)/lySales*100) : null;
-  document.getElementById('ytd-vs-ly').textContent = lySales > 0 ? '$'+Math.round(lySales).toLocaleString() : '—';
+  safeSet('ytd-vs-ly', lySales > 0 ? '$'+Math.round(lySales).toLocaleString() : '—');
   const lyPctEl = document.getElementById('ytd-vs-ly-pct');
   lyPctEl.textContent = vsLyPct !== null ? (vsLyPct>=0?'+':'')+vsLyPct+'% YoY' : '—';
   lyPctEl.style.color = vsLyPct >= 0 ? 'var(--green)' : 'var(--red)';
-  document.getElementById('ytd-vs-ly-label').textContent = lySales > 0 ? '2025 Jan–'+mn[curMonthNum-1] : 'No 2025 data';
+  safeSet('ytd-vs-ly-label', lySales > 0 ? '2025 Jan–'+mn[curMonthNum-1] : 'No 2025 data');
 
   // YTD cost breakdown
   const ytdFees = Math.abs(s.fba_fees||0) + Math.abs(s.referral_fees||0);
