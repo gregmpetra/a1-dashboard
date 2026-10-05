@@ -2334,6 +2334,10 @@ function renderHomeTab(d) {
   });
 }
 
+window.onerror = function(msg, src, line, col, err) {
+  document.body.innerHTML = '<div style="padding:40px;font-family:monospace;"><h2>JS Error</h2><p>' + msg + '</p><p>Line: ' + line + '</p><p>' + (err ? err.stack : '') + '</p></div>';
+  return true;
+};
 load().catch(e => {
   document.body.innerHTML = `<div style="padding:40px;font-family:sans-serif;color:#a32d2d">
     <h2>Could not load data.json</h2><p>Run <code>python3 process.py</code> first.</p><pre>${e}</pre></div>`;
