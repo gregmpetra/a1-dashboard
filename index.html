@@ -1200,10 +1200,10 @@ function render(d) {
   if (mlabel) mlabel.textContent = 'Monthly sales goal — ' + currentMonth + ' progress';
   document.getElementById('goal-num').textContent = '$' + Math.round(mtdSalesAmt).toLocaleString();
   document.getElementById('goal-pct').textContent = mtdGoalPct + '% of $100K goal';
-  document.getElementById('goal-pct').className = mtdGoalPct >= 100 ? 'up' : mtdGoalPct >= 70 ? 'neu' : 'dn';
-  document.getElementById('month-pct-label').textContent = monthPct + '%';
-  document.getElementById('goal-days-label').textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
-  document.getElementById('proj-monthly').textContent = '$' + projMonthly.toLocaleString() + ' est. full month';
+  (document.getElementById('goal-pct')||{className:''}).className = mtdGoalPct >= 100 ? 'up' : mtdGoalPct >= 70 ? 'neu' : 'dn';
+  (document.getElementById('month-pct-label')||{textContent:''}).textContent = monthPct + '%';
+  (document.getElementById('goal-days-label')||{textContent:''}).textContent = mtdDaysElapsed + ' of ' + daysInMonth + ' days elapsed';
+  (document.getElementById('proj-monthly')||{textContent:''}).textContent = '$' + projMonthly.toLocaleString() + ' est. full month';
   setTimeout(() => document.getElementById('goal-bar').style.width = mtdGoalPct + '%', 150);
 
   // Deficit uses settled financial events only - deficit reduces as real profit is banked
