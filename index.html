@@ -226,13 +226,16 @@
   <!-- MTD Costs + Net -->
   <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:20px;">
     <div class="card">
-      <div class="ey" style="margin-bottom:12px;">Month to date costs</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="ey">Month to date costs</div>
+        <div id="mtd-costs-caveat" style="font-size:10px;color:var(--muted);font-style:italic;"></div>
+      </div>
       <div id="mtd-costs-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;"></div>
     </div>
     <div class="card" style="display:flex;flex-direction:column;justify-content:center;text-align:center;">
       <div class="ey">Net result MTD</div>
       <div style="font-size:36px;font-weight:800;letter-spacing:-0.02em;margin:12px 0;" id="mtd-net">—</div>
-      <div class="cs">after all costs</div>
+      <div class="cs" id="mtd-net-caveat">after all costs</div>
     </div>
   </div>
 
@@ -2218,13 +2221,18 @@ function renderHomeTab(d) {
   safeSet('mtd-vs-best-label', bestM ? mn[parseInt(bestM.slice(5))-1] + ' 2026 (best month)' : '—');
 
   // MTD costs
-  const mtdFees = Math.abs(mFees[curM]||0);
+  // If current month has no settled costs yet, estimate proportionally from last month
+  const hasSettledCosts = Math.abs(mFees[curM]||0) > 0;
+  const prevM2 = months2026[months2026.length - 2] || '';
+  const costRatio = daysElapsed / daysInMonth;
+  const mtdFees = hasSettledCosts ? Math.abs(mFees[curM]||0) : Math.abs(mFees[prevM2]||0) * costRatio;
   const mtdAds  = Math.abs(mAds[curM]||0);
-  const mtdCogs = Math.abs(mCogs[curM]||0);
-  const mtdPromos = Math.abs(mPromos[curM]||0);
-  const mtdRefunds = Math.abs(mRefunds[curM]||0);
-  const mtdSub = Math.abs(mSub[curM]||0);
+  const mtdCogs = hasSettledCosts ? Math.abs(mCogs[curM]||0) : Math.abs(mCogs[prevM2]||0) * costRatio;
+  const mtdPromos = hasSettledCosts ? Math.abs(mPromos[curM]||0) : Math.abs(mPromos[prevM2]||0) * costRatio;
+  const mtdRefunds = hasSettledCosts ? Math.abs(mRefunds[curM]||0) : Math.abs(mRefunds[prevM2]||0) * costRatio;
+  const mtdSub = hasSettledCosts ? Math.abs(mSub[curM]||0) : Math.abs(mSub[prevM2]||0) * costRatio;
   const mtdNet = (mNet[curM]||0);
+  const costsAreEstimated = !hasSettledCosts;
 
   const mtdCosts = [
     { label: 'Amazon fees', val: mtdFees, color: '#e24b4a' },
@@ -2246,6 +2254,13 @@ function renderHomeTab(d) {
   const netEl = document.getElementById('mtd-net');
   netEl.textContent = (mtdNet>=0?'+$':'-$') + Math.abs(Math.round(mtdNet)).toLocaleString();
   netEl.style.color = mtdNet >= 0 ? 'var(--green)' : 'var(--red)';
+  if (costsAreEstimated) {
+    safeSet('mtd-costs-caveat', 'Estimated — settlement pending');
+    safeSet('mtd-net-caveat', 'Estimated costs excl. COGS · Settlement pending');
+  } else {
+    safeSet('mtd-costs-caveat', '');
+    safeSet('mtd-net-caveat', 'After all costs excl. COGS');
+  }
 
   // --- YTD 2026 ---
   const ytdSales = p.ytd_sales_api || s.gross_sales || 0;
