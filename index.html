@@ -877,7 +877,7 @@ function applyPeriodFilter(d, period) {
     ].filter(c => c.val > 0).map(c => ({...c, val: period === 'ytd' ? c.val : Math.round(c.val * ratio)}));
   }
   const totalCosts = costs.reduce((a,c)=>a+c.val,0);
-  document.getElementById('breakdown-grid').innerHTML = costs.map(c => `
+  (document.getElementById('breakdown-grid') || document.getElementById('ytd-costs-grid') || {innerHTML: ''}).innerHTML = costs.map(c => `
     <div style="background:var(--surface);border-radius:8px;padding:12px;">
       <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${c.label}</div>
       <div style="font-size:18px;font-weight:700;color:${c.color};">-$${Math.round(c.val).toLocaleString()}</div>
