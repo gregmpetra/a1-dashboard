@@ -642,6 +642,7 @@
 // Safe DOM helpers - never throw on missing elements
 function safeSet(id, val, prop) {
   const el = document.getElementById(id);
+  if (el === null) return;
   if (prop === 'class') el.className = val;
   else if (prop === 'style.color') el.style.color = val;
   else if (prop === 'style.width') el.style.width = val;
