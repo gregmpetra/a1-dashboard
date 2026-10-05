@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T19:21:41.261648Z",
+  "generated_at": "2026-10-05T19:52:03.657146Z",
   "source": "sp-api",
   "config": {
     "deficit_start": 0,
@@ -51,16 +51,16 @@
     "deficit_remaining": 0,
     "pct_recovered": 0,
     "goal_monthly": 100000,
-    "mtd_sales": 11638.91,
+    "mtd_sales": 11768.9,
     "mtd_days": 5,
-    "rolling_30d_sales": 97699.38,
-    "rolling_14d_sales": 48847.65,
-    "rolling_7d_sales": 26008.66,
-    "rolling_30d_units": 862,
-    "rolling_14d_units": 435,
-    "mtd_units": 109,
-    "ytd_sales_api": 532771.28,
-    "ytd_units_api": 5723
+    "rolling_30d_sales": 97829.37,
+    "rolling_14d_sales": 48977.64,
+    "rolling_7d_sales": 26138.65,
+    "rolling_30d_units": 863,
+    "rolling_14d_units": 436,
+    "mtd_units": 110,
+    "ytd_sales_api": 532901.27,
+    "ytd_units_api": 5724
   },
   "sku_breakdown": {
     "sales": {
@@ -84,7 +84,7 @@
       "TDASH12": 89.99
     },
     "units": {
-      "MC7090": 1039,
+      "MC7090": 1038,
       "OC100-G": 258,
       "MC7098-15": 357,
       "OC300-1": 279,
@@ -139,7 +139,7 @@
     "mtd_sales_by_sku": {
       "MC7072": 7279.44,
       "WIPEMC7098-1": 199.92,
-      "MC7090": 1413.87,
+      "MC7090": 1307.88,
       "MC7095": 89.97
     },
     "monthly_sales_by_sku": {
@@ -885,9 +885,9 @@
     },
     "WIPEMC7098-1": {
       "sku": "WIPEMC7098-1",
-      "in_stock": 139,
+      "in_stock": 178,
       "daily_rate": 1.27,
-      "days_remaining": 109,
+      "days_remaining": 140,
       "reorder_alert": false
     }
   },
@@ -902,7 +902,7 @@
       "2026-07": 42788.58000000007,
       "2026-08": 95229.8500000005,
       "2026-09": 75945.82000000011,
-      "2026-10": 11059.28
+      "2026-10": 11194.4
     },
     "monthly_fees": {
       "2026-01": -8838.069999999978,
@@ -936,11 +936,11 @@
       "2026-07": 31307.08,
       "2026-08": 74757.68,
       "2026-09": 59324.45,
-      "2026-10": 11059.28
+      "2026-10": 11194.4
     },
     "weekly_sales": {
       "2026-09-28": 10535.21,
-      "2026-10-05": 524.07
+      "2026-10-05": 659.19
     },
     "monthly_cogs": {
       "2026-01": 0.0,
