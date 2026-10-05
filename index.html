@@ -1240,8 +1240,8 @@ function render(d) {
   safeSet('be-days', daysToBreakeven > 0 ? daysToBreakeven : '0');
 
   function renderTimeline(fillId, markersId, pct, milestones) {
-    setTimeout(() => document.getElementById(fillId).style.width = Math.min(95, Math.max(5, pct)) + '%', 200);
-    document.getElementById(markersId).innerHTML = milestones.map(m => `
+    setTimeout(() => { const fe = document.getElementById(fillId); if (fe) fe.style.width = Math.min(95, Math.max(5, pct)) + '%'; }, 200);
+    const me = document.getElementById(markersId); if (me) me.innerHTML = milestones.map(m => `
       <div class="tl-marker">
         <div class="tl-dot ${m.done ? 'tl-dot-done' : m.now ? 'tl-dot-now' : 'tl-dot-future'}"></div>
         <div class="tl-lbl"><strong>${m.label}</strong>${m.date}</div>
