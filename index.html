@@ -189,113 +189,97 @@
   <!-- ============ TAB 1: SALES & GOALS ============ -->
   <div class="tab-panel active" id="tab-sales">
 
-    <div class="sl">Goals &amp; targets</div>
-    <div class="goal-row">
-      <div class="goal-card">
-        <div class="ey" id="goal-month-label">Monthly sales goal</div>
-        <div class="num" id="goal-num">—</div>
-        <div class="sub">actual MTD · <span id="month-pct-label">—</span> through the month</div>
-        <div class="track"><div class="fill fill-g" id="goal-bar"></div></div>
-        <div class="prow"><span id="goal-days-label">—</span><strong id="goal-pct">—</strong></div>
-        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:11px;color:var(--muted)">Projected full month</span>
-          <span style="font-size:14px;font-weight:700;color:var(--muted)" id="proj-monthly">—</span>
-        </div>
+  <!-- ===== THIS MONTH ===== -->
+  <div class="sl" style="margin-bottom:14px;">This month — <span id="mtd-month-label">—</span></div>
+
+  <!-- MTD Goal Progress -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="ey">Monthly sales goal progress</div>
+      <div style="font-size:32px;font-weight:800;letter-spacing:-0.02em;margin:8px 0;" id="mtd-sales-big">—</div>
+      <div class="cs" id="mtd-goal-sub">— of $100,000 goal</div>
+      <div style="background:var(--border);border-radius:4px;height:8px;margin:12px 0 6px;">
+        <div id="mtd-goal-bar" style="height:8px;border-radius:4px;background:var(--green);width:0%;transition:width 0.6s;"></div>
       </div>
-      <div class="goal-card">
-        <div class="ey">Net Sales (excl. COGS)</div>
-        <div class="num" id="def-num">—</div>
-        <div class="sub">gross sales minus FBA + referral fees</div>
-        <div class="track"><div class="fill fill-a" id="def-bar"></div></div>
-        <div class="prow"><span id="def-peak">—</span><strong id="def-pct">—</strong></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+        <span id="mtd-days-label">—</span>
+        <span id="mtd-goal-pct" style="font-weight:700;">—</span>
       </div>
+      <div style="margin-top:10px;font-size:12px;color:var(--muted);">Projected full month: <strong id="mtd-proj">—</strong></div>
     </div>
 
-    <div id="breakeven-section" style="display:none"><div class="sl">Road to breakeven</div>
-    <div class="card" style="margin-bottom:14px">
-      <div class="be-grid">
-        <div class="be-stat">
-          <div class="bl">Cumulative net result</div>
-          <div class="bv" id="be-net">—</div>
-          <div class="bs">all periods to date</div>
-        </div>
-        <div class="be-stat">
-          <div class="bl">Recent net / period</div>
-          <div class="bv" id="be-rate">—</div>
-          <div class="bs">14-day settlement rate</div>
-        </div>
-        <div class="be-stat">
-          <div class="bl">Projected breakeven</div>
-          <div class="bv" id="be-date" style="color:var(--amber-mid)">—</div>
-          <div class="bs">if current rate holds</div>
-        </div>
-        <div class="be-stat">
-          <div class="bl">Days remaining</div>
-          <div class="bv" id="be-days">—</div>
-          <div class="bs">to cumulative zero</div>
-        </div>
-      </div>
-      <div class="tl-track"><div class="tl-fill" id="tl-fill"></div></div>
-      <div class="tl-markers" id="tl-markers"></div>
-    </div>
-
-    <div class="tab-period-bar">
-      </div>
-    <div class="sl" style="margin:0">Period snapshot</div>
-      <div class="period-bar" id="sales-period-bar"></div>
-    </div>
-    <!-- Month comparison -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;" id="month-compare-row">
-      <div class="card" style="padding:16px;">
-        <div class="kl" style="font-size:11px;color:var(--muted);margin-bottom:6px;">vs last month</div>
-        <div style="display:flex;align-items:baseline;gap:8px;">
-          <span id="vs-last-val" style="font-size:22px;font-weight:700;">—</span>
-          <span id="vs-last-pct" style="font-size:13px;font-weight:600;">—</span>
-        </div>
-        <div id="vs-last-label" style="font-size:11px;color:var(--muted);margin-top:2px;">—</div>
-      </div>
-      <div class="card" style="padding:16px;">
-        <div class="kl" style="font-size:11px;color:var(--muted);margin-bottom:6px;">best month</div>
-        <div style="display:flex;align-items:baseline;gap:8px;">
-          <span id="best-month-val" style="font-size:22px;font-weight:700;">—</span>
-          <span id="best-month-name" style="font-size:13px;color:var(--muted);">—</span>
-        </div>
-        <div id="best-month-label" style="font-size:11px;color:var(--muted);margin-top:2px;">— vs current run rate</div>
-      </div>
-    </div>
-    </div>
-    <div class="kpi4">
-      <div class="kpi"><div class="kl">Gross sales</div><div class="kv" id="s-sales">—</div><div class="kd neu" id="s-period-label">year to date</div></div>
-      <div class="kpi"><div class="kl">Ad spend</div><div class="kv" id="s-spend">—</div><div class="kd" id="s-roas">—</div></div>
-      <div class="kpi"><div class="kl">Net result</div><div class="kv" id="s-net">—</div><div class="kd neu">after all costs</div></div>
-      <div class="kpi"><div class="kl">Units sold</div><div class="kv" id="s-units">—</div><div class="kd neu" id="s-skus">—</div></div>
-    </div>
-
-    <!-- Cost breakdown for selected period -->
-    <div class="card" style="margin-bottom:14px;" id="period-cost-breakdown">
-      <h3 id="breakdown-title">Cost breakdown — year to date</h3>
-      <div class="cs">Where the money goes in this period</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:12px;" id="breakdown-grid"></div>
-    </div>
-
-    <div class="two-col">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div class="card">
-        <h3>Sales by product</h3>
-        <div class="cs">Gross revenue per SKU, all loaded periods</div>
-        <div style="position:relative;height:240px;">
-          <canvas id="skuChart" role="img" aria-label="Sales by SKU bar chart"></canvas>
-        </div>
+        <div class="ey">vs last month</div>
+        <div style="font-size:22px;font-weight:800;margin:6px 0;" id="mtd-vs-last">—</div>
+        <div style="font-size:12px;font-weight:700;" id="mtd-vs-last-pct">—</div>
+        <div class="cs" id="mtd-vs-last-label">—</div>
       </div>
       <div class="card">
-        <h3>Key signals</h3>
-        <div class="cs">What the numbers are telling you</div>
-        <div class="insights" id="s-insights"></div>
+        <div class="ey">vs best month</div>
+        <div style="font-size:22px;font-weight:800;margin:6px 0;" id="mtd-vs-best">—</div>
+        <div class="cs" id="mtd-vs-best-label">—</div>
       </div>
     </div>
-
   </div>
 
-  <!-- ============ TAB 2: SKU PERFORMANCE ============ -->
+  <!-- MTD Costs + Net -->
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:20px;">
+    <div class="card">
+      <div class="ey" style="margin-bottom:12px;">Month to date costs</div>
+      <div id="mtd-costs-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;"></div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;justify-content:center;text-align:center;">
+      <div class="ey">Net result MTD</div>
+      <div style="font-size:36px;font-weight:800;letter-spacing:-0.02em;margin:12px 0;" id="mtd-net">—</div>
+      <div class="cs">after all costs</div>
+    </div>
+  </div>
+
+  <!-- ===== YEAR TO DATE ===== -->
+  <div class="sl" style="margin-bottom:14px;">Year to date — 2026</div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="ey">Gross sales YTD</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:-0.02em;margin:8px 0;" id="ytd-sales">—</div>
+      <div class="cs">year to date 2026</div>
+    </div>
+    <div class="card">
+      <div class="ey">vs 2025 same period</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:-0.02em;margin:8px 0;" id="ytd-vs-ly">—</div>
+      <div style="font-size:12px;font-weight:700;" id="ytd-vs-ly-pct">—</div>
+      <div class="cs" id="ytd-vs-ly-label">—</div>
+    </div>
+    <div class="card">
+      <div class="ey">Net result YTD</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:-0.02em;margin:8px 0;" id="ytd-net">—</div>
+      <div class="cs">after all costs</div>
+    </div>
+  </div>
+
+  <!-- YTD Cost Breakdown -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="ey" style="margin-bottom:12px;">Year to date cost breakdown</div>
+    <div id="ytd-costs-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;"></div>
+  </div>
+
+  <!-- YTD by SKU chart -->
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+      <div>
+        <h3 style="margin:0;">Year to date sales by SKU</h3>
+        <div class="cs" style="margin-top:2px;">2026 settled financial events + open period orders · <em>Settlement date, not order date — current month may be understated by up to 14 days</em></div>
+      </div>
+    </div>
+    <div style="position:relative;height:360px;margin-top:16px;">
+      <canvas id="skuYtdChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ TAB 2: SKU PERFORMANCE ============ -->
   <div class="tab-panel" id="tab-sku">
 
     <div class="sl">SKU performance — all periods</div>
@@ -1494,6 +1478,7 @@ function render(d) {
 
   // Store globally for all tabs
   globalData = d;
+  renderHomeTab(d);
 
   // Build period bars for all tabs
   buildPeriodBar('sales-period-bar', 'sales');
@@ -2156,6 +2141,182 @@ function renderHistoryTab(d) {
     const yoyStr = yoy!==null ? '<span style="color:'+(yoy>=0?'var(--green)':'var(--red)')+';">'+(yoy>=0?'+':'')+yoy+'%</span>' : '--';
     return '<tr><td style="padding:8px 12px;border-bottom:1px solid var(--border);font-weight:600;">'+mn[parseInt(m)-1]+'</td>'+cells+'<td style="text-align:right;padding:8px 12px;border-bottom:1px solid var(--border);">'+yoyStr+'</td></tr>';
   }).join('');
+}
+
+
+function renderHomeTab(d) {
+  const s = d.summary;
+  const p = d.progress;
+  const t = d.trends || {};
+  const sb = d.sku_breakdown || {};
+  const mSales = t.monthly_sales || {};
+  const mNet   = t.monthly_net   || {};
+  const mFees  = t.monthly_fees  || {};
+  const mAds   = t.monthly_ads   || {};
+  const mCogs  = t.monthly_cogs  || {};
+  const mPromos = t.monthly_promos || {};
+  const mRefunds = t.monthly_refunds || {};
+  const mSub   = t.monthly_subscription || {};
+  const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+  const gridC = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const lblC  = isDark ? '#888780' : '#5f5e5a';
+
+  const today = new Date();
+  const curM = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0');
+  const monthName = mn[today.getMonth()] + ' ' + today.getFullYear();
+  document.getElementById('mtd-month-label').textContent = monthName;
+
+  // --- MTD ---
+  const mtdSales = p.mtd_sales || 0;
+  const goal = 100000;
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+  const daysElapsed = today.getDate();
+  const goalPct = Math.round(mtdSales / goal * 100);
+  const proj = Math.round(mtdSales / daysElapsed * daysInMonth);
+
+  document.getElementById('mtd-sales-big').textContent = '$' + Math.round(mtdSales).toLocaleString();
+  document.getElementById('mtd-goal-sub').textContent = '$' + Math.round(mtdSales).toLocaleString() + ' of $100,000 goal';
+  document.getElementById('mtd-days-label').textContent = daysElapsed + ' of ' + daysInMonth + ' days elapsed';
+  document.getElementById('mtd-goal-pct').textContent = goalPct + '% of goal';
+  document.getElementById('mtd-proj').textContent = '$' + proj.toLocaleString() + ' est. full month';
+  setTimeout(() => { const b = document.getElementById('mtd-goal-bar'); if(b) b.style.width = Math.min(100,goalPct)+'%'; }, 200);
+  document.getElementById('mtd-goal-bar').style.background = goalPct >= 100 ? 'var(--green)' : goalPct >= 70 ? '#c8a820' : 'var(--red)';
+
+  // vs last month
+  const months2026 = Object.keys(mSales).filter(m=>m.startsWith('2026')).sort();
+  const prevM = months2026[months2026.length - 2];
+  const prevSales = prevM ? (mSales[prevM]||0) : 0;
+  const vsPrevPct = prevSales > 0 ? Math.round((mtdSales - prevSales)/prevSales*100) : 0;
+  document.getElementById('mtd-vs-last').textContent = '$' + Math.round(mtdSales).toLocaleString();
+  const vsEl = document.getElementById('mtd-vs-last-pct');
+  vsEl.textContent = (vsPrevPct>=0?'+':'')+vsPrevPct+'%';
+  vsEl.style.color = vsPrevPct >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('mtd-vs-last-label').textContent = 'vs ' + (prevM ? mn[parseInt(prevM.slice(5))-1]+' ($'+Math.round(prevSales).toLocaleString()+')' : '—');
+
+  // vs best month
+  const completedMonths = months2026.filter(m => m < curM);
+  const bestM = completedMonths.length > 0 ? completedMonths.reduce((a,m)=>(mSales[m]||0)>(mSales[a]||0)?m:a, completedMonths[0]) : null;
+  const bestSales = bestM ? (mSales[bestM]||0) : 0;
+  document.getElementById('mtd-vs-best').textContent = bestSales > 0 ? '$' + Math.round(bestSales).toLocaleString() : '—';
+  document.getElementById('mtd-vs-best-label').textContent = bestM ? mn[parseInt(bestM.slice(5))-1] + ' 2026 (best month)' : '—';
+
+  // MTD costs
+  const mtdFees = Math.abs(mFees[curM]||0);
+  const mtdAds  = Math.abs(mAds[curM]||0);
+  const mtdCogs = Math.abs(mCogs[curM]||0);
+  const mtdPromos = Math.abs(mPromos[curM]||0);
+  const mtdRefunds = Math.abs(mRefunds[curM]||0);
+  const mtdSub = Math.abs(mSub[curM]||0);
+  const mtdNet = (mNet[curM]||0);
+
+  const mtdCosts = [
+    { label: 'Amazon fees', val: mtdFees, color: '#e24b4a' },
+    { label: 'Ad spend', val: mtdAds, color: '#c17f2a' },
+    { label: 'COGS', val: mtdCogs, color: '#888' },
+    { label: 'Promotions', val: mtdPromos, color: '#a06080' },
+    { label: 'Refunds', val: mtdRefunds, color: '#c0605a' },
+    { label: 'Subscription', val: mtdSub, color: '#999' },
+  ].filter(c => c.val > 0);
+  const totalMtdCosts = mtdCosts.reduce((a,c)=>a+c.val,0);
+
+  document.getElementById('mtd-costs-grid').innerHTML = mtdCosts.map(c =>
+    '<div style="background:var(--surface);border-radius:8px;padding:10px;">' +
+    '<div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">'+c.label+'</div>' +
+    '<div style="font-size:16px;font-weight:700;color:'+c.color+';">-$'+Math.round(c.val).toLocaleString()+'</div>' +
+    '<div style="font-size:10px;color:var(--muted);">'+(totalMtdCosts>0?Math.round(c.val/totalMtdCosts*100)+'%':'')+'</div></div>'
+  ).join('');
+
+  const netEl = document.getElementById('mtd-net');
+  netEl.textContent = (mtdNet>=0?'+$':'-$') + Math.abs(Math.round(mtdNet)).toLocaleString();
+  netEl.style.color = mtdNet >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // --- YTD 2026 ---
+  const ytdSales = p.ytd_sales_api || s.gross_sales || 0;
+  document.getElementById('ytd-sales').textContent = '$' + Math.round(ytdSales).toLocaleString();
+
+  // YTD net - sum all 2026 monthly net
+  const ytdNet = months2026.reduce((a,m)=>a+(mNet[m]||0),0);
+  const ytdNetEl = document.getElementById('ytd-net');
+  ytdNetEl.textContent = (ytdNet>=0?'+$':'-$') + Math.abs(Math.round(ytdNet)).toLocaleString();
+  ytdNetEl.style.color = ytdNet >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // vs last year same period
+  const curMonthNum = today.getMonth() + 1;
+  const ly2025Months = Object.keys(mSales).filter(m=>m.startsWith('2025') && parseInt(m.slice(5)) <= curMonthNum);
+  const lySales = ly2025Months.reduce((a,m)=>a+(mSales[m]||0),0);
+  const vsLyPct = lySales > 0 ? Math.round((ytdSales-lySales)/lySales*100) : null;
+  document.getElementById('ytd-vs-ly').textContent = lySales > 0 ? '$'+Math.round(lySales).toLocaleString() : '—';
+  const lyPctEl = document.getElementById('ytd-vs-ly-pct');
+  lyPctEl.textContent = vsLyPct !== null ? (vsLyPct>=0?'+':'')+vsLyPct+'% YoY' : '—';
+  lyPctEl.style.color = vsLyPct >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('ytd-vs-ly-label').textContent = lySales > 0 ? '2025 Jan–'+mn[curMonthNum-1] : 'No 2025 data';
+
+  // YTD cost breakdown
+  const ytdFees = Math.abs(s.fba_fees||0) + Math.abs(s.referral_fees||0);
+  const ytdCosts = [
+    { label: 'Amazon fees', val: ytdFees, color: '#e24b4a' },
+    { label: 'Ad spend', val: Math.abs(s.ad_spend||0), color: '#c17f2a' },
+    { label: 'COGS', val: Math.abs(s.cogs||0), color: '#888' },
+    { label: 'Promotions', val: Math.abs(s.promotions||0), color: '#a06080' },
+    { label: 'Refunds', val: Math.abs(s.refunds||0), color: '#c0605a' },
+    { label: 'AWD logistics', val: Math.abs(s.awd_transport||0)+Math.abs(s.awd_processing||0)+Math.abs(s.awd_storage||0), color: '#ba7517' },
+    { label: 'Subscription', val: Math.abs(s.subscription||0), color: '#999' },
+  ].filter(c => c.val > 0);
+  const totalYtdCosts = ytdCosts.reduce((a,c)=>a+c.val,0);
+
+  document.getElementById('ytd-costs-grid').innerHTML = ytdCosts
+    .sort((a,b)=>b.val-a.val)
+    .map(c =>
+      '<div style="background:var(--surface);border-radius:8px;padding:12px;border:1px solid var(--border);">' +
+      '<div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">'+c.label+'</div>' +
+      '<div style="font-size:18px;font-weight:700;color:'+c.color+';">-$'+Math.round(c.val).toLocaleString()+'</div>' +
+      '<div style="font-size:10px;color:var(--muted);margin-top:2px);">'+(totalYtdCosts>0?Math.round(c.val/totalYtdCosts*100)+'% of costs':'')+'</div>' +
+      '<div style="height:3px;background:var(--border);border-radius:2px;margin-top:6px;">' +
+      '<div style="height:3px;background:'+c.color+';border-radius:2px;width:'+Math.min(100,Math.round(c.val/totalYtdCosts*100))+'%;"></div></div></div>'
+    ).join('');
+
+  // YTD by SKU bar chart - combine settled monthly + MTD unsettled
+  const ytdSkuSales = {};
+  months2026.forEach(m => {
+    Object.entries(sb.monthly_sales_by_sku?.[m]||{}).forEach(([k,v]) => ytdSkuSales[k]=(ytdSkuSales[k]||0)+v);
+  });
+  // Add open period (MTD) unsettled SKU data if available
+  Object.entries(sb.mtd_sales_by_sku||{}).forEach(([k,v]) => {
+    const settledMtd = sb.monthly_sales_by_sku?.[curM]?.[k] || 0;
+    const unsettled = v - settledMtd;
+    if (unsettled > 0) ytdSkuSales[k] = (ytdSkuSales[k]||0) + unsettled;
+  });
+
+  const skuEntries = Object.entries(ytdSkuSales).filter(([,v])=>v>0).sort(([,a],[,b])=>b-a).slice(0,20);
+  const skuLabels = skuEntries.map(([k])=>k.length>15?k.slice(0,15)+'…':k);
+  const skuVals = skuEntries.map(([,v])=>Math.round(v));
+
+  if (window._skuYtdChart) window._skuYtdChart.destroy();
+  window._skuYtdChart = new Chart(document.getElementById('skuYtdChart'), {
+    type: 'bar',
+    data: {
+      labels: skuLabels,
+      datasets: [{
+        label: '2026 YTD Sales',
+        data: skuVals,
+        backgroundColor: '#014567',
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ' $'+ctx.parsed.x.toLocaleString() }}
+      },
+      scales: {
+        x: { ticks:{color:lblC,font:{size:11},callback:v=>'$'+Math.round(v/1000)+'K'}, grid:{color:gridC}, border:{display:false} },
+        y: { ticks:{color:lblC,font:{size:10}}, grid:{display:false}, border:{display:false} }
+      }
+    }
+  });
 }
 
 load().catch(e => {
