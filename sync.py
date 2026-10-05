@@ -199,6 +199,7 @@ def calc_unsettled_revenue(access_token, settled_monthly, start_of_open_period):
     unsettled_total = 0
     daily_sales = {}   # date -> amount
     units_by_sku = {}  # sku -> units (for open period)
+    sales_by_sku = {}  # sku -> revenue
     
     for order in orders:
         order_total = float(order.get('OrderTotal', {}).get('Amount', 0))
@@ -216,11 +217,13 @@ def calc_unsettled_revenue(access_token, settled_monthly, start_of_open_period):
                 for item in items:
                     sku = item.get('SellerSKU', '')
                     qty = int(item.get('QuantityOrdered', 0))
+                    item_price = float(item.get('ItemPrice', {}).get('Amount', 0))
                     if sku and qty > 0:
                         units_by_sku[sku] = units_by_sku.get(sku, 0) + qty
+                        sales_by_sku[sku] = sales_by_sku.get(sku, 0) + item_price
 
     print(f"  Unsettled revenue estimate: ${unsettled_total:.2f}")
-    return round(unsettled_total, 2), daily_sales, units_by_sku
+    return round(unsettled_total, 2), daily_sales, units_by_sku, sales_by_sku
 
 def process_financial_events(events_list):
     """Bucket all financial events into P&L categories."""
@@ -537,7 +540,7 @@ def run():
     from datetime import timedelta
     open_period_start = today_dt.replace(day=1).isoformat()
     print("Fetching unsettled orders for open period...")
-    unsettled, daily_orders, unsettled_units_by_sku = calc_unsettled_revenue(token, monthly_sales_map, open_period_start)
+    unsettled, daily_orders, unsettled_units_by_sku, unsettled_sales_by_sku = calc_unsettled_revenue(token, monthly_sales_map, open_period_start)
 
     # Use higher of settled MTD or orders API MTD (avoid double counting)
     mtd_sales = max(mtd_settled, unsettled)
@@ -700,6 +703,7 @@ def run():
             'fba_fees_by_sku': merge_by_name(fba_fees_by_sku, round_vals=True),
             'referral_fees_by_sku': merge_by_name(referral_fees_by_sku, round_vals=True),
             'ads_by_sku': sku_ads,
+            'mtd_sales_by_sku': {PRODUCT_NAMES.get(k,k): round(v,2) for k,v in unsettled_sales_by_sku.items()},
             'monthly_sales_by_sku': {m: merge_by_name(skus, round_vals=True)
                                       for m, skus in monthly_sales_by_sku.items()},
             'monthly_units_by_sku': {m: merge_by_name(skus)
