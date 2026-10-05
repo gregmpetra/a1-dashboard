@@ -784,6 +784,7 @@ function setPeriod(period) {
 }
 
 function applyPeriodFilter(d, period) {
+  try {
   const p = d.progress;
   const pd = getPeriodData(d, period);
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
@@ -1153,6 +1154,7 @@ const ASIN_TO_SKU = {
 };
 
 function render(d) {
+  try {
   const s = d.summary;
   const p = d.progress;
   const ads = d.ads;
