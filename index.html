@@ -2212,7 +2212,8 @@ function renderHomeTab(d) {
   const pillsEl = document.getElementById('month-pills');
   if (pillsEl) {
     const pastMonths = months2026.filter(x => x < curM).reverse().slice(0, 6);
-    pillsEl.innerHTML = pastMonths.map(x =>
+    const curPill = '<button onclick="renderHomeTab(globalData)" id="pill-current" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--border2);cursor:pointer;color:var(--text);font-weight:700;">' + mn[parseInt(curM.slice(5))-1] + '</button>';
+    pillsEl.innerHTML = curPill + pastMonths.map(x =>
       '<button onclick="showMonth(\'' + x + '\')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;color:var(--text);">' +
       mn[parseInt(x.slice(5))-1] + '</button>'
     ).join('');
@@ -2449,8 +2450,9 @@ function showMonth(m) {
 
   // Highlight active pill
   document.querySelectorAll('#month-pills button').forEach(btn => {
-    btn.style.background = btn.textContent === mn[parseInt(m.slice(5))-1] ? 'var(--border2)' : 'var(--surface)';
-    btn.style.fontWeight = btn.textContent === mn[parseInt(m.slice(5))-1] ? '700' : 'normal';
+    const isActive = btn.textContent.trim() === mn[parseInt(m.slice(5))-1];
+    btn.style.background = isActive ? 'var(--border2)' : 'var(--surface)';
+    btn.style.fontWeight = isActive ? '700' : 'normal';
   });
 }
 
