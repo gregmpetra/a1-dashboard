@@ -1299,7 +1299,7 @@ function render(d) {
 
 
   if (ads.roas < 1) ins.push(['r', `Blended ROAS of ${ads.roas.toFixed(2)}× means ads are still underwater overall. June improved significantly — keep optimising.`]);
-  document.getElementById('s-insights').innerHTML = ins.map(([t,txt])=>
+  (document.getElementById('s-insights') || {innerHTML: ''}).innerHTML = ins.map(([t,txt])=>
     `<div class="insight"><div class="i-dot i-${t}"></div><div>${txt}</div></div>`).join('');
 
   // ---- TAB 2: SKU PERFORMANCE ----
