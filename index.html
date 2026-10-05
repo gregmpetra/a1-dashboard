@@ -190,7 +190,10 @@
   <div class="tab-panel active" id="tab-sales">
 
   <!-- ===== THIS MONTH ===== -->
-  <div class="sl" style="margin-bottom:14px;">This month — <span id="mtd-month-label">—</span></div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div class="sl" style="margin:0;">This month — <span id="mtd-month-label">—</span></div>
+    <div id="month-pills" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+  </div>
 
   <!-- MTD Goal Progress -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
@@ -2356,6 +2359,91 @@ window.onerror = function(msg, src, line, col, err) {
   document.body.innerHTML = '<div style="padding:40px;font-family:monospace;"><h2>JS Error</h2><p>' + msg + '</p><p>Line: ' + line + '</p><p>' + (err ? err.stack : '') + '</p></div>';
   return true;
 };
+
+function showMonth(m) {
+  if (!globalData) return;
+  const d = globalData;
+  const t = d.trends || {};
+  const mSales = t.monthly_sales || {};
+  const mNet   = t.monthly_net   || {};
+  const mFees  = t.monthly_fees  || {};
+  const mAds   = t.monthly_ads   || {};
+  const mCogs  = t.monthly_cogs  || {};
+  const mPromos = t.monthly_promos || {};
+  const mRefunds = t.monthly_refunds || {};
+  const mSub   = t.monthly_subscription || {};
+  const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const goal = 100000;
+
+  const mLabel = mn[parseInt(m.slice(5))-1] + ' ' + m.slice(0,4);
+  safeSet('mtd-month-label', mLabel);
+
+  const sales = mSales[m] || 0;
+  const daysInM = new Date(parseInt(m.slice(0,4)), parseInt(m.slice(5)), 0).getDate();
+  const goalPct = Math.round(sales / goal * 100);
+
+  safeSet('mtd-sales-big', '$' + Math.round(sales).toLocaleString());
+  safeSet('mtd-goal-sub', '$' + Math.round(sales).toLocaleString() + ' of $100,000 goal');
+  safeSet('mtd-days-label', 'Full month · ' + daysInM + ' days');
+  safeSet('mtd-goal-pct', goalPct + '% of goal');
+  safeSet('mtd-proj', '$' + Math.round(sales).toLocaleString() + ' (final)');
+  setTimeout(() => { const b = document.getElementById('mtd-goal-bar'); if(b) { b.style.width = Math.min(100,goalPct)+'%'; b.style.background = goalPct>=100?'var(--green)':goalPct>=70?'#c8a820':'var(--red)'; }}, 200);
+
+  // vs prior month
+  const months2026 = Object.keys(mSales).filter(x=>x.startsWith('2026')).sort();
+  const idx = months2026.indexOf(m);
+  const prevM = idx > 0 ? months2026[idx-1] : null;
+  const prevSales = prevM ? (mSales[prevM]||0) : 0;
+  const vsPct = prevSales > 0 ? Math.round((sales-prevSales)/prevSales*100) : 0;
+  safeSet('mtd-vs-last', prevSales > 0 ? '$'+Math.round(prevSales).toLocaleString() : '—');
+  const vsEl = document.getElementById('mtd-vs-last-pct');
+  if (vsEl) { vsEl.textContent = (vsPct>=0?'+':'')+vsPct+'%'; vsEl.style.color = vsPct>=0?'var(--green)':'var(--red)'; }
+  safeSet('mtd-vs-last-label', prevM ? mn[parseInt(prevM.slice(5))-1]+' 2026 · this month was '+(vsPct>=0?'+':'')+vsPct+'%' : '—');
+
+  // vs best
+  const completed = months2026.filter(x=>x<m);
+  const bestM = completed.length>0?completed.reduce((a,x)=>(mSales[x]||0)>(mSales[a]||0)?x:a,completed[0]):null;
+  safeSet('mtd-vs-best', bestM?'$'+Math.round(mSales[bestM]||0).toLocaleString():'—');
+  safeSet('mtd-vs-best-label', bestM?mn[parseInt(bestM.slice(5))-1]+' 2026 (best month)':'—');
+
+  // costs
+  const fees = Math.abs(mFees[m]||0);
+  const ads = Math.abs(mAds[m]||0);
+  const cogs = Math.abs(mCogs[m]||0);
+  const promos = Math.abs(mPromos[m]||0);
+  const refunds = Math.abs(mRefunds[m]||0);
+  const sub = Math.abs(mSub[m]||0);
+  const net = mNet[m]||0;
+
+  const costs = [
+    {label:'Amazon fees',val:fees,color:'#e24b4a'},
+    {label:'Ad spend',val:ads,color:'#c17f2a'},
+    {label:'COGS',val:cogs,color:'#888'},
+    {label:'Promotions',val:promos,color:'#a06080'},
+    {label:'Refunds',val:refunds,color:'#c0605a'},
+    {label:'Subscription',val:sub,color:'#999'},
+  ].filter(c=>c.val>0);
+  const totalCosts = costs.reduce((a,c)=>a+c.val,0);
+  const grid = document.getElementById('mtd-costs-grid');
+  if (grid) grid.innerHTML = costs.map(c=>
+    '<div style="background:var(--surface);border-radius:8px;padding:10px;">'+
+    '<div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">'+c.label+'</div>'+
+    '<div style="font-size:16px;font-weight:700;color:'+c.color+';">-$'+Math.round(c.val).toLocaleString()+'</div>'+
+    '<div style="font-size:10px;color:var(--muted);">'+(totalCosts>0?Math.round(c.val/totalCosts*100)+'%':'')+'</div></div>'
+  ).join('');
+
+  const netEl = document.getElementById('mtd-net');
+  if (netEl) { netEl.textContent = (net>=0?'+$':'-$')+Math.abs(Math.round(net)).toLocaleString(); netEl.style.color = net>=0?'var(--green)':'var(--red)'; }
+  safeSet('mtd-net-caveat', 'Final · after all costs excl. COGS');
+  safeSet('mtd-costs-caveat', '');
+
+  // Highlight active pill
+  document.querySelectorAll('#month-pills button').forEach(btn => {
+    btn.style.background = btn.textContent === mn[parseInt(m.slice(5))-1] ? 'var(--border2)' : 'var(--surface)';
+    btn.style.fontWeight = btn.textContent === mn[parseInt(m.slice(5))-1] ? '700' : 'normal';
+  });
+}
+
 load().catch(e => {
   document.body.innerHTML = `<div style="padding:40px;font-family:sans-serif;color:#a32d2d">
     <h2>Could not load data.json</h2><p>Run <code>python3 process.py</code> first.</p>
