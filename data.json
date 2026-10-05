@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T13:43:37.416369Z",
+  "generated_at": "2026-10-05T19:21:41.261648Z",
   "source": "sp-api",
   "config": {
     "deficit_start": 0,
@@ -51,16 +51,16 @@
     "deficit_remaining": 0,
     "pct_recovered": 0,
     "goal_monthly": 100000,
-    "mtd_sales": 11178.95,
+    "mtd_sales": 11638.91,
     "mtd_days": 5,
-    "rolling_30d_sales": 97239.42,
-    "rolling_14d_sales": 48387.69,
-    "rolling_7d_sales": 25548.7,
-    "rolling_30d_units": 858,
-    "rolling_14d_units": 431,
-    "mtd_units": 105,
-    "ytd_sales_api": 532311.32,
-    "ytd_units_api": 5719
+    "rolling_30d_sales": 97699.38,
+    "rolling_14d_sales": 48847.65,
+    "rolling_7d_sales": 26008.66,
+    "rolling_30d_units": 862,
+    "rolling_14d_units": 435,
+    "mtd_units": 109,
+    "ytd_sales_api": 532771.28,
+    "ytd_units_api": 5723
   },
   "sku_breakdown": {
     "sales": {
@@ -84,20 +84,20 @@
       "TDASH12": 89.99
     },
     "units": {
-      "MC7090": 1043,
+      "MC7090": 1039,
       "OC100-G": 258,
       "MC7098-15": 357,
       "OC300-1": 279,
-      "MC7072": 2188,
+      "MC7072": 2182,
       "MC7099-R": 108,
       "WIPEMC7090-1": 184,
       "OC600": 5,
       "WIPEMC7098-1": 353,
-      "OC100": 62,
+      "OC100": 61,
       "MC7071": 19,
       "MC7095": 66,
       "FW8002PK": 34,
-      "OC300": 38,
+      "OC300": 37,
       "OC200": 48,
       "MC7073": 3,
       "MC7207": 2,
@@ -137,12 +137,10 @@
     },
     "ads_by_sku": {},
     "mtd_sales_by_sku": {
-      "MC7072": 8059.38,
+      "MC7072": 7279.44,
       "WIPEMC7098-1": 199.92,
-      "MC7090": 1837.83,
-      "MC7095": 89.97,
-      "OC100": 69.99,
-      "OC300": 69.99
+      "MC7090": 1413.87,
+      "MC7095": 89.97
     },
     "monthly_sales_by_sku": {
       "2026-01": {
@@ -776,7 +774,7 @@
     "MC7072": {
       "sku": "MC7072",
       "in_stock": 0,
-      "daily_rate": 7.9,
+      "daily_rate": 7.88,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -790,7 +788,7 @@
     "MC7090": {
       "sku": "MC7090",
       "in_stock": 95,
-      "daily_rate": 3.77,
+      "daily_rate": 3.75,
       "days_remaining": 25,
       "reorder_alert": true
     },
@@ -904,7 +902,7 @@
       "2026-07": 42788.58000000007,
       "2026-08": 95229.8500000005,
       "2026-09": 75945.82000000011,
-      "2026-10": 10917.72
+      "2026-10": 11059.28
     },
     "monthly_fees": {
       "2026-01": -8838.069999999978,
@@ -938,11 +936,11 @@
       "2026-07": 31307.08,
       "2026-08": 74757.68,
       "2026-09": 59324.45,
-      "2026-10": 10917.72
+      "2026-10": 11059.28
     },
     "weekly_sales": {
       "2026-09-28": 10535.21,
-      "2026-10-05": 382.51
+      "2026-10-05": 524.07
     },
     "monthly_cogs": {
       "2026-01": 0.0,
