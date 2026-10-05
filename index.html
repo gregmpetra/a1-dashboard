@@ -2189,6 +2189,17 @@ function renderHomeTab(d) {
   const monthName = mn[today.getMonth()] + ' ' + today.getFullYear();
   safeSet('mtd-month-label', monthName);
 
+  // Build month pills
+  const pillsEl = document.getElementById('month-pills');
+  if (pillsEl) {
+    const mn2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const pastMonths = months2026.filter(x => x < curM).reverse().slice(0, 6);
+    pillsEl.innerHTML = pastMonths.map(x =>
+      '<button onclick="showMonth(\'' + x + '\')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;color:var(--text);">' +
+      mn2[parseInt(x.slice(5))-1] + '</button>'
+    ).join('');
+  }
+
   // --- MTD ---
   const mtdSales = p.mtd_sales || 0;
   const goal = 100000;
@@ -2210,11 +2221,11 @@ function renderHomeTab(d) {
   const prevM = months2026[months2026.length - 2];
   const prevSales = prevM ? (mSales[prevM]||0) : 0;
   const vsPrevPct = prevSales > 0 ? Math.round((mtdSales - prevSales)/prevSales*100) : 0;
-  safeSet('mtd-vs-last', '$' + Math.round(mtdSales).toLocaleString());
+  safeSet('mtd-vs-last', prevSales > 0 ? '$' + Math.round(prevSales).toLocaleString() : '--');
   const vsEl = document.getElementById('mtd-vs-last-pct');
-  vsEl.textContent = (vsPrevPct>=0?'+':'')+vsPrevPct+'%';
+  if (vsEl) vsEl.textContent = (vsPrevPct>=0?'+':'')+vsPrevPct+'%';
   vsEl.style.color = vsPrevPct >= 0 ? 'var(--green)' : 'var(--red)';
-  safeSet('mtd-vs-last-label', 'vs ' + (prevM ? mn[parseInt(prevM.slice(5))-1]+' ($'+Math.round(prevSales).toLocaleString()+')' : '—'));
+  safeSet('mtd-vs-last-label', prevM ? mn[parseInt(prevM.slice(5))-1]+' 2026 · current month is '+(vsPrevPct>=0?'+':'')+vsPrevPct+'%' : '--');
 
   // vs best month
   const completedMonths = months2026.filter(m => m < curM);
