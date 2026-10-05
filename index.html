@@ -1638,7 +1638,7 @@ function renderProfitability(d) {
     if (l2 > l1) ins.push(['g', `Net result improved from ${lastTwo[0]} to ${lastTwo[1]} — positive momentum. Keep optimising ad spend to continue the trend.`]);
     else ins.push(['a', `Net result declined from ${lastTwo[0]} to ${lastTwo[1]}. Review ad spend efficiency and AWD storage costs.`]);
   }
-  if (realPct > 0) ins.push(['g', `${realPct}% of the  has been recovered. At current trajectory, full breakeven by ${document.getElementById('pr-be-date').textContent}.`]);
+  if (realPct > 0) ins.push(['g', `${realPct}% of the  has been recovered. At current trajectory, full breakeven by ${(document.getElementById('pr-be-date')||{textContent:''}).textContent}.`]);
   const bestSalesMonth = months.reduce((a,m)=>(mSales[m]||0)>(mSales[a]||0)?m:a, months[0]);
   ins.push(['g', `${bestSalesMonth} was your strongest sales month at $${Math.round(mSales[bestSalesMonth]||0).toLocaleString()}. Use it as the benchmark for future months.`]);
   if (Math.abs(s.awd_storage) + Math.abs(s.awd_transport) + Math.abs(s.awd_processing) > 1500)
