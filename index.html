@@ -2231,7 +2231,9 @@ function renderHomeTab(d) {
   const mtdPromos = hasSettledCosts ? Math.abs(mPromos[curM]||0) : Math.abs(mPromos[prevM2]||0) * costRatio;
   const mtdRefunds = hasSettledCosts ? Math.abs(mRefunds[curM]||0) : Math.abs(mRefunds[prevM2]||0) * costRatio;
   const mtdSub = hasSettledCosts ? Math.abs(mSub[curM]||0) : Math.abs(mSub[prevM2]||0) * costRatio;
-  const mtdNet = (mNet[curM]||0);
+  // Calculate MTD net from components (mNet[curM] is 0 if no settled data)
+  const mtdNetCalc = mtdSales - mtdFees - mtdAds - mtdCogs - mtdPromos - mtdRefunds - mtdSub;
+  const mtdNet = hasSettledCosts ? (mNet[curM]||0) : mtdNetCalc;
   const costsAreEstimated = !hasSettledCosts;
 
   const mtdCosts = [
