@@ -2340,7 +2340,9 @@ window.onerror = function(msg, src, line, col, err) {
 };
 load().catch(e => {
   document.body.innerHTML = `<div style="padding:40px;font-family:sans-serif;color:#a32d2d">
-    <h2>Could not load data.json</h2><p>Run <code>python3 process.py</code> first.</p><pre>${e}</pre></div>`;
+    <h2>Could not load data.json</h2><p>Run <code>python3 process.py</code> first.</p>
+    <pre>${e}</pre>
+    <pre>${e && e.stack ? e.stack : 'no stack'}</pre></div>`;
 });
 </script>
 </body>
