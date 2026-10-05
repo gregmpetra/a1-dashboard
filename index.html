@@ -2189,17 +2189,6 @@ function renderHomeTab(d) {
   const monthName = mn[today.getMonth()] + ' ' + today.getFullYear();
   safeSet('mtd-month-label', monthName);
 
-  // Build month pills
-  const pillsEl = document.getElementById('month-pills');
-  if (pillsEl) {
-    const mn2 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const pastMonths = months2026.filter(x => x < curM).reverse().slice(0, 6);
-    pillsEl.innerHTML = pastMonths.map(x =>
-      '<button onclick="showMonth(\'' + x + '\')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;color:var(--text);">' +
-      mn2[parseInt(x.slice(5))-1] + '</button>'
-    ).join('');
-  }
-
   // --- MTD ---
   const mtdSales = p.mtd_sales || 0;
   const goal = 100000;
@@ -2218,6 +2207,16 @@ function renderHomeTab(d) {
 
   // vs last month
   const months2026 = Object.keys(mSales).filter(m=>m.startsWith('2026')).sort();
+
+  // Build month pills now that months2026 is defined
+  const pillsEl = document.getElementById('month-pills');
+  if (pillsEl) {
+    const pastMonths = months2026.filter(x => x < curM).reverse().slice(0, 6);
+    pillsEl.innerHTML = pastMonths.map(x =>
+      '<button onclick="showMonth(\'' + x + '\')" style="font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid var(--border2);background:var(--surface);cursor:pointer;color:var(--text);">' +
+      mn[parseInt(x.slice(5))-1] + '</button>'
+    ).join('');
+  }
   const prevM = months2026[months2026.length - 2];
   const prevSales = prevM ? (mSales[prevM]||0) : 0;
   const vsPrevPct = prevSales > 0 ? Math.round((mtdSales - prevSales)/prevSales*100) : 0;
