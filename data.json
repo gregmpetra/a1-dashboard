@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T15:34:28.986626Z",
+  "generated_at": "2026-10-21T15:51:04.490217Z",
   "source": "sp-api",
   "config": {
     "deficit_start": 0,
@@ -9,7 +9,7 @@
   },
   "date_range": {
     "start": "2026-01-01",
-    "end": "2026-10-20"
+    "end": "2026-10-21"
   },
   "summary": {
     "gross_sales": 497301.27,
@@ -51,16 +51,16 @@
     "deficit_remaining": 0,
     "pct_recovered": 0,
     "goal_monthly": 100000,
-    "mtd_sales": 67731.13,
-    "mtd_days": 20,
-    "rolling_30d_sales": 104006.82,
-    "rolling_14d_sales": 52795.36,
-    "rolling_7d_sales": 28785.52,
-    "rolling_30d_units": 918,
-    "rolling_14d_units": 464,
-    "mtd_units": 590,
-    "ytd_sales_api": 587285.51,
-    "ytd_units_api": 6200
+    "mtd_sales": 73051.04,
+    "mtd_days": 21,
+    "rolling_30d_sales": 107615.51,
+    "rolling_14d_sales": 50007.57,
+    "rolling_7d_sales": 27698.63,
+    "rolling_30d_units": 949,
+    "rolling_14d_units": 443,
+    "mtd_units": 624,
+    "ytd_sales_api": 591254.17,
+    "ytd_units_api": 6234
   },
   "sku_breakdown": {
     "sales": {
@@ -84,18 +84,18 @@
       "TDASH12": 89.99
     },
     "units": {
-      "MC7090": 1183,
+      "MC7090": 1188,
       "OC100-G": 258,
       "MC7098-15": 357,
       "OC300-1": 279,
-      "MC7072": 2616,
+      "MC7072": 2677,
       "MC7099-R": 108,
       "WIPEMC7090-1": 198,
       "OC600": 5,
-      "WIPEMC7098-1": 410,
-      "OC100": 69,
+      "WIPEMC7098-1": 400,
+      "OC100": 68,
       "MC7071": 19,
-      "MC7095": 72,
+      "MC7095": 75,
       "FW8002PK": 36,
       "OC300": 42,
       "OC200": 51,
@@ -137,12 +137,12 @@
     },
     "ads_by_sku": {},
     "mtd_sales_by_sku": {
-      "MC7072": 24178.14,
-      "WIPEMC7098-1": 924.63,
-      "MC7090": 6491.4,
-      "MC7095": 89.97,
+      "MC7072": 32107.53,
+      "WIPEMC7098-1": 674.73,
+      "MC7090": 6993.35,
+      "MC7095": 179.94,
       "WIPEMC7090-1": 89.97,
-      "OC100": 489.93,
+      "OC100": 419.94,
       "OC300": 279.96
     },
     "monthly_sales_by_sku": {
@@ -716,7 +716,7 @@
       "sku": "FW8002PK",
       "in_stock": 64,
       "daily_rate": 0.12,
-      "days_remaining": 519,
+      "days_remaining": 521,
       "reorder_alert": false
     },
     "MC1616-BLUE": {
@@ -806,7 +806,7 @@
     "MC7072": {
       "sku": "MC7072",
       "in_stock": 0,
-      "daily_rate": 8.96,
+      "daily_rate": 9.14,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -819,9 +819,9 @@
     },
     "MC7090": {
       "sku": "MC7090",
-      "in_stock": 13,
+      "in_stock": 9,
       "daily_rate": 4.05,
-      "days_remaining": 3,
+      "days_remaining": 2,
       "reorder_alert": true
     },
     "MC7092-AMAZON": {
@@ -841,7 +841,7 @@
     "MC7095": {
       "sku": "MC7095",
       "in_stock": 0,
-      "daily_rate": 0.25,
+      "daily_rate": 0.26,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -890,7 +890,7 @@
     "OC300-1": {
       "sku": "OC300-1",
       "in_stock": 0,
-      "daily_rate": 0.96,
+      "daily_rate": 0.95,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -898,7 +898,7 @@
       "sku": "TDASH12",
       "in_stock": 9,
       "daily_rate": 0.0,
-      "days_remaining": 2628,
+      "days_remaining": 2637,
       "reorder_alert": false
     },
     "TDASH12-100": {
@@ -917,9 +917,9 @@
     },
     "WIPEMC7098-1": {
       "sku": "WIPEMC7098-1",
-      "in_stock": 166,
-      "daily_rate": 1.4,
-      "days_remaining": 118,
+      "in_stock": 162,
+      "daily_rate": 1.37,
+      "days_remaining": 119,
       "reorder_alert": false
     }
   },
@@ -934,7 +934,7 @@
       "2026-07": 42788.58000000007,
       "2026-08": 95229.8500000005,
       "2026-09": 108173.95000000088,
-      "2026-10": 67731.13
+      "2026-10": 73051.04
     },
     "monthly_fees": {
       "2026-01": -8838.069999999978,
@@ -969,13 +969,13 @@
       "2026-07": 31307.08,
       "2026-08": 74757.68,
       "2026-09": 84941.9,
-      "2026-10": 62095.88
+      "2026-10": 67415.79
     },
     "weekly_sales": {
       "2026-09-28": 10814.0,
       "2026-10-05": 23995.12,
       "2026-10-12": 27127.68,
-      "2026-10-19": 5794.33
+      "2026-10-19": 11114.24
     },
     "monthly_cogs": {
       "2026-01": 0.0,
