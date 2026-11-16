@@ -160,6 +160,21 @@
                        border-color: var(--border2); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
   .tab-period-bar { display: flex; align-items: center; justify-content: space-between;
                     margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  /* Catalog + Opportunities tabs (reuse kpi/card/sku-table/pill; only these additions) */
+  .tabs { max-width: 100%; overflow-x: auto; }
+  .tab { white-space: nowrap; flex-shrink: 0; }
+  .sku-table.wide { min-width: 960px; }
+  .sku-table th.l, .sku-table td.l { text-align: left; }
+  .sku-table td.nw, .sku-table.wide .pill { white-space: nowrap; }
+  .sample-tag { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 99px; font-size: 9px;
+                font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; vertical-align: middle;
+                background: var(--amber-bg); color: var(--amber); white-space: nowrap; }
+  .tile { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--surface2); border: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--muted); overflow: hidden; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; }
+  .row-actions { display: inline-flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  .blocked-note { font-size: 11px; color: var(--red); font-weight: 600; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (max-width: 720px) {
     .goal-row, .kpi4, .kpi3, .two-col, .three-col, .be-grid { grid-template-columns: 1fr; }
     .tl-markers { gap: 16px; flex-wrap: wrap; justify-content: flex-start; }
@@ -171,7 +186,7 @@
 
   <div class="hdr">
     <div>
-      <h1 id="acct-name">For &amp; Against</h1>
+      <h1 id="acct-name">A1 American</h1>
       <p id="date-range">Loading...</p>
     </div>
     <span class="badge" id="source-badge"><span class="dot"></span>Settlement reports + Ads CSV</span>
@@ -184,6 +199,8 @@
     <button class="tab" onclick="switchTab('trends')">Trends</button>
     <button class="tab" onclick="switchTab('profitability')">Profitability</button>
     <button class="tab" onclick="switchTab('inventory')">Inventory</button>
+    <button class="tab" onclick="switchTab('catalog')">Amazon Catalog</button>
+    <button class="tab" onclick="switchTab('opportunities')">Opportunities</button>
   </div>
 
   <!-- ============ TAB 1: SALES & GOALS ============ -->
@@ -353,7 +370,7 @@
     </div>
     <div class="kpi4" style="margin-bottom:14px">
       <div class="kpi"><div class="kl">This month sales</div><div class="kv" id="c-mtd">—</div><div class="kd neu" id="c-mtd-sub">—</div></div>
-      <div class="kpi"><div class="kl">Monthly target</div><div class="kv">$10,000</div><div class="kd neu">gross sales goal</div></div>
+      <div class="kpi"><div class="kl">Monthly target</div><div class="kv" id="coo-goal-target">$100,000</div><div class="kd neu">gross sales goal</div></div>
       <div class="kpi"><div class="kl">ROAS</div><div class="kv" id="c-roas">—</div><div class="kd neu">ad return on spend</div></div>
       <div class="kpi"><div class="kl">Units sold YTD</div><div class="kv" id="c-units">—</div><div class="kd neu">all SKUs</div></div>
     </div>
@@ -599,7 +616,7 @@
           </tr>
         </thead>
         <tbody id="inv-tbody"></tbody>
-      </table>
+      </table></div>
     </div>
 
     <div class="two-col">
@@ -617,6 +634,70 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ============ TAB 7: AMAZON CATALOG ============ -->
+  <div class="tab-panel" id="tab-catalog">
+    <div class="sl">Amazon catalog <span class="sample-tag" id="cat-sample-flag">Sample data</span></div>
+
+    <div class="kpi4">
+      <div class="kpi"><div class="kl">Live listings <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-live">—</div><div class="kd neu">SKUs with stock or sales</div></div>
+      <div class="kpi"><div class="kl">Units at Amazon</div><div class="kv" id="cat-amz-units">—</div><div class="kd neu">FBA fulfillable (SP-API)</div></div>
+      <div class="kpi"><div class="kl">Units in warehouses <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-wh-units">—</div><div class="kd neu">internal feed not connected</div></div>
+      <div class="kpi"><div class="kl">Blended GPM <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-gpm">—</div><div class="kd neu" id="cat-gpm-sub">—</div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Listings</h3>
+      <div class="cs">Net value = Amazon price − Amazon fees − last cost. GPM = net value ÷ Amazon price. No cost on file shows "-". Low stock = under 45 days of cover or under 10 units.</div>
+      <div class="table-wrap"><table class="sku-table wide" id="cat-table">
+        <thead>
+          <tr>
+            <th class="l"><span class="sr-only">Image</span></th>
+            <th class="l">Title <span class="sample-tag">Sample data</span></th>
+            <th class="l">SKU</th>
+            <th>Qty in Amazon</th>
+            <th>Qty in warehouses <span class="sample-tag">Sample data</span></th>
+            <th>Last cost <span class="sample-tag">Sample data</span></th>
+            <th>Amazon price <span class="sample-tag">Sample data</span></th>
+            <th>Amazon fees</th>
+            <th>Net value <span class="sample-tag">Sample data</span></th>
+            <th>GPM <span class="sample-tag">Sample data</span></th>
+          </tr>
+        </thead>
+        <tbody id="cat-tbody"><tr><td colspan="10" class="l neu">Loading…</td></tr></tbody>
+      </table></div>
+      <div class="cs" style="margin:12px 0 0;">Amazon fees are realized per-unit fees (FBA + referral ÷ units) where the SKU has sales; cells marked "Sample" are placeholders until the Product Fees API is connected.</div>
+    </div>
+  </div>
+
+  <!-- ============ TAB 8: OPPORTUNITIES ============ -->
+  <div class="tab-panel" id="tab-opportunities">
+    <div class="sl">Opportunities <span class="sample-tag">Sample data</span></div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Internal items not yet on Amazon</h3>
+      <div class="cs">Sorted by score, high to low. Grade: A ≥ 85 · B 70–84 · C 55–69 · D &lt; 55. "Push to Amazon" only adds the item to a draft queue in this browser. Nothing is sent to Amazon.</div>
+      <div class="table-wrap"><table class="sku-table wide" id="opp-table">
+        <thead>
+          <tr>
+            <th class="l">Internal title <span class="sample-tag">Sample data</span></th>
+            <th class="l">SKU</th>
+            <th>Most recent COGS <span class="sample-tag">Sample data</span></th>
+            <th>Retail price <span class="sample-tag">Sample data</span></th>
+            <th>Score <span class="sample-tag">Sample data</span></th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="opp-tbody"><tr><td colspan="6" class="l neu">Loading…</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Draft queue (this browser only)</h3>
+      <div class="cs">Saved in this browser's local storage. Other people and devices won't see it, and clearing site data empties it.</div>
+      <div class="insights" id="opp-queue"></div>
+    </div>
   </div>
 
   <div class="stamp" id="stamp">—</div>
@@ -897,7 +978,7 @@ let globalData = null;
 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['sales','sku','coo','trends','profitability','inventory'];
+    const names = ['sales','sku','coo','trends','profitability','inventory','catalog','opportunities'];
     t.classList.toggle('active', names[i] === name);
   });
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -908,6 +989,8 @@ function switchTab(name) {
   if (name === 'history' && globalData) renderHistoryTab(globalData);
   if (name === 'sku' && globalData) { buildPeriodBar('sku-period-bar','sku'); renderSkuRows(globalData, tabPeriods['sku']); }
   if (name === 'coo' && globalData) { buildPeriodBar('coo-period-bar','coo'); }
+  if (name === 'catalog') renderCatalogTab();
+  if (name === 'opportunities') renderOpportunitiesTab();
 }
 
 function setView(view) {
@@ -1109,6 +1192,13 @@ function fmt(v, dec=0) {
   const s = Math.abs(v).toLocaleString('en-US', {minimumFractionDigits:dec, maximumFractionDigits:dec});
   return (v < 0 ? '–$' : '$') + s;
 }
+// Monthly sales goal: data/config.json goal_monthly, default $100,000
+function goalMonthly(d) {
+  return (d && d.config && d.config.goal_monthly) || 100000;
+}
+function fmtGoalShort(g) {
+  return g >= 1000 ? '$' + Math.round(g / 1000) + 'K' : '$' + g;
+}
 function fmtDate(d) {
   return d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
 }
@@ -1167,7 +1257,8 @@ function render(d) {
   const skuUnits = d.sku_breakdown.units;
   const skuCogs = d.sku_breakdown.cogs_by_sku;
 
-  safeSet('acct-name', cfg.account_name || 'For & Against');
+  safeSet('acct-name', cfg.account_name || 'A1 American');
+  safeSet('coo-goal-target', '$' + goalMonthly(d).toLocaleString());
   safeSet('date-range', `${d.date_range.start} – ${d.date_range.end}  ·  All statement periods loaded`);
 
   // ---- SHARED CALCULATIONS ----
@@ -1179,7 +1270,7 @@ function render(d) {
   const mtdSalesAmt = p.mtd_sales || cfg.mtd_sales || s.gross_sales;
   const dailyRate = mtdSalesAmt / Math.max(1, mtdDaysElapsed);
   const monthlyRate = Math.round(dailyRate * 30);
-  const goalTarget = cfg.goal_monthly || 10000;
+  const goalTarget = goalMonthly(d);
   const goalPct = Math.min(100, Math.round(monthlyRate / goalTarget * 100));
 
   // deficit_start from config is the baseline; use whichever is larger (actual deficit may have grown)
@@ -1298,9 +1389,9 @@ function render(d) {
   const projStr = '$' + projMonthly.toLocaleString();
   const gapStr = '$' + Math.max(0, goalTarget - projMonthly).toLocaleString();
   const goalPctActual = Math.min(100, Math.round(projMonthly / goalTarget * 100));
-  if (goalPctActual < 70) ins.push(['a', `Projected full month of ${projStr} is ${goalPctActual}% of the $10K goal. Need ${gapStr} more.`]);
+  if (goalPctActual < 70) ins.push(['a', `Projected full month of ${projStr} is ${goalPctActual}% of the ${fmtGoalShort(goalTarget)} goal. Need ${gapStr} more.`]);
   else if (goalPctActual < 100) ins.push(['a', `Getting close — ${projStr} projected for the month. ${gapStr} gap remaining.`]);
-  else ins.push(['g', `On track to exceed the $10K monthly goal — ${projStr} projected.`]);
+  else ins.push(['g', `On track to exceed the ${fmtGoalShort(goalTarget)} monthly goal — ${projStr} projected.`]);
   if (daysToBreakeven > 0) ins.push(['a', `Cumulative breakeven projected ${fmtDate(breakevenDate)} — ${daysToBreakeven} days from today based on June trajectory.`]);
 
 
@@ -1415,8 +1506,9 @@ function render(d) {
   const cmth = d.date_range.end.slice(0,7);
   const mtdVal = d.progress.mtd_sales || (d.trends.monthly_sales||{})[cmth] || 0;
   safeSet('c-mtd', fmt(mtdVal));
-  safeSet('c-mtd-sub', 'of $10,000 goal (' + Math.round(mtdVal/10000*100) + '%)');
-  safeClass('c-mtd', 'kv ' + (mtdVal >= 10000 ? 'up' : mtdVal >= 5000 ? 'neu' : 'dn'));
+  const cGoal = goalMonthly(d);
+  safeSet('c-mtd-sub', 'of $' + cGoal.toLocaleString() + ' goal (' + Math.round(mtdVal/cGoal*100) + '%)');
+  safeClass('c-mtd', 'kv ' + (mtdVal >= cGoal ? 'up' : mtdVal >= cGoal/2 ? 'neu' : 'dn'));
   safeSet('c-roas', ads.roas.toFixed(2) + '×');
   safeClass('c-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
   const totalUnitsYtd = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
@@ -1955,8 +2047,9 @@ function renderCooTab(d, period) {
 
   // MTD / ROAS / Units
   set('c-mtd', '$' + Math.round(p.mtd_sales || 0).toLocaleString());
-  set('c-mtd-sub', 'of $10,000 goal (' + Math.round((p.mtd_sales||0)/10000*100) + '%)');
-  setClass('c-mtd', 'kv ' + ((p.mtd_sales||0) >= 10000 ? 'up' : (p.mtd_sales||0) >= 5000 ? 'neu' : 'dn'));
+  const cooGoal = goalMonthly(d);
+  set('c-mtd-sub', 'of $' + cooGoal.toLocaleString() + ' goal (' + Math.round((p.mtd_sales||0)/cooGoal*100) + '%)');
+  setClass('c-mtd', 'kv ' + ((p.mtd_sales||0) >= cooGoal ? 'up' : (p.mtd_sales||0) >= cooGoal/2 ? 'neu' : 'dn'));
   set('c-roas', ads.roas.toFixed(2) + 'x');
   setClass('c-roas', 'kv ' + (ads.roas >= 1.5 ? 'up' : ads.roas >= 1 ? 'neu' : 'dn'));
   const totalUnits = Object.values(d.sku_breakdown.units).reduce((a,b)=>a+b,0);
@@ -2191,7 +2284,7 @@ function renderHomeTab(d) {
 
   // --- MTD ---
   const mtdSales = p.mtd_sales || 0;
-  const goal = 100000;
+  const goal = goalMonthly(d);
   const daysInMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
   const daysElapsed = today.getDate();
   const goalPct = Math.round(mtdSales / goal * 100);
@@ -2384,7 +2477,7 @@ function showMonth(m) {
   const mRefunds = t.monthly_refunds || {};
   const mSub   = t.monthly_subscription || {};
   const mn = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const goal = 100000;
+  const goal = goalMonthly(globalData);
 
   const mLabel = mn[parseInt(m.slice(5))-1] + ' ' + m.slice(0,4);
   safeSet('mtd-month-label', mLabel);
@@ -2454,6 +2547,177 @@ function showMonth(m) {
     btn.style.background = isActive ? 'var(--border2)' : 'var(--surface)';
     btn.style.fontWeight = isActive ? '700' : 'normal';
   });
+}
+
+// ============ AMAZON CATALOG + OPPORTUNITIES ============
+// Read-only views of static JSON files. Nothing here calls Amazon.
+function esc(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function money2(v) { return v == null || isNaN(v) ? '-' : fmt(v, 2); }
+const SAMPLE_TAG = '<span class="sample-tag">Sample</span>';
+
+const jsonCache = {};
+async function loadJson(path) {
+  if (!jsonCache[path]) {
+    jsonCache[path] = fetch(path, {cache: 'no-cache'}).then(r => {
+      if (!r.ok) throw new Error(path + ' → HTTP ' + r.status);
+      return r.json();
+    }).catch(e => { delete jsonCache[path]; throw e; });
+  }
+  return jsonCache[path];
+}
+
+function catalogNet(row) {
+  // Net and GPM only when cost, price and fees are all known
+  if (row.last_cogs == null || row.amazon_price == null || row.amazon_fees == null || !(row.amazon_price > 0)) return null;
+  const net = row.amazon_price - row.amazon_fees - row.last_cogs;
+  return { net, gpm: net / row.amazon_price };
+}
+
+function stockLabel(row) {
+  const qty = row.amazon_qty || 0;
+  const inv = (globalData && globalData.inventory && globalData.inventory[row.sku]) || null;
+  if (qty === 0) return '<span class="pill pill-r">Out of stock</span>';
+  const lowByDays = inv && inv.days_remaining !== 999 && inv.days_remaining < 45;
+  if (lowByDays || qty < 10) return '<span class="pill pill-a">Low stock</span>';
+  return '';
+}
+
+async function renderCatalogTab() {
+  const tbody = document.getElementById('cat-tbody');
+  let cat;
+  try { cat = await loadJson('data/catalog.json'); }
+  catch (e) { tbody.innerHTML = `<tr><td colspan="10" class="l dn">Could not load data/catalog.json (${esc(e.message)})</td></tr>`; return; }
+
+  const rows = (cat.rows || []).slice();
+  document.getElementById('cat-sample-flag').style.display = cat._sample ? '' : 'none';
+
+  let whUnits = 0, amzUnits = 0, netSum = 0, priceSum = 0, costed = 0;
+  rows.forEach(r => {
+    amzUnits += r.amazon_qty || 0;
+    whUnits += r.warehouse_qty || 0;
+    const n = catalogNet(r);
+    if (n) { netSum += n.net; priceSum += r.amazon_price; costed++; }
+  });
+  safeSet('cat-live', rows.length.toLocaleString());
+  safeSet('cat-amz-units', amzUnits.toLocaleString());
+  safeSet('cat-wh-units', whUnits.toLocaleString());
+  safeSet('cat-gpm', priceSum > 0 ? (netSum / priceSum * 100).toFixed(1) + '%' : '-');
+  safeSet('cat-gpm-sub', `${costed} of ${rows.length} SKUs have a cost on file`);
+
+  // Highest Amazon stock first, then SKU
+  rows.sort((a, b) => (b.amazon_qty || 0) - (a.amazon_qty || 0) || String(a.sku).localeCompare(b.sku));
+
+  tbody.innerHTML = rows.map(r => {
+    const n = catalogNet(r);
+    const initials = esc(String(r.sku || '?').slice(0, 2));
+    const tile = r.image_url
+      ? `<div class="tile"><img src="${esc(r.image_url)}" alt="${esc(r.title)}" loading="lazy"></div>`
+      : `<div class="tile" aria-hidden="true">${initials}</div>`;
+    const cost = r.last_cogs == null ? '-'
+      : `${money2(r.last_cogs)}<div class="sku-sub">${esc(r.cogs_date || '')}</div>`;
+    const fees = money2(r.amazon_fees) + (r.fees_source === 'sample' ? '<div class="sku-sub">' + SAMPLE_TAG + '</div>' : '');
+    let gpmCell = '-', netCell = '-';
+    if (n) {
+      const pct = n.gpm * 100;
+      const cls = n.net < 0 ? 'dn' : '';
+      netCell = `<span class="${cls}">${money2(n.net)}</span>`;
+      const barColor = pct < 0 ? 'var(--red-mid)' : pct < 15 ? 'var(--amber-mid)' : 'var(--green-mid)';
+      gpmCell = `<span class="${cls}">${pct.toFixed(1)}%</span>
+        <div class="margin-bar" aria-hidden="true"><div class="margin-fill" style="width:${Math.max(0, Math.min(100, pct))}%;background:${barColor}"></div></div>`;
+    }
+    return `<tr>
+      <td class="l">${tile}</td>
+      <td class="l"><span class="sku-name">${esc(r.title)}</span></td>
+      <td class="l nw">${esc(r.sku)}</td>
+      <td><strong>${(r.amazon_qty || 0).toLocaleString()}</strong><div class="sku-sub">${stockLabel(r)}</div></td>
+      <td>${r.warehouse_qty == null ? '-' : r.warehouse_qty.toLocaleString()}</td>
+      <td>${cost}</td>
+      <td>${money2(r.amazon_price)}</td>
+      <td>${fees}</td>
+      <td>${netCell}</td>
+      <td style="min-width:80px">${gpmCell}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="10" class="l neu">No listings in data/catalog.json</td></tr>';
+}
+
+// ---- Opportunities draft queue: localStorage only, never sent anywhere ----
+const OPP_QUEUE_KEY = 'a1.opportunities.draftQueue.v1';
+function readOppQueue() {
+  try { return JSON.parse(localStorage.getItem(OPP_QUEUE_KEY) || '{}') || {}; }
+  catch (e) { return {}; }
+}
+function writeOppQueue(q) {
+  try { localStorage.setItem(OPP_QUEUE_KEY, JSON.stringify(q)); return true; }
+  catch (e) { return false; }
+}
+let oppStorageOk = true;
+function queueOpp(sku) {
+  const q = readOppQueue();
+  q[sku] = { status: 'queued', queued_at: new Date().toISOString() };
+  oppStorageOk = writeOppQueue(q);
+  renderOpportunitiesTab();
+}
+function undoOpp(sku) {
+  const q = readOppQueue();
+  delete q[sku];
+  oppStorageOk = writeOppQueue(q);
+  renderOpportunitiesTab();
+}
+
+function gradePill(grade) {
+  const cls = {A: 'pill-g', B: 'pill-b', C: 'pill-a', D: 'pill-r'}[grade] || 'pill-b';
+  return `<span class="pill ${cls}">Grade ${esc(grade || '?')}</span>`;
+}
+function gradeFor(score) {
+  return score >= 85 ? 'A' : score >= 70 ? 'B' : score >= 55 ? 'C' : 'D';
+}
+
+async function renderOpportunitiesTab() {
+  const tbody = document.getElementById('opp-tbody');
+  let data;
+  try { data = await loadJson('data/opportunities.json'); }
+  catch (e) { tbody.innerHTML = `<tr><td colspan="6" class="l dn">Could not load data/opportunities.json (${esc(e.message)})</td></tr>`; return; }
+
+  const q = readOppQueue();
+  const rows = (data.rows || []).slice().sort((a, b) => (b.score || 0) - (a.score || 0));
+
+  tbody.innerHTML = rows.map(r => {
+    const grade = r.grade || gradeFor(r.score || 0);
+    const queued = !!q[r.sku];
+    const skuArg = esc(JSON.stringify(String(r.sku)));
+    let action;
+    if (r.blocked) {
+      action = `<span class="blocked-note">Blocked: ${esc(r.blocked_reason || 'reason not given')}</span>`;
+    } else if (queued) {
+      action = `<span class="row-actions"><span class="pill pill-b">Queued (draft)</span>
+        <button class="filter-btn" onclick="undoOpp(${skuArg})" aria-label="Undo queue for ${esc(r.title)}">Undo</button></span>`;
+    } else if (r.status === 'pushed') {
+      action = '<span class="pill pill-g">Pushed</span>';
+    } else {
+      action = `<button class="filter-btn" onclick="queueOpp(${skuArg})" aria-label="Push ${esc(r.title)} to Amazon draft queue">Push to Amazon</button>`;
+    }
+    return `<tr>
+      <td class="l"><span class="sku-name">${esc(r.title)}</span></td>
+      <td class="l nw">${esc(r.sku)}</td>
+      <td>${money2(r.cogs)}</td>
+      <td>${money2(r.retail_price)}</td>
+      <td><span class="row-actions"><strong>${esc(r.score)}</strong>${gradePill(grade)}</span></td>
+      <td>${action}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" class="l neu">No items in data/opportunities.json</td></tr>';
+
+  const byS = Object.fromEntries(rows.map(r => [r.sku, r]));
+  const queuedSkus = Object.keys(q).filter(s => byS[s]);
+  const box = document.getElementById('opp-queue');
+  let html = '';
+  if (!oppStorageOk) html += '<div class="insight"><div class="i-dot i-r"></div><div>This browser blocked local storage, so the queue will not be saved after you leave the page.</div></div>';
+  html += queuedSkus.length
+    ? queuedSkus.map(s => `<div class="insight"><div class="i-dot i-a"></div><div><strong>${esc(byS[s].title)}</strong> (${esc(s)}) · queued ${esc(new Date(q[s].queued_at).toLocaleString())} · <button class="filter-btn" onclick="undoOpp(${esc(JSON.stringify(s))})">Undo</button></div></div>`).join('')
+    : '<div class="insight"><div class="i-dot i-g"></div><div>Nothing queued. Drafts stay here until a backend can create and validate Amazon listings (not built yet).</div></div>';
+  box.innerHTML = html;
 }
 
 load().catch(e => {

@@ -1,0 +1,138 @@
+{
+    "_sample":  true,
+    "_note":  "FAKE sample items and scores until the internal feed and real scoring exist (Part 4).",
+    "rows":  [
+                 {
+                     "sku":  "INT-2100",
+                     "title":  "Sample - Heavy-duty degreaser 1 gal",
+                     "cogs":  17.4,
+                     "retail_price":  43.5,
+                     "score":  84,
+                     "grade":  "B",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2107",
+                     "title":  "Sample - Glass cleaner 32 oz",
+                     "cogs":  11.3,
+                     "retail_price":  32.77,
+                     "score":  39,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2114",
+                     "title":  "Sample - Neutral floor cleaner 1 gal",
+                     "cogs":  12.3,
+                     "retail_price":  35.67,
+                     "score":  45,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2121",
+                     "title":  "Sample - Disinfectant wipes 160 ct",
+                     "cogs":  25.7,
+                     "retail_price":  84.81,
+                     "score":  69,
+                     "grade":  "C",
+                     "blocked":  true,
+                     "blocked_reason":  "Hazmat review required (SDS not on file)",
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2128",
+                     "title":  "Sample - Stainless polish 15 oz",
+                     "cogs":  19.1,
+                     "retail_price":  42.02,
+                     "score":  54,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2135",
+                     "title":  "Sample - Carpet spotter 32 oz",
+                     "cogs":  12.2,
+                     "retail_price":  40.26,
+                     "score":  46,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2142",
+                     "title":  "Sample - Hand soap refill 1 gal",
+                     "cogs":  15.4,
+                     "retail_price":  53.9,
+                     "score":  49,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2149",
+                     "title":  "Sample - Odor eliminator 32 oz",
+                     "cogs":  10.2,
+                     "retail_price":  28.56,
+                     "score":  54,
+                     "grade":  "D",
+                     "blocked":  true,
+                     "blocked_reason":  "Brand not registered for this product line",
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2156",
+                     "title":  "Sample - Bowl cleaner 32 oz",
+                     "cogs":  22.5,
+                     "retail_price":  47.25,
+                     "score":  46,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2163",
+                     "title":  "Sample - Microfiber cloths 24 pk",
+                     "cogs":  23.4,
+                     "retail_price":  58.5,
+                     "score":  89,
+                     "grade":  "A",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2170",
+                     "title":  "Sample - Enzyme cleaner 1 gal",
+                     "cogs":  3.5,
+                     "retail_price":  9.1,
+                     "score":  95,
+                     "grade":  "A",
+                     "blocked":  true,
+                     "blocked_reason":  "Missing UPC / GTIN exemption",
+                     "status":  "new"
+                 },
+                 {
+                     "sku":  "INT-2177",
+                     "title":  "Sample - Graffiti remover 12 oz",
+                     "cogs":  9.8,
+                     "retail_price":  23.52,
+                     "score":  51,
+                     "grade":  "D",
+                     "blocked":  false,
+                     "blocked_reason":  null,
+                     "status":  "new"
+                 }
+             ]
+}

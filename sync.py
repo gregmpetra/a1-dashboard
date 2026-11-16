@@ -9,7 +9,34 @@ MARKETPLACE_ID = os.environ.get('MARKETPLACE_ID', 'ATVPDKIKX0DER')  # US default
 REGION         = os.environ.get('SPAPI_REGION', 'us-east-1')
 ENDPOINT       = 'https://sellercentral.amazon.com'
 
-COGS_MAP = {}  # No COGS data for A1 American yet
+def load_cogs_map():
+    """Per-unit COGS by raw SKU from data/costs.json.
+
+    Format: { "<sku>": { "cogs": number, "costed_on": "YYYY-MM-DD" } }
+    Keys starting with "_" are metadata. While "_sample" is true the file
+    holds placeholder values, so it is NOT loaded: fake costs must never
+    reach the live P&L in data.json.
+    """
+    path = os.path.join(os.path.dirname(__file__), 'data', 'costs.json')
+    if not os.path.exists(path):
+        return {}
+    with open(path) as f:
+        raw = json.load(f)
+    if raw.get('_sample'):
+        print("  data/costs.json is marked _sample — COGS not applied")
+        return {}
+    cogs = {}
+    for sku, row in raw.items():
+        if sku.startswith('_') or not isinstance(row, dict):
+            continue
+        try:
+            cogs[sku] = float(row['cogs'])
+        except (KeyError, TypeError, ValueError):
+            print(f"  Skipping COGS for {sku}: missing or invalid 'cogs'")
+    print(f"  Loaded COGS for {len(cogs)} SKUs from data/costs.json")
+    return cogs
+
+COGS_MAP = load_cogs_map()
 
 
 PRODUCT_NAMES = {}  # Raw SKUs for A1 American
@@ -269,6 +296,10 @@ def process_financial_events(events_list):
     monthly_liquidations  = {}
 
     for events in events_list:
+        # Fallback month for events with no PostedDate (refunds, service fees,
+        # reimbursements). Set per batch, before any loop that reads it.
+        chunk_month = events.get('_chunk_month', '')
+
         # Order events
         for order in events.get('ShipmentEventList', []):
             posted = order.get('PostedDate', '')[:7]  # YYYY-MM
@@ -331,7 +362,6 @@ def process_financial_events(events_list):
 
         # Service fee events (AWD, subscription, etc)
         # Use chunk month as fallback for AWD/service fee events that have no PostedDate
-        chunk_month = events.get('_chunk_month', '')
         for fee_event in events.get('ServiceFeeEventList', []):
             raw_date = (fee_event.get('PostedDate') or 
                        fee_event.get('TransactionPostedDate') or '')
