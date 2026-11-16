@@ -227,7 +227,8 @@ def calc_unsettled_revenue(access_token, settled_monthly, start_of_open_period):
     daily_sales = {}   # date -> amount
     units_by_sku = {}  # sku -> units (for open period)
     sales_by_sku = {}  # sku -> revenue
-    
+    order_details = [] # per-order detail, used by fbm.py (no extra API calls)
+
     for order in orders:
         order_total = float(order.get('OrderTotal', {}).get('Amount', 0))
         status = order.get('OrderStatus', '')
@@ -241,16 +242,22 @@ def calc_unsettled_revenue(access_token, settled_monthly, start_of_open_period):
             # Get line items for unit counts per SKU
             if order_id:
                 items = get_order_items(access_token, order_id)
+                detail = {'order_id': order_id, 'channel': order.get('FulfillmentChannel', ''),
+                          'purchase_date': order.get('PurchaseDate', ''), 'items': []}
                 for item in items:
                     sku = item.get('SellerSKU', '')
                     qty = int(item.get('QuantityOrdered', 0))
                     item_price = float(item.get('ItemPrice', {}).get('Amount', 0))
+                    ship_price = float((item.get('ShippingPrice') or {}).get('Amount', 0) or 0)
                     if sku and qty > 0:
                         units_by_sku[sku] = units_by_sku.get(sku, 0) + qty
                         sales_by_sku[sku] = sales_by_sku.get(sku, 0) + item_price
+                        detail['items'].append({'sku': sku, 'qty': qty, 'price': item_price,
+                                                'shipping': ship_price})
+                order_details.append(detail)
 
     print(f"  Unsettled revenue estimate: ${unsettled_total:.2f}")
-    return round(unsettled_total, 2), daily_sales, units_by_sku, sales_by_sku
+    return round(unsettled_total, 2), daily_sales, units_by_sku, sales_by_sku, order_details
 
 def process_financial_events(events_list):
     """Bucket all financial events into P&L categories."""
@@ -570,7 +577,18 @@ def run():
     from datetime import timedelta
     open_period_start = today_dt.replace(day=1).isoformat()
     print("Fetching unsettled orders for open period...")
-    unsettled, daily_orders, unsettled_units_by_sku, unsettled_sales_by_sku = calc_unsettled_revenue(token, monthly_sales_map, open_period_start)
+    unsettled, daily_orders, unsettled_units_by_sku, unsettled_sales_by_sku, unsettled_order_details = \
+        calc_unsettled_revenue(token, monthly_sales_map, open_period_start)
+
+    # FBM order profitability -> data/fbm.json (optional; never blocks data.json)
+    try:
+        import fbm
+        referral_rate_by_sku = {sku: abs(fee) / sales_by_sku[sku]
+                                for sku, fee in referral_fees_by_sku.items()
+                                if sales_by_sku.get(sku, 0) > 0}
+        fbm.write(fin_events, unsettled_order_details, COGS_MAP, referral_rate_by_sku)
+    except Exception as e:
+        print(f"  FBM report skipped: {e}")
 
     # Use higher of settled MTD or orders API MTD (avoid double counting)
     mtd_sales = max(mtd_settled, unsettled)
