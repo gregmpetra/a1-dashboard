@@ -1,508 +1,550 @@
 {
-    "_sample":  true,
-    "_generated":  "2026-11-16",
-    "_sources":  {
-                     "amazon_qty":  "real: data.json inventory.in_stock",
-                     "amazon_fees":  "real where fees_source=realized: (fba_fees_by_sku + referral_fees_by_sku) / units from data.json; sample otherwise until Product Fees API",
-                     "amazon_price":  "sample: average realized price from data.json, or fake for SKUs with no sales, until Listings Items API",
-                     "title":  "sample",
-                     "image_url":  "sample (none) until Catalog Items API",
-                     "warehouse_qty":  "sample until internal inventory feed",
-                     "last_cogs":  "sample: data/costs.json",
-                     "cogs_date":  "sample: data/costs.json"
-                 },
-    "rows":  [
-                 {
-                     "sku":  "AC580-C19",
-                     "title":  "Sample title - AC580-C19",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  22.94,
-                     "cogs_date":  "2026-09-06",
-                     "amazon_price":  69.5,
-                     "amazon_fees":  22.94,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "BLKGG90X90PLAT",
-                     "title":  "Sample title - BLKGG90X90PLAT",
-                     "image_url":  null,
-                     "amazon_qty":  2,
-                     "warehouse_qty":  25,
-                     "last_cogs":  7.75,
-                     "cogs_date":  "2026-09-18",
-                     "amazon_price":  33.7,
-                     "amazon_fees":  11.8,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "DISPMC7067KIT",
-                     "title":  "Sample title - DISPMC7067KIT",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  175,
-                     "last_cogs":  18.3,
-                     "cogs_date":  "2026-10-02",
-                     "amazon_price":  63.1,
-                     "amazon_fees":  18.3,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "EC500",
-                     "title":  "Sample title - EC500",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  175,
-                     "last_cogs":  12.73,
-                     "cogs_date":  "2026-09-10",
-                     "amazon_price":  43.9,
-                     "amazon_fees":  16.24,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "EC500-1",
-                     "title":  "Sample title - EC500-1",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  200,
-                     "last_cogs":  6.98,
-                     "cogs_date":  "2026-09-10",
-                     "amazon_price":  17.9,
-                     "amazon_fees":  6.62,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "FW8002PK",
-                     "title":  "Sample title - FW8002PK",
-                     "image_url":  null,
-                     "amazon_qty":  63,
-                     "warehouse_qty":  200,
-                     "last_cogs":  23.18,
-                     "cogs_date":  "2026-11-07",
-                     "amazon_price":  59.43,
-                     "amazon_fees":  25.57,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC1616-BLUE",
-                     "title":  "Sample title - MC1616-BLUE",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  25,
-                     "last_cogs":  null,
-                     "cogs_date":  null,
-                     "amazon_price":  41.8,
-                     "amazon_fees":  15.05,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC3005",
-                     "title":  "Sample title - MC3005",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  8.77,
-                     "cogs_date":  "2026-10-09",
-                     "amazon_price":  25.8,
-                     "amazon_fees":  9.29,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC3015",
-                     "title":  "Sample title - MC3015",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  175,
-                     "last_cogs":  8.38,
-                     "cogs_date":  "2026-11-09",
-                     "amazon_price":  28.9,
-                     "amazon_fees":  10.69,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC3019",
-                     "title":  "Sample title - MC3019",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  9.67,
-                     "cogs_date":  "2026-09-04",
-                     "amazon_price":  29.3,
-                     "amazon_fees":  9.08,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC4207",
-                     "title":  "Sample title - MC4207",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  5.71,
-                     "cogs_date":  "2026-10-14",
-                     "amazon_price":  17.3,
-                     "amazon_fees":  5.36,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC4207-2",
-                     "title":  "Sample title - MC4207-2",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  100,
-                     "last_cogs":  17.89,
-                     "cogs_date":  "2026-10-09",
-                     "amazon_price":  68.8,
-                     "amazon_fees":  24.77,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC5025",
-                     "title":  "Sample title - MC5025",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  0,
-                     "last_cogs":  21.67,
-                     "cogs_date":  "2026-11-09",
-                     "amazon_price":  69.9,
-                     "amazon_fees":  25.86,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC6065",
-                     "title":  "Sample title - MC6065",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  200,
-                     "last_cogs":  null,
-                     "cogs_date":  null,
-                     "amazon_price":  61.4,
-                     "amazon_fees":  19.65,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7063",
-                     "title":  "Sample title - MC7063",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  175,
-                     "last_cogs":  11.69,
-                     "cogs_date":  "2026-11-03",
-                     "amazon_price":  40.3,
-                     "amazon_fees":  12.49,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7064",
-                     "title":  "Sample title - MC7064",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  200,
-                     "last_cogs":  12.12,
-                     "cogs_date":  "2026-11-04",
-                     "amazon_price":  40.4,
-                     "amazon_fees":  12.93,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7068",
-                     "title":  "Sample title - MC7068",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  13.87,
-                     "cogs_date":  "2026-11-08",
-                     "amazon_price":  40.8,
-                     "amazon_fees":  14.69,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7070-6",
-                     "title":  "Sample title - MC7070-6",
-                     "image_url":  null,
-                     "amazon_qty":  240,
-                     "warehouse_qty":  0,
-                     "last_cogs":  8.45,
-                     "cogs_date":  "2026-09-05",
-                     "amazon_price":  38.4,
-                     "amazon_fees":  12.29,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7071",
-                     "title":  "Sample title - MC7071",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  0,
-                     "last_cogs":  29.26,
-                     "cogs_date":  "2026-09-23",
-                     "amazon_price":  133.01,
-                     "amazon_fees":  19.95,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7072",
-                     "title":  "Sample title - MC7072",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  25,
-                     "last_cogs":  26.28,
-                     "cogs_date":  "2026-09-24",
-                     "amazon_price":  114.24,
-                     "amazon_fees":  16.07,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7072FBA",
-                     "title":  "Sample title - MC7072FBA",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  null,
-                     "cogs_date":  null,
-                     "amazon_price":  22.1,
-                     "amazon_fees":  6.41,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7073",
-                     "title":  "Sample title - MC7073",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  31.2,
-                     "cogs_date":  "2026-09-25",
-                     "amazon_price":  129.99,
-                     "amazon_fees":  19.5,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7090",
-                     "title":  "Sample title - MC7090",
-                     "image_url":  null,
-                     "amazon_qty":  1,
-                     "warehouse_qty":  175,
-                     "last_cogs":  31.2,
-                     "cogs_date":  "2026-09-14",
-                     "amazon_price":  107.59,
-                     "amazon_fees":  40.26,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7092-AMAZON",
-                     "title":  "Sample title - MC7092-AMAZON",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  175,
-                     "last_cogs":  16.57,
-                     "cogs_date":  "2026-10-17",
-                     "amazon_price":  43.6,
-                     "amazon_fees":  14.82,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7092-IDV",
-                     "title":  "Sample title - MC7092-IDV",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  11.62,
-                     "cogs_date":  "2026-10-26",
-                     "amazon_price":  46.5,
-                     "amazon_fees":  15.34,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7095",
-                     "title":  "Sample title - MC7095",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  10.72,
-                     "cogs_date":  "2026-09-19",
-                     "amazon_price":  31.53,
-                     "amazon_fees":  4.73,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7098",
-                     "title":  "Sample title - MC7098",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  150,
-                     "last_cogs":  18.54,
-                     "cogs_date":  "2026-09-22",
-                     "amazon_price":  50.1,
-                     "amazon_fees":  14.53,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "MC7098-15",
-                     "title":  "Sample title - MC7098-15",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  125,
-                     "last_cogs":  null,
-                     "cogs_date":  null,
-                     "amazon_price":  98.88,
-                     "amazon_fees":  38.4,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7099-R",
-                     "title":  "Sample title - MC7099-R",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  18.25,
-                     "cogs_date":  "2026-09-14",
-                     "amazon_price":  73,
-                     "amazon_fees":  25.71,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC7207",
-                     "title":  "Sample title - MC7207",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  25,
-                     "last_cogs":  4.6,
-                     "cogs_date":  "2026-10-24",
-                     "amazon_price":  20,
-                     "amazon_fees":  3,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "MC8008",
-                     "title":  "Sample title - MC8008",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  7.14,
-                     "cogs_date":  "2026-09-21",
-                     "amazon_price":  21,
-                     "amazon_fees":  5.88,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "OC100",
-                     "title":  "Sample title - OC100",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  50,
-                     "last_cogs":  22.81,
-                     "cogs_date":  "2026-09-20",
-                     "amazon_price":  69.13,
-                     "amazon_fees":  10.37,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "OC100-G",
-                     "title":  "Sample title - OC100-G",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  125,
-                     "last_cogs":  7.2,
-                     "cogs_date":  "2026-09-05",
-                     "amazon_price":  19.99,
-                     "amazon_fees":  12.32,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "OC200",
-                     "title":  "Sample title - OC200",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  0,
-                     "last_cogs":  16,
-                     "cogs_date":  "2026-09-01",
-                     "amazon_price":  72.74,
-                     "amazon_fees":  10.91,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "OC300",
-                     "title":  "Sample title - OC300",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  75,
-                     "last_cogs":  null,
-                     "cogs_date":  null,
-                     "amazon_price":  68.47,
-                     "amazon_fees":  10.27,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "OC300-1",
-                     "title":  "Sample title - OC300-1",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  0,
-                     "last_cogs":  4.4,
-                     "cogs_date":  "2026-09-01",
-                     "amazon_price":  19.99,
-                     "amazon_fees":  12.3,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "OC600",
-                     "title":  "Sample title - OC600",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  150,
-                     "last_cogs":  31.45,
-                     "cogs_date":  "2026-09-22",
-                     "amazon_price":  84.99,
-                     "amazon_fees":  12.75,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "TDASH12",
-                     "title":  "Sample title - TDASH12",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  200,
-                     "last_cogs":  27,
-                     "cogs_date":  "2026-11-04",
-                     "amazon_price":  89.99,
-                     "amazon_fees":  29.47,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "TDASH12-100",
-                     "title":  "Sample title - TDASH12-100",
-                     "image_url":  null,
-                     "amazon_qty":  0,
-                     "warehouse_qty":  0,
-                     "last_cogs":  10.3,
-                     "cogs_date":  "2026-11-08",
-                     "amazon_price":  46.8,
-                     "amazon_fees":  16.85,
-                     "fees_source":  "sample"
-                 },
-                 {
-                     "sku":  "WIPEMC7090-1",
-                     "title":  "Sample title - WIPEMC7090-1",
-                     "image_url":  null,
-                     "amazon_qty":  73,
-                     "warehouse_qty":  50,
-                     "last_cogs":  9.67,
-                     "cogs_date":  "2026-10-26",
-                     "amazon_price":  29.29,
-                     "amazon_fees":  17.59,
-                     "fees_source":  "realized"
-                 },
-                 {
-                     "sku":  "WIPEMC7098-1",
-                     "title":  "Sample title - WIPEMC7098-1",
-                     "image_url":  null,
-                     "amazon_qty":  234,
-                     "warehouse_qty":  100,
-                     "last_cogs":  10.96,
-                     "cogs_date":  "2026-10-14",
-                     "amazon_price":  31.3,
-                     "amazon_fees":  25.3,
-                     "fees_source":  "realized"
-                 }
-             ]
+  "_sample": true,
+  "_sample_columns": [
+    "cost"
+  ],
+  "_synced_at": "2026-11-16T22:30:31+00:00",
+  "_sync": {
+    "listings": "ok (32 listings)",
+    "catalog": "ok (31 ASINs)",
+    "fees": "ok (14 estimates)"
+  },
+  "_sources": {
+    "title/status/price": "Listings Items API",
+    "image_url": "Catalog Items API (listing mainImage fallback)",
+    "amazon_qty": "data.json inventory.in_stock",
+    "amazon_fees": "realized from data.json, else Product Fees API estimate",
+    "last_cogs/cogs_date": "data/costs.json (sample)",
+    "warehouse_qty": "not connected (internal inventory feed)"
+  },
+  "rows": [
+    {
+      "sku": "BLKGG90X90PLAT",
+      "asin": "B0FJNCT2GQ",
+      "title": "Golden Gem Queen Size Fleece Blanket (90 x 90) \u2013 300 GSM Luxury Plush Microfiber Blanket, Platinum Grey, Soft Fuzzy Throw for Bed, Sofa & Couch, Warm Lightweight Anti-Static Cozy Blanket",
+      "image_url": "https://m.media-amazon.com/images/I/41ukBeSPiWL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 2,
+      "warehouse_qty": null,
+      "last_cogs": 7.75,
+      "cogs_date": "2026-09-18",
+      "amazon_price": 24.99,
+      "amazon_fees": 12.52,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "FW8002PK",
+      "asin": "B0FJMVX6C3",
+      "title": "FlexWipes Disinfecting Wipes 800 Count Roll (2 Pack) \u2013 EPA Registered Disinfectant Wipes, Antibacterial Sanitizing Wipes for Gym Equipment, Fitness Centers & Commercial Use \u2013 Large 8\u201d x 6\u201d Wipes",
+      "image_url": "https://m.media-amazon.com/images/I/61aWZogVvsL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 63,
+      "warehouse_qty": null,
+      "last_cogs": 23.18,
+      "cogs_date": "2026-11-07",
+      "amazon_price": 59.99,
+      "amazon_fees": 24.88,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "KITSTP180-30",
+      "asin": "B0GHZVS52C",
+      "title": "100 Pack Kraft Paper Lawn Bags | 3.5 Mil Low Density Brown Lawn Bags | 18\" x 36\" - 30 Gal Capacity (100 Pack)",
+      "image_url": null,
+      "status": [
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 129.99,
+      "amazon_fees": 19.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC5025",
+      "asin": "B076PR3M4G",
+      "title": "7\" Black Combs - 144 Combs per Order - 0.18c per Comb - Bulk Combs Perfect for Gyms, Fitness Centers, Spa's, Hairdressers",
+      "image_url": "https://m.media-amazon.com/images/I/41CyI4tV4lL.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 21.67,
+      "cogs_date": "2026-11-09",
+      "amazon_price": 25.9,
+      "amazon_fees": 3.89,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC6048",
+      "asin": "B085T98SZY",
+      "title": "Barbasol Original Thick and Rich Shaving Cream, 7 Ounce, Pack of 6",
+      "image_url": "https://m.media-amazon.com/images/I/517si0KZhBL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 19.99,
+      "amazon_fees": 3.0,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7065",
+      "asin": "B076HXCJS5",
+      "title": "Stainless Steel Standing Wipe Dispenser | Top Wipe Dispenser with Trash Section | Perfect For Gyms and Fitness Facilities",
+      "image_url": "https://m.media-amazon.com/images/I/61rXRxwpS6L.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 269.99,
+      "amazon_fees": 40.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7070",
+      "asin": "B08Y2HM232",
+      "title": "2XL Wipes | Force2 Disinfectant Wipes, Heavy Duty Cleaning Wipes I 220 Wipes Per Canister, 12 Canisters/CSE",
+      "image_url": "https://m.media-amazon.com/images/I/41DGsN2PbZS.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 69.99,
+      "amazon_fees": 10.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7070-6",
+      "asin": "B0CLWH62FS",
+      "title": "2XL Force2 Disinfectant Wipes Canisters | Heavy Duty Disinfectant Wipes | Surface Cleaning Wipes | 220/CT (6 Pack)",
+      "image_url": "https://m.media-amazon.com/images/I/41TwHfAX35L.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 240,
+      "warehouse_qty": null,
+      "last_cogs": 8.45,
+      "cogs_date": "2026-09-05",
+      "amazon_price": 39.99,
+      "amazon_fees": 21.97,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7071",
+      "asin": "B07HKWQS7W",
+      "title": "2XL Antibacterial Force Disinfecting Wipes Refill, 3600 Count, 6 x 8 Inch Cleaning Wipes, 8 x 6 Inch Cleaning Wipes, 900 Count (Pack of 4)",
+      "image_url": "https://m.media-amazon.com/images/I/51NCFHjMG6L.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 29.26,
+      "cogs_date": "2026-09-23",
+      "amazon_price": 133.01,
+      "amazon_fees": 19.95,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7072",
+      "asin": "B07HM1JPW9",
+      "title": "GymWipes Antibacterial Wipes by 2XL Corporation, Towelettes Bucket Refill, 4 Rolls (Pack of 4) - Clean, Deodorize & Kills Bacteria, Viruses & Fungi",
+      "image_url": "https://m.media-amazon.com/images/I/412+dxVR6GL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 26.28,
+      "cogs_date": "2026-09-24",
+      "amazon_price": 139.99,
+      "amazon_fees": 15.99,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7073",
+      "asin": "B005NIIMAE",
+      "title": "2XL L36 7 x 8 White Rainforest Scent Gym Wipes Roll of 900 (Case of 4)",
+      "image_url": "https://m.media-amazon.com/images/I/51A5N11Q8eL.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 31.2,
+      "cogs_date": "2026-09-25",
+      "amazon_price": 129.99,
+      "amazon_fees": 19.5,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7090",
+      "asin": "B076HWVWRP",
+      "title": "Gym Equipment Wipes \u2013 Antiseptic Gym Cleaning Wipes, 4000 Count (4 Rolls), Alcohol Free Bulk Sanitizing Fitness Wipes for Equipment, Gyms, Studios & Facilities | HealthEwipes",
+      "image_url": "https://m.media-amazon.com/images/I/51jV8e480bS.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 1,
+      "warehouse_qty": null,
+      "last_cogs": 31.2,
+      "cogs_date": "2026-09-14",
+      "amazon_price": 109.99,
+      "amazon_fees": 40.26,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7095",
+      "asin": "B076HWLNG5",
+      "title": "Gym Equipment Wipe Dispenser for Fitness Facilities & Commercial Use | Wall Mount or Floor Stand Compatible Wipe Holder, Fits Most Refill Rolls | Easy to Use, Lockable, No Touch Sanitizing Dispenser",
+      "image_url": "https://m.media-amazon.com/images/I/211qqx0W7sL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 10.72,
+      "cogs_date": "2026-09-19",
+      "amazon_price": 29.99,
+      "amazon_fees": 4.73,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7098",
+      "asin": "B08H5T39CT",
+      "title": "Value Gym Equipment Cleaning Wipes | Perfect Bulk Wipes For Fitness Facilities | 1200 Gym Wipes Per Roll, 4 Rolls Per Case (4800 Sanitizing Wipes Per Order)",
+      "image_url": "https://m.media-amazon.com/images/I/31GxBLkhDHL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 18.54,
+      "cogs_date": "2026-09-22",
+      "amazon_price": 89.99,
+      "amazon_fees": 35.61,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7098-15",
+      "asin": "B0DYKBVN7Q",
+      "title": "CLUBwipes Gym Equipment Wipes Refill Rolls \u2013 6000 Bulk Sanitizing Wipes for Fitness Centers, Gyms & Wellness Facilities \u2013 Commercial Cleaning Wipes for Gym Equipment \u2013 4 x 1500 Roll Refill Pack",
+      "image_url": "https://m.media-amazon.com/images/I/417t42PiTxL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 99.99,
+      "amazon_fees": 38.4,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7099-R",
+      "asin": "B075SMQQSH",
+      "title": "Handyclean Rinse-Free Sanitizing Wipes Food Contact Safe Pack of 12 Pouches with 80ct Wipes per Pouch",
+      "image_url": "https://m.media-amazon.com/images/I/51c38rTJpcL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 18.25,
+      "cogs_date": "2026-09-14",
+      "amazon_price": 73.0,
+      "amazon_fees": 25.71,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7206-A",
+      "asin": "B07KBZR17X",
+      "title": "Germisept Floor Stand Gym/Stainless Steel Wipe Dispenser with High Capacity Built-in Trash Can, Back Door Access and Free Sign Board",
+      "image_url": "https://m.media-amazon.com/images/I/314IurIaFBL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 149.99,
+      "amazon_fees": 22.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7207",
+      "asin": "B07TDN86NJ",
+      "title": "PetrA-1 Wall Mounted Gym Wipes Dispenser with Anti Roping Technology | Charcoal Wipe Dispenser That Prevents Roping | Simple Design with Economical Efficiency",
+      "image_url": "https://m.media-amazon.com/images/I/31woGNtrIHL.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 4.6,
+      "cogs_date": "2026-10-24",
+      "amazon_price": 39.99,
+      "amazon_fees": 3.0,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "MC7208",
+      "asin": "B08HPQ7Q1H",
+      "title": "Floor Standing Disposable Wipe Dispenser with Trash Can | Silver",
+      "image_url": "https://m.media-amazon.com/images/I/61rXRxwpS6L.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 159.99,
+      "amazon_fees": 24.0,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "MC7209",
+      "asin": "B08HPFCBF2",
+      "title": "PetrA-1 Floor Standing Disposable Wipe Dispenser with Trash Can | Matte Black",
+      "image_url": "https://m.media-amazon.com/images/I/21bdBivth8L.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 159.99,
+      "amazon_fees": 24.0,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "OC100",
+      "asin": "B076HSLWXB",
+      "title": "Oceania Moisturizing Bulk Shampoo Refill, Coconut Lime, Sulfate & Paraben Free, Vegan, Aloe Vera + Kelp, For All Hair Types, 4 x 1 Gallon Case for Gyms, Hotels, Spas & Locker Rooms",
+      "image_url": "https://m.media-amazon.com/images/I/414P+u5EjmL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 22.81,
+      "cogs_date": "2026-09-20",
+      "amazon_price": 69.99,
+      "amazon_fees": 10.5,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "OC100-G",
+      "asin": "B0FDGZDHHK",
+      "title": "Bulk Shampoo Gallon Refill for Gyms, Hotels & Salons | Commercial Coconut Lime Shampoo Gallon | Vegan, Cruelty Free, Sulfate & Paraben Free | 1 Gallon (128 oz) | Oceania",
+      "image_url": "https://m.media-amazon.com/images/I/31nzQeW5aZL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 7.2,
+      "cogs_date": "2026-09-05",
+      "amazon_price": 19.99,
+      "amazon_fees": 12.32,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "OC200",
+      "asin": "B076HW251G",
+      "title": "Oceania Conditioner (4 x 1 Gallon)| Coconut Lime Fragranced, For Softer & Strong Hair Perfect For Gyms, Fitness Centers & Hotels",
+      "image_url": "https://m.media-amazon.com/images/I/41sYlPaePrL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 16,
+      "cogs_date": "2026-09-01",
+      "amazon_price": 73.99,
+      "amazon_fees": 10.55,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "OC300",
+      "asin": "B076HXDF5J",
+      "title": "Oceania Wholesale Body Wash (4 X 1 Gal/Case) | Coconut Lime Fragrance | Deep Cleansing and Moisturizing Body Wash Perfect For Fitness Facilities",
+      "image_url": "https://m.media-amazon.com/images/I/41GvjoXWxWL.jpg",
+      "status": [
+        "DISCOVERABLE",
+        "BUYABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 69.99,
+      "amazon_fees": 10.5,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "OC300-1",
+      "asin": "B0FDH5T32H",
+      "title": "Coconut Lime Gallon Body Wash, 100% Vegan & Cruelty Free | Paraben Free Bulk Shower Gel For Gyms, Hotels & Spas | Cleansing & Moisturizing Body Wash Refill Gallon",
+      "image_url": "https://m.media-amazon.com/images/I/3190qRCQ9pL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 4.4,
+      "cogs_date": "2026-09-01",
+      "amazon_price": 19.99,
+      "amazon_fees": 12.3,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "OC600",
+      "asin": "B076HWDPDR",
+      "title": "Oceania Wholesale Moisturizing Lotion (4 X 1 Gal/Case) | Coconut Lime Fragrance Moisturizer",
+      "image_url": "https://m.media-amazon.com/images/I/41x4opCruBL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 31.45,
+      "cogs_date": "2026-09-22",
+      "amazon_price": 84.99,
+      "amazon_fees": 12.75,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "SCUPUPOLY72X72",
+      "asin": "B0H8X7DDVF",
+      "title": "White Fabric Shower Curtain Liner, 72x72 Inch, 12 Pack Case \u2013 Waterproof PU Coated 65GSM Cloth, Rustproof Grommets, Hotel & Rental Property Bulk Bathroom Liners, Machine Washable",
+      "image_url": "https://m.media-amazon.com/images/I/3104JoRkOFL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 129.99,
+      "amazon_fees": 19.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "TDASH12",
+      "asin": "B07HST2HTV",
+      "title": "Promo Car Care DashWipes | Individually Packaged Cleaning Wipes for Car Interiors, Convenient and Versatile - Gentle and Quick-Drying - Ideal for Car Owners and Car Wash Businesses | 1000 Wipe/Cse",
+      "image_url": "https://m.media-amazon.com/images/I/31j+9FtIa3L.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 27,
+      "cogs_date": "2026-11-04",
+      "amazon_price": 89.99,
+      "amazon_fees": 29.47,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "TDASH12-100",
+      "asin": "B0FZX1MPKH",
+      "title": "Promo Car Care DashWipes | Car Wash Wipes With Refreshing Lemon Scent | 100 Individually Packaged Car Cleaning Dashboard Wipes",
+      "image_url": "https://m.media-amazon.com/images/I/21MPORHR6EL.jpg",
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": 10.3,
+      "cogs_date": "2026-11-08",
+      "amazon_price": 19.99,
+      "amazon_fees": 7.46,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "WIPEMC7090-1",
+      "asin": "B0F4Y5RGSV",
+      "title": "Gym Wipes For Equipment Cleaning - 1000 Count HealthEwipes Antiseptic Wipe Refill Roll - Alcohol Free Fitness Equipment Wipes For Gyms, Studios and Home Use",
+      "image_url": "https://m.media-amazon.com/images/I/31JrobIzH2L.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 73,
+      "warehouse_qty": null,
+      "last_cogs": 9.67,
+      "cogs_date": "2026-10-26",
+      "amazon_price": 29.99,
+      "amazon_fees": 17.11,
+      "fees_source": "realized"
+    },
+    {
+      "sku": "WIPEMC7098",
+      "asin": "B0F4Y4BXK1",
+      "title": "WIPEMC7098",
+      "image_url": null,
+      "status": [
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 0,
+      "warehouse_qty": null,
+      "last_cogs": null,
+      "cogs_date": null,
+      "amazon_price": 89.99,
+      "amazon_fees": 13.5,
+      "fees_source": "estimate"
+    },
+    {
+      "sku": "WIPEMC7098-1",
+      "asin": "B0F9FWGWQ3",
+      "title": "CLUBwipes Gym Equipment Cleaning Wipes \u2013 1200 Count Roll | Bulk Gym Wipes for Equipment, Fitness Centers & Hotels | Antiseptic Wipes Refill Roll for Workout Equipment",
+      "image_url": "https://m.media-amazon.com/images/I/31GxBLkhDHL.jpg",
+      "status": [
+        "BUYABLE",
+        "DISCOVERABLE"
+      ],
+      "amazon_qty": 234,
+      "warehouse_qty": null,
+      "last_cogs": 10.96,
+      "cogs_date": "2026-10-14",
+      "amazon_price": 24.99,
+      "amazon_fees": 25.3,
+      "fees_source": "realized"
+    }
+  ]
 }

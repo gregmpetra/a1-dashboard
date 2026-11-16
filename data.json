@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16T20:47:53.687542Z",
+  "generated_at": "2026-11-16T22:30:25.814836Z",
   "source": "sp-api",
   "config": {
     "deficit_start": 0,
@@ -88,20 +88,21 @@
       "OC100-G": 258,
       "MC7098-15": 357,
       "OC300-1": 279,
-      "MC7072": 3126,
+      "MC7072": 3143,
       "MC7099-R": 108,
-      "WIPEMC7090-1": 214,
+      "WIPEMC7090-1": 220,
       "OC600": 5,
       "WIPEMC7098-1": 436,
-      "OC100": 81,
+      "OC100": 80,
       "MC7071": 19,
       "MC7095": 76,
-      "FW8002PK": 36,
-      "OC300": 46,
-      "OC200": 59,
+      "FW8002PK": 37,
+      "OC300": 45,
+      "OC200": 61,
       "MC7073": 3,
       "MC7207": 4,
-      "TDASH12": 1
+      "TDASH12": 1,
+      "BLKGG90X90PLAT": 1
     },
     "cogs_by_sku": {},
     "fba_fees_by_sku": {
@@ -137,12 +138,12 @@
     },
     "ads_by_sku": {},
     "mtd_sales_by_sku": {
-      "MC7072": 18518.58,
-      "WIPEMC7090-1": 149.95,
+      "MC7072": 20738.41,
+      "WIPEMC7090-1": 329.89,
       "WIPEMC7098-1": 174.93,
-      "OC100": 69.99,
-      "OC300": 69.99,
-      "OC200": 73.99,
+      "OC200": 221.97,
+      "FW8002PK": 59.99,
+      "BLKGG90X90PLAT": 24.99,
       "MC7207": 79.98
     },
     "monthly_sales_by_sku": {
@@ -718,7 +719,7 @@
       "sku": "BLKGG90X90PLAT",
       "in_stock": 2,
       "daily_rate": 0.0,
-      "days_remaining": 999,
+      "days_remaining": 638,
       "reorder_alert": false
     },
     "DISPMC7067KIT": {
@@ -745,8 +746,8 @@
     "FW8002PK": {
       "sku": "FW8002PK",
       "in_stock": 63,
-      "daily_rate": 0.11,
-      "days_remaining": 558,
+      "daily_rate": 0.12,
+      "days_remaining": 543,
       "reorder_alert": false
     },
     "MC1616-BLUE": {
@@ -836,7 +837,7 @@
     "MC7072": {
       "sku": "MC7072",
       "in_stock": 0,
-      "daily_rate": 9.8,
+      "daily_rate": 9.85,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -941,8 +942,8 @@
     "WIPEMC7090-1": {
       "sku": "WIPEMC7090-1",
       "in_stock": 73,
-      "daily_rate": 0.67,
-      "days_remaining": 109,
+      "daily_rate": 0.69,
+      "days_remaining": 106,
       "reorder_alert": false
     },
     "WIPEMC7098-1": {
