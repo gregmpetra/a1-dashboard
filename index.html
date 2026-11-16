@@ -174,6 +174,11 @@
   .tile img { width: 100%; height: 100%; object-fit: cover; }
   .row-actions { display: inline-flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
   .blocked-note { font-size: 11px; color: var(--red); font-weight: 600; }
+  .btn-primary { padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
+                 border: 1px solid var(--blue); background: var(--blue); color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.15); transition: all 0.15s; }
+  .btn-primary:hover { background: #08335d; border-color: #08335d; }
+  .btn-primary:focus-visible, .filter-btn:focus-visible { outline: 2px solid var(--blue-mid); outline-offset: 2px; }
+  .qty-input { width: 72px; padding: 4px 6px; border: 1px solid var(--border2); border-radius: 6px; font: inherit; font-size: 12px; text-align: right; background: var(--surface); color: var(--text); }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (max-width: 720px) {
     .goal-row, .kpi4, .kpi3, .two-col, .three-col, .be-grid { grid-template-columns: 1fr; }
@@ -613,10 +618,17 @@
             <th>Days remaining</th>
             <th>Status</th>
             <th>Reorder by</th>
+            <th>Shipment</th>
           </tr>
         </thead>
         <tbody id="inv-tbody"></tbody>
       </table></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Shipment draft (this browser only)</h3>
+      <div class="cs">Suggested quantity covers 60 days at the current daily rate. Saved in this browser's local storage only. Nothing is sent to Amazon; creating real FBA shipments needs a backend (not built yet).</div>
+      <div id="ship-draft"></div>
     </div>
 
     <div class="two-col">
@@ -677,8 +689,8 @@
 
     <div class="card" style="margin-bottom:14px;">
       <h3>Internal items not yet on Amazon</h3>
-      <div class="cs">Sorted by score, high to low. Grade: A ≥ 85 · B 70–84 · C 55–69 · D &lt; 55. "Push to Amazon" only adds the item to a draft queue in this browser. Nothing is sent to Amazon.</div>
-      <div class="table-wrap"><table class="sku-table wide" id="opp-table">
+      <div class="cs">Sorted by score, high to low. Grade: A ≥ 85 · B 70–84 · C 55–69 · D &lt; 55. "Add to Amazon" only adds the item to a draft queue in this browser. Nothing is sent to Amazon.</div>
+      <div class="table-wrap"><table class="sku-table wide" id="opp-table" style="min-width:700px">
         <thead>
           <tr>
             <th class="l">Internal title <span class="sample-tag">Sample data</span></th>
@@ -1807,9 +1819,11 @@ function renderInventory(d) {
       <td class="${isOos?'dn':isWarn?'neu':''}">${daysDisplay}</td>
       <td><span class="pill ${statusPill}">${statusText}</span></td>
       <td style="font-weight:${isOos?'700':'400'};color:${isOos?'var(--red)':isWarn?'var(--amber)':'var(--muted)'}">${reorderBy}</td>
+      <td style="white-space:nowrap">${shipmentCell(data)}</td>
     </tr>`;
   }
   document.getElementById('inv-tbody').innerHTML = tableHtml;
+  renderShipmentDraft();
 
   // Chart — only SKUs with velocity and not 999 days
   const chartSkus = active.filter(([,d]) => d.daily_rate > 0 && d.days_remaining !== 999);
@@ -2643,6 +2657,78 @@ async function renderCatalogTab() {
   }).join('') || '<tr><td colspan="10" class="l neu">No listings in data/catalog.json</td></tr>';
 }
 
+// ---- Inventory shipment draft: localStorage only, never sent anywhere ----
+const SHIP_DRAFT_KEY = 'a1.inventory.shipmentDraft.v1';
+let shipStorageOk = true;
+function readShipDraft() {
+  try { return JSON.parse(localStorage.getItem(SHIP_DRAFT_KEY) || '{}') || {}; }
+  catch (e) { return {}; }
+}
+function writeShipDraft(s) {
+  try { localStorage.setItem(SHIP_DRAFT_KEY, JSON.stringify(s)); shipStorageOk = true; }
+  catch (e) { shipStorageOk = false; }
+}
+function suggestedShipQty(inv) {
+  // Enough for 60 days at the current rate, minus what Amazon already has
+  return Math.max(1, Math.ceil((inv.daily_rate || 0) * 60 - (inv.in_stock || 0)));
+}
+function shipmentCell(inv) {
+  const arg = esc(JSON.stringify(String(inv.sku)));
+  if (readShipDraft()[inv.sku]) {
+    return `<span class="row-actions"><span class="pill pill-b">In draft</span>
+      <button class="filter-btn" onclick="removeFromShipment(${arg})" aria-label="Undo shipment for ${esc(inv.sku)}">Undo</button></span>`;
+  }
+  return `<button class="btn-primary" onclick="addToShipment(${arg})" aria-label="Setup shipment for ${esc(inv.sku)}">Setup Shipment</button>`;
+}
+function addToShipment(sku) {
+  const inv = (globalData && globalData.inventory && globalData.inventory[sku]) || {sku};
+  const s = readShipDraft();
+  s[sku] = { qty: suggestedShipQty(inv), added_at: new Date().toISOString() };
+  writeShipDraft(s);
+  if (globalData) renderInventory(globalData);
+}
+function removeFromShipment(sku) {
+  const s = readShipDraft();
+  delete s[sku];
+  writeShipDraft(s);
+  if (globalData) renderInventory(globalData);
+}
+function setShipQty(sku, val) {
+  const s = readShipDraft();
+  const n = Math.floor(Number(val));
+  if (!s[sku] || !(n >= 1)) { renderShipmentDraft(); return; }
+  s[sku].qty = n;
+  writeShipDraft(s);
+  renderShipmentDraft();
+}
+function renderShipmentDraft() {
+  const box = document.getElementById('ship-draft');
+  if (!box) return;
+  const s = readShipDraft();
+  const skus = Object.keys(s);
+  let html = shipStorageOk ? '' : '<div class="insight" style="margin-bottom:10px"><div class="i-dot i-r"></div><div>This browser blocked local storage, so the draft will not be saved after you leave the page.</div></div>';
+  if (!skus.length) {
+    box.innerHTML = html + '<div class="insights"><div class="insight"><div class="i-dot i-g"></div><div>No SKUs in the draft. Use "Setup Shipment" on a row above.</div></div></div>';
+    return;
+  }
+  const total = skus.reduce((a, k) => a + (s[k].qty || 0), 0);
+  html += `<div class="table-wrap"><table class="sku-table">
+    <thead><tr><th class="l">SKU</th><th>In stock</th><th>Units to send</th><th></th></tr></thead><tbody>`;
+  html += skus.map(k => {
+    const inv = (globalData && globalData.inventory && globalData.inventory[k]) || {};
+    const arg = esc(JSON.stringify(k));
+    return `<tr>
+      <td class="l nw"><strong>${esc(k)}</strong></td>
+      <td>${inv.in_stock != null ? inv.in_stock : '-'}</td>
+      <td><label class="sr-only" for="ship-qty-${esc(k)}">Units to send for ${esc(k)}</label>
+        <input class="qty-input" id="ship-qty-${esc(k)}" type="number" min="1" step="1" value="${s[k].qty}" onchange="setShipQty(${arg}, this.value)"></td>
+      <td><button class="filter-btn" onclick="removeFromShipment(${arg})">Undo</button></td>
+    </tr>`;
+  }).join('');
+  html += `<tr><td class="l"><strong>Total</strong></td><td></td><td><strong>${total.toLocaleString()}</strong></td><td></td></tr></tbody></table></div>`;
+  box.innerHTML = html;
+}
+
 // ---- Opportunities draft queue: localStorage only, never sent anywhere ----
 const OPP_QUEUE_KEY = 'a1.opportunities.draftQueue.v1';
 function readOppQueue() {
@@ -2697,7 +2783,7 @@ async function renderOpportunitiesTab() {
     } else if (r.status === 'pushed') {
       action = '<span class="pill pill-g">Pushed</span>';
     } else {
-      action = `<button class="filter-btn" onclick="queueOpp(${skuArg})" aria-label="Push ${esc(r.title)} to Amazon draft queue">Push to Amazon</button>`;
+      action = `<button class="btn-primary" onclick="queueOpp(${skuArg})" aria-label="Add ${esc(r.title)} to Amazon draft queue">Add to Amazon</button>`;
     }
     return `<tr>
       <td class="l"><span class="sku-name">${esc(r.title)}</span></td>
