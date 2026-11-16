@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A1 American — Amazon US</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -16,6 +19,7 @@
     --red: #a32d2d; --red-bg: #fcebeb; --red-mid: #e24b4a;
     --blue: #0c447c; --blue-bg: #e6f1fb; --blue-mid: #378add;
     --radius: 12px; --radius-sm: 8px;
+    --brand-gold: #CFB023; --brand-gold-dark: #B89C1A; --brand-black: #212322; --brand-navy: #0C2340; --brand-creme: #F0EEE7;
     --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   body { font-family: var(--font); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
@@ -163,7 +167,7 @@
   /* Catalog + Opportunities tabs (reuse kpi/card/sku-table/pill; only these additions) */
   .tabs { max-width: 100%; overflow-x: auto; }
   .tab { white-space: nowrap; flex-shrink: 0; }
-  .sku-table.wide { min-width: 960px; }
+  .sku-table.wide { min-width: 1080px; }
   .sku-table th.l, .sku-table td.l { text-align: left; }
   .sku-table td.nw, .sku-table.wide .pill { white-space: nowrap; }
   .sample-tag { display: inline-block; margin-left: 4px; padding: 1px 6px; border-radius: 99px; font-size: 9px;
@@ -174,6 +178,15 @@
   .tile img { width: 100%; height: 100%; object-fit: cover; }
   .row-actions { display: inline-flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
   .blocked-note { font-size: 11px; color: var(--red); font-weight: 600; }
+  /* A1 American brand action button: Rich Black text on Gold (7.5:1; 5.9:1 on hover), Navy focus ring */
+  .btn-primary { padding: 7px 14px; border-radius: 6px; font-family: 'Open Sans', var(--font); font-size: 12px; font-weight: 700;
+                 letter-spacing: 0.01em; cursor: pointer; white-space: nowrap;
+                 border: 1px solid var(--brand-gold); background: var(--brand-gold); color: var(--brand-black);
+                 box-shadow: 0 1px 2px rgba(33,35,34,0.18); transition: background 0.15s, border-color 0.15s; }
+  .btn-primary:hover { background: var(--brand-gold-dark); border-color: var(--brand-gold-dark); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:focus-visible, .filter-btn:focus-visible { outline: 2px solid var(--brand-navy); outline-offset: 2px; }
+  .qty-input { width: 72px; padding: 4px 6px; border: 1px solid var(--border2); border-radius: 6px; font: inherit; font-size: 12px; text-align: right; background: var(--surface); color: var(--text); }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (max-width: 720px) {
     .goal-row, .kpi4, .kpi3, .two-col, .three-col, .be-grid { grid-template-columns: 1fr; }
@@ -638,13 +651,13 @@
 
   <!-- ============ TAB 7: AMAZON CATALOG ============ -->
   <div class="tab-panel" id="tab-catalog">
-    <div class="sl">Amazon catalog <span class="sample-tag" id="cat-sample-flag">Sample data</span></div>
+    <div class="sl">Amazon catalog <span class="sample-tag" data-sample="any">Sample data</span> <span class="neu" id="cat-synced" style="text-transform:none;letter-spacing:0;font-weight:500"></span></div>
 
     <div class="kpi4">
-      <div class="kpi"><div class="kl">Live listings <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-live">—</div><div class="kd neu">SKUs with stock or sales</div></div>
+      <div class="kpi"><div class="kl">Live listings <span class="sample-tag" data-sample="listing">Sample data</span></div><div class="kv" id="cat-live">—</div><div class="kd neu" id="cat-live-sub">—</div></div>
       <div class="kpi"><div class="kl">Units at Amazon</div><div class="kv" id="cat-amz-units">—</div><div class="kd neu">FBA fulfillable (SP-API)</div></div>
-      <div class="kpi"><div class="kl">Units in warehouses <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-wh-units">—</div><div class="kd neu">internal feed not connected</div></div>
-      <div class="kpi"><div class="kl">Blended GPM <span class="sample-tag">Sample data</span></div><div class="kv" id="cat-gpm">—</div><div class="kd neu" id="cat-gpm-sub">—</div></div>
+      <div class="kpi"><div class="kl">Units in warehouses <span class="sample-tag" data-sample="warehouse">Sample data</span></div><div class="kv" id="cat-wh-units">—</div><div class="kd neu">internal feed not connected</div></div>
+      <div class="kpi"><div class="kl">Blended GPM <span class="sample-tag" data-sample="margin">Sample data</span></div><div class="kv" id="cat-gpm">—</div><div class="kd neu" id="cat-gpm-sub">—</div></div>
     </div>
 
     <div class="card" style="margin-bottom:14px;">
@@ -654,20 +667,27 @@
         <thead>
           <tr>
             <th class="l"><span class="sr-only">Image</span></th>
-            <th class="l">Title <span class="sample-tag">Sample data</span></th>
+            <th class="l">Title <span class="sample-tag" data-sample="title">Sample data</span></th>
             <th class="l">SKU</th>
             <th>Qty in Amazon</th>
-            <th>Qty in warehouses <span class="sample-tag">Sample data</span></th>
-            <th>Last cost <span class="sample-tag">Sample data</span></th>
-            <th>Amazon price <span class="sample-tag">Sample data</span></th>
+            <th>Qty in warehouses <span class="sample-tag" data-sample="warehouse">Sample data</span></th>
+            <th>Last cost <span class="sample-tag" data-sample="cost">Sample data</span></th>
+            <th>Amazon price <span class="sample-tag" data-sample="price">Sample data</span></th>
             <th>Amazon fees</th>
-            <th>Net value <span class="sample-tag">Sample data</span></th>
-            <th>GPM <span class="sample-tag">Sample data</span></th>
+            <th>Net value <span class="sample-tag" data-sample="margin">Sample data</span></th>
+            <th>GPM <span class="sample-tag" data-sample="margin">Sample data</span></th>
+            <th>Shipment</th>
           </tr>
         </thead>
-        <tbody id="cat-tbody"><tr><td colspan="10" class="l neu">Loading…</td></tr></tbody>
+        <tbody id="cat-tbody"><tr><td colspan="11" class="l neu">Loading…</td></tr></tbody>
       </table></div>
-      <div class="cs" style="margin:12px 0 0;">Amazon fees are realized per-unit fees (FBA + referral ÷ units) where the SKU has sales; cells marked "Sample" are placeholders until the Product Fees API is connected.</div>
+      <div class="cs" style="margin:12px 0 0;">Amazon fees: realized per-unit fees (FBA + referral ÷ units) where the SKU has sales; "Est." = Product Fees API estimate at the current price; "Sample" = placeholder.</div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <h3>Shipment draft (this browser only)</h3>
+      <div class="cs">Suggested quantity covers 60 days at the current daily rate, minus units already at Amazon. Saved in this browser's local storage only. Nothing is sent to Amazon; creating real FBA shipments needs a backend (not built yet).</div>
+      <div id="ship-draft"></div>
     </div>
   </div>
 
@@ -677,8 +697,8 @@
 
     <div class="card" style="margin-bottom:14px;">
       <h3>Internal items not yet on Amazon</h3>
-      <div class="cs">Sorted by score, high to low. Grade: A ≥ 85 · B 70–84 · C 55–69 · D &lt; 55. "Push to Amazon" only adds the item to a draft queue in this browser. Nothing is sent to Amazon.</div>
-      <div class="table-wrap"><table class="sku-table wide" id="opp-table">
+      <div class="cs">Sorted by score, high to low. Grade: A ≥ 85 · B 70–84 · C 55–69 · D &lt; 55. "Add to Amazon" only adds the item to a draft queue in this browser. Nothing is sent to Amazon.</div>
+      <div class="table-wrap"><table class="sku-table wide" id="opp-table" style="min-width:700px">
         <thead>
           <tr>
             <th class="l">Internal title <span class="sample-tag">Sample data</span></th>
@@ -2589,21 +2609,34 @@ async function renderCatalogTab() {
   const tbody = document.getElementById('cat-tbody');
   let cat;
   try { cat = await loadJson('data/catalog.json'); }
-  catch (e) { tbody.innerHTML = `<tr><td colspan="10" class="l dn">Could not load data/catalog.json (${esc(e.message)})</td></tr>`; return; }
+  catch (e) { tbody.innerHTML = `<tr><td colspan="11" class="l dn">Could not load data/catalog.json (${esc(e.message)})</td></tr>`; return; }
 
   const rows = (cat.rows || []).slice();
-  document.getElementById('cat-sample-flag').style.display = cat._sample ? '' : 'none';
 
-  let whUnits = 0, amzUnits = 0, netSum = 0, priceSum = 0, costed = 0;
+  // Which columns are still sample data. catalog_sync.py writes _sample_columns;
+  // an older all-sample file only has _sample: true.
+  const sampleCols = new Set(Array.isArray(cat._sample_columns) ? cat._sample_columns
+    : cat._sample ? ['listing', 'title', 'warehouse', 'cost', 'price'] : []);
+  if (sampleCols.has('cost') || sampleCols.has('price') || rows.some(r => r.fees_source === 'sample')) sampleCols.add('margin');
+  document.querySelectorAll('#tab-catalog [data-sample]').forEach(el => {
+    const col = el.dataset.sample;
+    el.style.display = (col === 'any' ? sampleCols.size > 0 : sampleCols.has(col)) ? '' : 'none';
+  });
+  safeSet('cat-synced', cat._synced_at ? 'Synced from Amazon ' + new Date(cat._synced_at).toLocaleString() : '');
+
+  let whUnits = 0, whKnown = 0, amzUnits = 0, netSum = 0, priceSum = 0, costed = 0;
   rows.forEach(r => {
     amzUnits += r.amazon_qty || 0;
-    whUnits += r.warehouse_qty || 0;
+    if (r.warehouse_qty != null) { whUnits += r.warehouse_qty; whKnown++; }
     const n = catalogNet(r);
     if (n) { netSum += n.net; priceSum += r.amazon_price; costed++; }
   });
-  safeSet('cat-live', rows.length.toLocaleString());
+  const hasStatus = rows.some(r => Array.isArray(r.status));
+  const buyable = rows.filter(r => Array.isArray(r.status) && r.status.includes('BUYABLE')).length;
+  safeSet('cat-live', (hasStatus ? buyable : rows.length).toLocaleString());
+  safeSet('cat-live-sub', hasStatus ? `buyable, of ${rows.length} listings` : 'SKUs with stock or sales');
   safeSet('cat-amz-units', amzUnits.toLocaleString());
-  safeSet('cat-wh-units', whUnits.toLocaleString());
+  safeSet('cat-wh-units', whKnown ? whUnits.toLocaleString() : '-');
   safeSet('cat-gpm', priceSum > 0 ? (netSum / priceSum * 100).toFixed(1) + '%' : '-');
   safeSet('cat-gpm-sub', `${costed} of ${rows.length} SKUs have a cost on file`);
 
@@ -2618,7 +2651,11 @@ async function renderCatalogTab() {
       : `<div class="tile" aria-hidden="true">${initials}</div>`;
     const cost = r.last_cogs == null ? '-'
       : `${money2(r.last_cogs)}<div class="sku-sub">${esc(r.cogs_date || '')}</div>`;
-    const fees = money2(r.amazon_fees) + (r.fees_source === 'sample' ? '<div class="sku-sub">' + SAMPLE_TAG + '</div>' : '');
+    const feeNote = r.fees_source === 'sample' ? SAMPLE_TAG
+      : r.fees_source === 'estimate' ? '<span class="neu">Est.</span>' : '';
+    const fees = money2(r.amazon_fees) + (feeNote ? '<div class="sku-sub">' + feeNote + '</div>' : '');
+    const statusNote = Array.isArray(r.status) && !r.status.includes('BUYABLE')
+      ? '<div class="sku-sub">Not buyable</div>' : '';
     let gpmCell = '-', netCell = '-';
     if (n) {
       const pct = n.gpm * 100;
@@ -2630,8 +2667,8 @@ async function renderCatalogTab() {
     }
     return `<tr>
       <td class="l">${tile}</td>
-      <td class="l"><span class="sku-name">${esc(r.title)}</span></td>
-      <td class="l nw">${esc(r.sku)}</td>
+      <td class="l" style="max-width:260px"><span class="sku-name">${esc(r.title || r.sku)}</span>${statusNote}</td>
+      <td class="l nw">${esc(r.sku)}${r.asin ? '<div class="sku-sub">' + esc(r.asin) + '</div>' : ''}</td>
       <td><strong>${(r.amazon_qty || 0).toLocaleString()}</strong><div class="sku-sub">${stockLabel(r)}</div></td>
       <td>${r.warehouse_qty == null ? '-' : r.warehouse_qty.toLocaleString()}</td>
       <td>${cost}</td>
@@ -2639,8 +2676,90 @@ async function renderCatalogTab() {
       <td>${fees}</td>
       <td>${netCell}</td>
       <td style="min-width:80px">${gpmCell}</td>
+      <td style="white-space:nowrap">${shipmentCell(r)}</td>
     </tr>`;
-  }).join('') || '<tr><td colspan="10" class="l neu">No listings in data/catalog.json</td></tr>';
+  }).join('') || '<tr><td colspan="11" class="l neu">No listings in data/catalog.json</td></tr>';
+  catalogRows = Object.fromEntries(rows.map(r => [r.sku, r]));
+  renderShipmentDraft();
+}
+let catalogRows = {};
+
+// ---- Catalog shipment draft: localStorage only, never sent anywhere ----
+const SHIP_DRAFT_KEY = 'a1.catalog.shipmentDraft.v1';
+let shipStorageOk = true;
+function readShipDraft() {
+  try { return JSON.parse(localStorage.getItem(SHIP_DRAFT_KEY) || '{}') || {}; }
+  catch (e) { return {}; }
+}
+function writeShipDraft(s) {
+  try { localStorage.setItem(SHIP_DRAFT_KEY, JSON.stringify(s)); shipStorageOk = true; }
+  catch (e) { shipStorageOk = false; }
+}
+function amazonStockFor(sku) {
+  const row = catalogRows[sku];
+  if (row && row.amazon_qty != null) return row.amazon_qty;
+  const inv = globalData && globalData.inventory && globalData.inventory[sku];
+  return inv ? inv.in_stock : null;
+}
+function suggestedShipQty(sku) {
+  // Enough for 60 days at the current rate, minus what Amazon already has
+  const inv = (globalData && globalData.inventory && globalData.inventory[sku]) || {};
+  return Math.max(1, Math.ceil((inv.daily_rate || 0) * 60 - (amazonStockFor(sku) || 0)));
+}
+function shipmentCell(row) {
+  const arg = esc(JSON.stringify(String(row.sku)));
+  if (readShipDraft()[row.sku]) {
+    return `<span class="row-actions"><span class="pill pill-b">In draft</span>
+      <button class="filter-btn" onclick="removeFromShipment(${arg})" aria-label="Undo shipment for ${esc(row.sku)}">Undo</button></span>`;
+  }
+  return `<button class="btn-primary" onclick="addToShipment(${arg})" aria-label="Setup shipment for ${esc(row.sku)}">Setup Shipment</button>`;
+}
+function addToShipment(sku) {
+  const s = readShipDraft();
+  s[sku] = { qty: suggestedShipQty(sku), added_at: new Date().toISOString() };
+  writeShipDraft(s);
+  renderCatalogTab();
+}
+function removeFromShipment(sku) {
+  const s = readShipDraft();
+  delete s[sku];
+  writeShipDraft(s);
+  renderCatalogTab();
+}
+function setShipQty(sku, val) {
+  const s = readShipDraft();
+  const n = Math.floor(Number(val));
+  if (!s[sku] || !(n >= 1)) { renderShipmentDraft(); return; }
+  s[sku].qty = n;
+  writeShipDraft(s);
+  renderShipmentDraft();
+}
+function renderShipmentDraft() {
+  const box = document.getElementById('ship-draft');
+  if (!box) return;
+  const s = readShipDraft();
+  const skus = Object.keys(s);
+  let html = shipStorageOk ? '' : '<div class="insight" style="margin-bottom:10px"><div class="i-dot i-r"></div><div>This browser blocked local storage, so the draft will not be saved after you leave the page.</div></div>';
+  if (!skus.length) {
+    box.innerHTML = html + '<div class="insights"><div class="insight"><div class="i-dot i-g"></div><div>No SKUs in the draft. Use "Setup Shipment" on a row above.</div></div></div>';
+    return;
+  }
+  const total = skus.reduce((a, k) => a + (s[k].qty || 0), 0);
+  html += `<div class="table-wrap"><table class="sku-table">
+    <thead><tr><th class="l">SKU</th><th>In stock</th><th>Units to send</th><th></th></tr></thead><tbody>`;
+  html += skus.map(k => {
+    const stock = amazonStockFor(k);
+    const arg = esc(JSON.stringify(k));
+    return `<tr>
+      <td class="l nw"><strong>${esc(k)}</strong></td>
+      <td>${stock != null ? stock : '-'}</td>
+      <td><label class="sr-only" for="ship-qty-${esc(k)}">Units to send for ${esc(k)}</label>
+        <input class="qty-input" id="ship-qty-${esc(k)}" type="number" min="1" step="1" value="${s[k].qty}" onchange="setShipQty(${arg}, this.value)"></td>
+      <td><button class="filter-btn" onclick="removeFromShipment(${arg})">Undo</button></td>
+    </tr>`;
+  }).join('');
+  html += `<tr><td class="l"><strong>Total</strong></td><td></td><td><strong>${total.toLocaleString()}</strong></td><td></td></tr></tbody></table></div>`;
+  box.innerHTML = html;
 }
 
 // ---- Opportunities draft queue: localStorage only, never sent anywhere ----
@@ -2697,7 +2816,7 @@ async function renderOpportunitiesTab() {
     } else if (r.status === 'pushed') {
       action = '<span class="pill pill-g">Pushed</span>';
     } else {
-      action = `<button class="filter-btn" onclick="queueOpp(${skuArg})" aria-label="Push ${esc(r.title)} to Amazon draft queue">Push to Amazon</button>`;
+      action = `<button class="btn-primary" onclick="queueOpp(${skuArg})" aria-label="Add ${esc(r.title)} to Amazon draft queue">Add to Amazon</button>`;
     }
     return `<tr>
       <td class="l"><span class="sku-name">${esc(r.title)}</span></td>

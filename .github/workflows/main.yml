@@ -33,6 +33,17 @@ jobs:
           MARKETPLACE_ID: ATVPDKIKX0DER
         run: python3 sync.py
 
+      - name: Run catalog sync
+        # Optional: a failure here must not block the data.json commit below
+        continue-on-error: true
+        env:
+          A1_SPAPI_CLIENT_ID: ${{ secrets.A1_SPAPI_CLIENT_ID }}
+          A1_SPAPI_CLIENT_SECRET: ${{ secrets.A1_SPAPI_CLIENT_SECRET }}
+          A1_SPAPI_REFRESH_TOKEN: ${{ secrets.A1_SPAPI_REFRESH_TOKEN }}
+          A1_SPAPI_SELLER_ID: ${{ secrets.A1_SPAPI_SELLER_ID }}
+          MARKETPLACE_ID: ATVPDKIKX0DER
+        run: python3 catalog_sync.py
+
       - name: Commit and push data.json
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
@@ -40,6 +51,6 @@ jobs:
           git config user.email "sync@a1dashboard.com"
           git config user.name "A1 Dashboard Sync"
           git remote set-url origin https://x-access-token:${GH_PAT}@github.com/gregmpetra/a1-dashboard.git
-          git add data.json
+          git add data.json data/catalog.json
           git diff --staged --quiet || git commit -m "Auto sync $(date +%Y-%m-%d)"
           git push --force origin master
