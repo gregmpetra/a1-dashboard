@@ -641,6 +641,15 @@ def run():
             'reorder_alert': days_left < 45,
         }
 
+    # Monthly COGS = units shipped that month x per-unit cost (data/costs.json).
+    # Current month mirrors MTD sales: the larger of settled units and
+    # Orders API units for the open period, so it isn't double counted.
+    def units_cost(units):
+        return sum(q * COGS_MAP.get(sku, 0) for sku, q in units.items())
+    monthly_cogs = {m: round(units_cost(skus), 2) for m, skus in monthly_units_by_sku.items()}
+    monthly_cogs[current_month] = round(max(monthly_cogs.get(current_month, 0),
+                                            units_cost(unsettled_units_by_sku)), 2)
+
     # Monthly net estimate
     monthly_net = {}
     for m in sorted(set(list(monthly_sales_map.keys()) + list(monthly_fees.keys()))):
@@ -648,8 +657,7 @@ def run():
         f  = monthly_fees.get(m, 0)
         a  = monthly_awd.get(m, 0)
         ad = monthly_ads.get(m, {}).get('spend', 0)
-        cogs_est = total_cogs * (s / max(1, gross_sales)) if gross_sales > 0 else 0
-        monthly_net[m] = round(s + f + a - ad - cogs_est, 2)
+        monthly_net[m] = round(s + f + a - ad - monthly_cogs.get(m, 0), 2)
 
     # Build weekly sales from daily orders
     weekly_sales_out = {}
@@ -727,6 +735,7 @@ def run():
         'sku_breakdown': {
             'sales': merge_by_name(sales_by_sku, round_vals=True),
             'units': merge_by_name(units_by_sku),
+            'cogs_per_unit': {PRODUCT_NAMES.get(k, k): round(c, 2) for k, c in COGS_MAP.items()},
             'cogs_by_sku': (lambda d: {k: round(v,2) for k,v in d.items()})(
                 {PRODUCT_NAMES.get(k,k): (lambda n,c: n*c)(units_by_sku.get(k,0), c)
                  for k, c in COGS_MAP.items() if units_by_sku.get(k, 0) > 0}),
@@ -750,8 +759,7 @@ def run():
             'monthly_awd':    monthly_awd,
             'monthly_net':    monthly_net,
             'weekly_sales':   weekly_sales_out,
-            'monthly_cogs':   {m: round(total_cogs * (monthly_sales_map.get(m,0) / max(1, gross_sales)), 2)
-                               for m in monthly_sales_map},
+            'monthly_cogs':   {m: monthly_cogs.get(m, 0) for m in monthly_sales_map},
             'monthly_ads':    {m: round(monthly_ads.get(m, {}).get('spend', 0), 2)
                                for m in monthly_sales_map},
             'monthly_promos':        monthly_promos,

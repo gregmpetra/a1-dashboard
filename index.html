@@ -1226,24 +1226,22 @@ function addDays(date, days) {
   const d = new Date(date); d.setDate(d.getDate() + days); return d;
 }
 
-// COGS map and fee estimates for SKU margin calc
+// Per-unit COGS by SKU, from data/costs.json via sync.py (sku_breakdown.cogs_per_unit).
+// Falls back to cogs_by_sku / units for data.json files written before that field existed.
+function cogsPerUnitMap(d) {
+  const sb = (d && d.sku_breakdown) || {};
+  if (sb.cogs_per_unit && Object.keys(sb.cogs_per_unit).length) return sb.cogs_per_unit;
+  const out = {}, units = sb.units || {};
+  for (const [k, c] of Object.entries(sb.cogs_by_sku || {})) if (units[k] > 0) out[k] = Math.abs(c) / units[k];
+  return out;
+}
+function hasCogsData(d) { return Object.keys(cogsPerUnitMap(d)).length > 0; }
+const NO_COST_NOTE = '<div class="sku-sub" style="color:var(--amber)">No cost on file</div>';
+
+// Fee estimates for SKU margin calc (legacy name-keyed fallbacks)
 const DISPLAY_NAME_FIX = {
   'FNA606-2LP': 'Amber & Sandalwood Refill Pouch 2L',
   'FNA606-600': 'Amber & Sandalwood Lotion 600ml',
-};
-const COGS_MAP = {
-  'Santal & Vetiver Body Wash 500ml': 2.40,
-  'Amber & Sandalwood Body Wash 500ml': 2.40,
-  'Bergamot & Hinoki Body Lotion 500ml': 2.90,
-  'Amber & Sandalwood Body Lotion 500ml': 2.90,
-  'Bergamot & Hinoki Refill Pouch 2L': 4.90,
-  'Amber & Sandalwood Gallon Case': 30.00,
-  'Bergamot & Hinoki Gallon Case': 30.00,
-  'Santal & Vetiver Gallon Case': 30.00,
-  'Bergamot & Hinoki Deodorant': 1.81,
-  'Santal & Vetiver Deodorant': 1.81,
-  'Tobacco & Vanilla Deodorant': 1.81,
-  'Bundle/Other': 2.40,
 };
 const FEE_MAP = {
   'Santal & Vetiver Body Wash 500ml': 8.27,
@@ -1425,9 +1423,10 @@ function render(d) {
   const fbaFeesBySku = d.sku_breakdown.fba_fees_by_sku || {};
   const refFeesBySku = d.sku_breakdown.referral_fees_by_sku || {};
 
+  const cpu = cogsPerUnitMap(d);
   const skuRows = Object.entries(skuSales).sort(([,a],[,b])=>b-a).map(([name, rev]) => {
     const units = skuUnits[name] || 0;
-    const cogs = (COGS_MAP[name] || 0) * units;
+    const cogs = (cpu[name] || 0) * units;
     const fbaFee = Math.abs(fbaFeesBySku[name] || (FEE_MAP[name] || 0) * units * 0.6);
     const refFee = Math.abs(refFeesBySku[name] || (FEE_MAP[name] || 0) * units * 0.4);
     const totalFees = fbaFee + refFee;
@@ -1450,6 +1449,7 @@ function render(d) {
         <div class="sku-name">${name}</div>
         <div class="sku-sub">${units} units · $${rev>0&&units>0?(rev/units).toFixed(2):'0'} avg</div>
         ${reco ? `<div style="font-size:10px;margin-top:2px;color:${adRoas<1&&adSpend>0?'var(--red)':'var(--green)'}">${reco}</div>` : ''}
+        ${units > 0 && cpu[name] == null ? NO_COST_NOTE : ''}
       </td>
       <td><strong>${units}</strong></td>
       <td><strong>${fmt(rev, 2)}</strong></td>
@@ -1464,7 +1464,7 @@ function render(d) {
 
   // Add totals row
   const totalRev = Object.values(skuSales).reduce((a,b)=>a+b,0);
-  const totalCogs = Object.entries(skuSales).reduce((a,[n])=>a+(COGS_MAP[n]||0)*(skuUnits[n]||0),0);
+  const totalCogs = Object.entries(skuSales).reduce((a,[n])=>a+(cpu[n]||0)*(skuUnits[n]||0),0);
   const totalFees2 = Object.keys(skuSales).reduce((a,n)=>a+Math.abs(fbaFeesBySku[n]||0)+Math.abs(refFeesBySku[n]||0),0);
   const totalAdSpend = Object.values(adsBySku).reduce((a,v)=>a+(v.spend||0),0);
   const totalNet = totalRev - totalCogs - totalFees2 - totalAdSpend;
@@ -1894,14 +1894,7 @@ function renderSkuRows(d, period) {
   period = period || tabPeriods['sku'] || 'ytd';
   const sb = d.sku_breakdown;
   const mAdsFull = d.ads.monthly || {};
-  const COGS_PER_UNIT = {};
-  // Build COGS per unit from YTD data
-  const ytdUnits = sb.units || {};
-  const ytdCogs  = sb.cogs_by_sku || {};
-  for (const [name, cogs] of Object.entries(ytdCogs)) {
-    const u = ytdUnits[name] || 0;
-    COGS_PER_UNIT[name] = u > 0 ? cogs / u : 0;
-  }
+  const COGS_PER_UNIT = cogsPerUnitMap(d);
 
   let skuSales, skuUnits, skuFba, skuRef, skuAds;
 
@@ -1993,7 +1986,7 @@ function renderSkuRows(d, period) {
     return `<tr>
       <td><div class="sku-name">${name}</div>
           <div class="sku-sub">${units} units${rev>0&&units>0?' · $'+(rev/units).toFixed(2)+' avg':''}</div>
-          ${reco}</td>
+          ${reco}${units > 0 && COGS_PER_UNIT[name] == null ? NO_COST_NOTE : ''}</td>
       <td><strong>${units}</strong></td>
       <td><strong>$${Math.round(rev).toLocaleString()}</strong></td>
       <td class="dn">-$${Math.round(cogs).toLocaleString()}</td>
@@ -2385,10 +2378,10 @@ function renderHomeTab(d) {
   netEl.style.color = mtdNet >= 0 ? 'var(--green)' : 'var(--red)';
   if (costsAreEstimated) {
     safeSet('mtd-costs-caveat', 'Estimated — settlement pending');
-    safeSet('mtd-net-caveat', 'Estimated costs excl. COGS · Settlement pending');
+    safeSet('mtd-net-caveat', 'Estimated costs ' + (hasCogsData(d) ? 'incl.' : 'excl.') + ' COGS · Settlement pending');
   } else {
     safeSet('mtd-costs-caveat', '');
-    safeSet('mtd-net-caveat', 'After all costs excl. COGS');
+    safeSet('mtd-net-caveat', 'After all costs ' + (hasCogsData(d) ? 'incl.' : 'excl.') + ' COGS');
   }
 
   // --- YTD 2026 ---
@@ -2558,7 +2551,7 @@ function showMonth(m) {
 
   const netEl = document.getElementById('mtd-net');
   if (netEl) { netEl.textContent = (net>=0?'+$':'-$')+Math.abs(Math.round(net)).toLocaleString(); netEl.style.color = net>=0?'var(--green)':'var(--red)'; }
-  safeSet('mtd-net-caveat', 'Final · after all costs excl. COGS');
+  safeSet('mtd-net-caveat', 'Final · after all costs ' + (hasCogsData(globalData) ? 'incl.' : 'excl.') + ' COGS');
   safeSet('mtd-costs-caveat', '');
 
   // Highlight active pill

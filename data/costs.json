@@ -1,148 +1,17 @@
 {
-    "_sample":  true,
-    "_note":  "FAKE placeholder costs. sync.py ignores this file while _sample is true. Replace with real per-unit COGS and delete _sample.",
-    "AC580-C19":  {
-                      "cogs":  22.94,
-                      "costed_on":  "2026-09-06"
-                  },
-    "BLKGG90X90PLAT":  {
-                           "cogs":  7.75,
-                           "costed_on":  "2026-09-18"
-                       },
-    "DISPMC7067KIT":  {
-                          "cogs":  18.3,
-                          "costed_on":  "2026-10-02"
-                      },
-    "EC500":  {
-                  "cogs":  12.73,
-                  "costed_on":  "2026-09-10"
-              },
-    "EC500-1":  {
-                    "cogs":  6.98,
-                    "costed_on":  "2026-09-10"
-                },
-    "FW8002PK":  {
-                     "cogs":  23.18,
-                     "costed_on":  "2026-11-07"
-                 },
-    "MC3005":  {
-                   "cogs":  8.77,
-                   "costed_on":  "2026-10-09"
-               },
-    "MC3015":  {
-                   "cogs":  8.38,
-                   "costed_on":  "2026-11-09"
-               },
-    "MC3019":  {
-                   "cogs":  9.67,
-                   "costed_on":  "2026-09-04"
-               },
-    "MC4207":  {
-                   "cogs":  5.71,
-                   "costed_on":  "2026-10-14"
-               },
-    "MC4207-2":  {
-                     "cogs":  17.89,
-                     "costed_on":  "2026-10-09"
-                 },
-    "MC5025":  {
-                   "cogs":  21.67,
-                   "costed_on":  "2026-11-09"
-               },
-    "MC7063":  {
-                   "cogs":  11.69,
-                   "costed_on":  "2026-11-03"
-               },
-    "MC7064":  {
-                   "cogs":  12.12,
-                   "costed_on":  "2026-11-04"
-               },
-    "MC7068":  {
-                   "cogs":  13.87,
-                   "costed_on":  "2026-11-08"
-               },
-    "MC7070-6":  {
-                     "cogs":  8.45,
-                     "costed_on":  "2026-09-05"
-                 },
-    "MC7071":  {
-                   "cogs":  29.26,
-                   "costed_on":  "2026-09-23"
-               },
-    "MC7072":  {
-                   "cogs":  26.28,
-                   "costed_on":  "2026-09-24"
-               },
-    "MC7073":  {
-                   "cogs":  31.2,
-                   "costed_on":  "2026-09-25"
-               },
-    "MC7090":  {
-                   "cogs":  31.2,
-                   "costed_on":  "2026-09-14"
-               },
-    "MC7092-AMAZON":  {
-                          "cogs":  16.57,
-                          "costed_on":  "2026-10-17"
-                      },
-    "MC7092-IDV":  {
-                       "cogs":  11.62,
-                       "costed_on":  "2026-10-26"
-                   },
-    "MC7095":  {
-                   "cogs":  10.72,
-                   "costed_on":  "2026-09-19"
-               },
-    "MC7098":  {
-                   "cogs":  18.54,
-                   "costed_on":  "2026-09-22"
-               },
-    "MC7099-R":  {
-                     "cogs":  18.25,
-                     "costed_on":  "2026-09-14"
-                 },
-    "MC7207":  {
-                   "cogs":  4.6,
-                   "costed_on":  "2026-10-24"
-               },
-    "MC8008":  {
-                   "cogs":  7.14,
-                   "costed_on":  "2026-09-21"
-               },
-    "OC100":  {
-                  "cogs":  22.81,
-                  "costed_on":  "2026-09-20"
-              },
-    "OC100-G":  {
-                    "cogs":  7.2,
-                    "costed_on":  "2026-09-05"
-                },
-    "OC200":  {
-                  "cogs":  16,
-                  "costed_on":  "2026-09-01"
-              },
-    "OC300-1":  {
-                    "cogs":  4.4,
-                    "costed_on":  "2026-09-01"
-                },
-    "OC600":  {
-                  "cogs":  31.45,
-                  "costed_on":  "2026-09-22"
-              },
-    "TDASH12":  {
-                    "cogs":  27,
-                    "costed_on":  "2026-11-04"
-                },
-    "TDASH12-100":  {
-                        "cogs":  10.3,
-                        "costed_on":  "2026-11-08"
-                    },
-    "WIPEMC7090-1":  {
-                         "cogs":  9.67,
-                         "costed_on":  "2026-10-26"
-                     },
-    "WIPEMC7098-1":  {
-                         "cogs":  10.96,
-                         "costed_on":  "2026-10-14"
-                     }
+  "_note": "Per-unit COGS by Amazon seller SKU. Entered 2026-11-16 from Greg's cost list. WIPEMC7098-15 on that list is stored under MC7098-15 (the SKU Amazon uses). WIPEMC7099-R / MC7099-R was listed at $0.00 and is left out until a real cost is known. No cost yet for MC7071, MC7095, MC7073, MC7207, BLKGG90X90PLAT.",
+  "MC7090":       { "cogs": 21.00, "costed_on": "2026-11-16", "title": "HealthEWipe Antiseptic Gym Equipment Cleaning Wipes - 1000 Wipes/Roll | 4 x Roll/CSE" },
+  "WIPEMC7090-1": { "cogs": 5.50,  "costed_on": "2026-11-16", "title": "HealthEWipe Antiseptic Gym Equipment Cleaning Wipes - 1000 Wipes/Roll | Single Roll Refill" },
+  "MC7098-15":    { "cogs": 20.00, "costed_on": "2026-11-16", "title": "CLUBwipes Fitness Cleaning Gym Equipment Wipes - 1500 Wipes/Roll | 4 Roll/CSE" },
+  "WIPEMC7098-1": { "cogs": 4.60,  "costed_on": "2026-11-16", "title": "CLUBwipes Fitness Cleaning Gym Equipment Wipes - 1200 Wipes/Roll | Single Roll Refill" },
+  "FW8002PK":     { "cogs": 20.00, "costed_on": "2026-11-16", "title": "FLEXwipes EPA Registered Disinfectant Wipes - 800 Wipes/Roll | 2 Pack" },
+  "MC7072":       { "cogs": 90.00, "costed_on": "2026-11-16", "title": "2XL Antibacterial GYMwipes" },
+  "TDASH12":      { "cogs": 19.00, "costed_on": "2026-11-16", "title": "Dashwipe Car Dashboard Cleaning Wipe | 1000 Individually Wrapped Wipes Per Case" },
+  "TDASH12-100":  { "cogs": 3.00,  "costed_on": "2026-11-16", "title": "Dashwipe Car Dashboard Cleaning Wipe | 100 Individually Wrapped Wipes Per Case" },
+  "OC100":        { "cogs": 25.00, "costed_on": "2026-11-16", "title": "Oceania Wholesale Shampoo Gallons | 4 Gal/CSE" },
+  "OC200":        { "cogs": 28.50, "costed_on": "2026-11-16", "title": "Oceania Wholesale Conditioner Gallons | 4 Gal/CSE" },
+  "OC300":        { "cogs": 25.00, "costed_on": "2026-11-16", "title": "Oceania Wholesale Body Wash Gallons | 4 Gal/CSE" },
+  "OC600":        { "cogs": 32.00, "costed_on": "2026-11-16", "title": "Oceania Wholesale Lotion Gallons | 4 Gal/CSE" },
+  "OC100-G":      { "cogs": 6.25,  "costed_on": "2026-11-16", "title": "Oceania Wholesale Shampoo Single Gallon Refill" },
+  "OC300-1":      { "cogs": 6.25,  "costed_on": "2026-11-16", "title": "Oceania Wholesale Body Wash Single Gallon Refill" }
 }
