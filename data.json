@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-20T18:58:19.157912Z",
+  "generated_at": "2026-11-21T17:53:23.226931Z",
   "source": "sp-api",
   "config": {
     "deficit_start": 0,
@@ -9,7 +9,7 @@
   },
   "date_range": {
     "start": "2026-01-01",
-    "end": "2026-11-20"
+    "end": "2026-11-21"
   },
   "summary": {
     "gross_sales": 601733.75,
@@ -51,16 +51,16 @@
     "deficit_remaining": 0,
     "pct_recovered": 0,
     "goal_monthly": 100000,
-    "mtd_sales": 33554.87,
-    "mtd_days": 20,
-    "rolling_30d_sales": 58849.43,
-    "rolling_14d_sales": 17066.3,
-    "rolling_7d_sales": 2204.61,
-    "rolling_30d_units": 558,
-    "rolling_14d_units": 170,
-    "mtd_units": 294,
-    "ytd_sales_api": 647973.78,
-    "ytd_units_api": 6774
+    "mtd_sales": 33902.71,
+    "mtd_days": 21,
+    "rolling_30d_sales": 55913.65,
+    "rolling_14d_sales": 13510.56,
+    "rolling_7d_sales": 2023.6,
+    "rolling_30d_units": 536,
+    "rolling_14d_units": 144,
+    "mtd_units": 298,
+    "ytd_sales_api": 648212.74,
+    "ytd_units_api": 6778
   },
   "sku_breakdown": {
     "sales": {
@@ -89,19 +89,19 @@
       "OC100-G": 258,
       "MC7098-15": 357,
       "OC300-1": 279,
-      "MC7072": 3237,
+      "MC7072": 3263,
       "MC7099-R": 108,
-      "WIPEMC7090-1": 223,
+      "WIPEMC7090-1": 224,
       "OC600": 5,
-      "WIPEMC7098-1": 444,
-      "OC100": 82,
+      "WIPEMC7098-1": 446,
+      "OC100": 81,
       "MC7071": 19,
       "MC7095": 78,
       "FW8002PK": 36,
       "OC300": 49,
-      "OC200": 60,
+      "OC200": 61,
       "MC7073": 3,
-      "MC7207": 2,
+      "MC7207": 4,
       "TDASH12": 1,
       "BLKGG90X90PLAT": 3
     },
@@ -123,14 +123,14 @@
     },
     "cogs_by_sku": {
       "MC7090": 26103.0,
-      "WIPEMC7090-1": 1226.5,
+      "WIPEMC7090-1": 1232.0,
       "MC7098-15": 7140.0,
-      "WIPEMC7098-1": 2042.4,
+      "WIPEMC7098-1": 2051.6,
       "FW8002PK": 720.0,
-      "MC7072": 291330.0,
+      "MC7072": 293670.0,
       "TDASH12": 19.0,
-      "OC100": 2050.0,
-      "OC200": 1710.0,
+      "OC100": 2025.0,
+      "OC200": 1738.5,
       "OC300": 1225.0,
       "OC600": 160.0,
       "OC100-G": 1612.5,
@@ -171,13 +171,14 @@
     },
     "ads_by_sku": {},
     "mtd_sales_by_sku": {
-      "MC7072": 17688.64,
-      "WIPEMC7090-1": 329.89,
-      "WIPEMC7098-1": 99.96,
-      "OC100": 139.98,
-      "OC300": 69.99,
-      "OC200": 73.99,
-      "BLKGG90X90PLAT": 24.99
+      "MC7072": 21148.38,
+      "WIPEMC7090-1": 359.88,
+      "WIPEMC7098-1": 149.94,
+      "OC100": 69.99,
+      "BLKGG90X90PLAT": 24.99,
+      "OC200": 147.98,
+      "MC7207": 79.98,
+      "OC300": 69.99
     },
     "monthly_sales_by_sku": {
       "2026-01": {
@@ -767,7 +768,7 @@
       "sku": "BLKGG90X90PLAT",
       "in_stock": 2,
       "daily_rate": 0.01,
-      "days_remaining": 215,
+      "days_remaining": 216,
       "reorder_alert": false
     },
     "DISPMC7067KIT": {
@@ -795,7 +796,7 @@
       "sku": "FW8002PK",
       "in_stock": 63,
       "daily_rate": 0.11,
-      "days_remaining": 565,
+      "days_remaining": 567,
       "reorder_alert": false
     },
     "MC1616-BLUE": {
@@ -885,7 +886,7 @@
     "MC7072": {
       "sku": "MC7072",
       "in_stock": 0,
-      "daily_rate": 10.02,
+      "daily_rate": 10.07,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -899,7 +900,7 @@
     "MC7090": {
       "sku": "MC7090",
       "in_stock": 1,
-      "daily_rate": 3.85,
+      "daily_rate": 3.84,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -934,7 +935,7 @@
     "MC7098-15": {
       "sku": "MC7098-15",
       "in_stock": 0,
-      "daily_rate": 1.11,
+      "daily_rate": 1.1,
       "days_remaining": 0,
       "reorder_alert": true
     },
@@ -977,7 +978,7 @@
       "sku": "TDASH12",
       "in_stock": 6,
       "daily_rate": 0.0,
-      "days_remaining": 1938,
+      "days_remaining": 1944,
       "reorder_alert": false
     },
     "TDASH12-100": {
@@ -989,15 +990,15 @@
     },
     "WIPEMC7090-1": {
       "sku": "WIPEMC7090-1",
-      "in_stock": 89,
+      "in_stock": 85,
       "daily_rate": 0.69,
-      "days_remaining": 129,
+      "days_remaining": 123,
       "reorder_alert": false
     },
     "WIPEMC7098-1": {
       "sku": "WIPEMC7098-1",
       "in_stock": 232,
-      "daily_rate": 1.37,
+      "daily_rate": 1.38,
       "days_remaining": 169,
       "reorder_alert": false
     }
@@ -1014,7 +1015,7 @@
       "2026-08": 95229.8500000005,
       "2026-09": 108173.95000000088,
       "2026-10": 105410.18000000081,
-      "2026-11": 33554.87
+      "2026-11": 33902.71
     },
     "monthly_fees": {
       "2026-01": -8838.069999999978,
@@ -1052,13 +1053,13 @@
       "2026-08": 14187.73,
       "2026-09": 19628.8,
       "2026-10": 19479.01,
-      "2026-11": 18003.18
+      "2026-11": 15992.82
     },
     "weekly_sales": {
       "2026-10-26": 1068.6,
       "2026-11-02": 20145.38,
       "2026-11-09": 11113.27,
-      "2026-11-16": 1227.62
+      "2026-11-16": 1575.46
     },
     "monthly_cogs": {
       "2026-01": 6216.1,
@@ -1071,7 +1072,7 @@
       "2026-08": 60569.95,
       "2026-09": 65313.1,
       "2026-10": 62935.7,
-      "2026-11": 12422.4
+      "2026-11": 14780.6
     },
     "monthly_ads": {
       "2026-01": 0,

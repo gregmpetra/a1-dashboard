@@ -1,7 +1,7 @@
 {
   "_sample": false,
   "_sample_columns": [],
-  "_synced_at": "2026-11-20T18:58:23+00:00",
+  "_synced_at": "2026-11-21T17:53:28+00:00",
   "_sync": {
     "listings": "ok (32 listings)",
     "catalog": "ok (31 ASINs)",
@@ -180,7 +180,7 @@
       "last_cogs": 90.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 139.99,
-      "amazon_fees": 16.23,
+      "amazon_fees": 16.1,
       "fees_source": "realized"
     },
     {
@@ -311,7 +311,7 @@
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 39.99,
-      "amazon_fees": 6.0,
+      "amazon_fees": 3.0,
       "fees_source": "realized"
     },
     {
@@ -360,7 +360,7 @@
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 10.24,
+      "amazon_fees": 10.37,
       "fees_source": "realized"
     },
     {
@@ -393,7 +393,7 @@
       "last_cogs": 28.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 73.99,
-      "amazon_fees": 10.91,
+      "amazon_fees": 10.74,
       "fees_source": "realized"
     },
     {
@@ -504,12 +504,12 @@
         "BUYABLE",
         "DISCOVERABLE"
       ],
-      "amazon_qty": 89,
+      "amazon_qty": 85,
       "warehouse_qty": null,
       "last_cogs": 5.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 29.99,
-      "amazon_fees": 17.14,
+      "amazon_fees": 17.06,
       "fees_source": "realized"
     },
     {
@@ -542,7 +542,7 @@
       "last_cogs": 4.6,
       "cogs_date": "2026-11-16",
       "amazon_price": 24.99,
-      "amazon_fees": 25.22,
+      "amazon_fees": 25.11,
       "fees_source": "realized"
     }
   ]
