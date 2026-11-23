@@ -1,5 +1,5 @@
 {
-  "_generated_at": "2026-11-22T18:11:54+00:00",
+  "_generated_at": "2026-11-23T22:22:00+00:00",
   "_notes": "Settled = financial events with no FBA fee; pending = this month's MFN orders not yet settled (referral fee estimated). Refunds not included.",
   "shipping_report": {
     "files": [],
@@ -47,25 +47,6 @@
       "complete": false
     },
     {
-      "order_id": "111-6189688-5718621",
-      "date": "2026-11-17",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 139.99,
-      "referral_fee": 19.77,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 30.22,
-      "complete": false
-    },
-    {
       "order_id": "111-7260062-3091431",
       "date": "2026-11-16",
       "month": "2026-11",
@@ -87,45 +68,121 @@
       "complete": false
     },
     {
-      "order_id": "114-6127240-6641804",
-      "date": "2026-11-10",
+      "order_id": "113-2411382-7367465",
+      "date": "2026-11-14",
       "month": "2026-11",
       "status": "pending",
       "skus": {
         "MC7072": 1
       },
       "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
+      "sales": 139.99,
+      "referral_fee": 19.77,
       "referral_estimated": true,
       "cogs": 90.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 21.64,
+      "profit": 30.22,
       "complete": false
     },
     {
-      "order_id": "114-2403526-9950623",
-      "date": "2026-11-10",
+      "order_id": "112-5998657-5385047",
+      "date": "2026-11-13",
       "month": "2026-11",
       "status": "pending",
       "skus": {
         "MC7072": 2
       },
       "units": 2,
-      "sales": 259.98,
-      "referral_fee": 36.71,
+      "sales": 279.98,
+      "referral_fee": 39.53,
       "referral_estimated": true,
       "cogs": 180.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 43.27,
+      "profit": 60.45,
       "complete": false
     },
     {
-      "order_id": "114-0653640-4704202",
+      "order_id": "111-8341948-9162656",
+      "date": "2026-11-13",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 139.99,
+      "referral_fee": 19.77,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 30.22,
+      "complete": false
+    },
+    {
+      "order_id": "111-1698748-7009856",
+      "date": "2026-11-12",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "OC200": 2
+      },
+      "units": 2,
+      "sales": 147.98,
+      "referral_fee": 22.2,
+      "referral_estimated": true,
+      "cogs": 57.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 68.78,
+      "complete": false
+    },
+    {
+      "order_id": "111-1057976-9743421",
+      "date": "2026-11-12",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 2
+      },
+      "units": 2,
+      "sales": 279.98,
+      "referral_fee": 39.53,
+      "referral_estimated": true,
+      "cogs": 180.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 60.45,
+      "complete": false
+    },
+    {
+      "order_id": "111-2520816-7405869",
+      "date": "2026-11-11",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 139.99,
+      "referral_fee": 19.77,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 30.22,
+      "complete": false
+    },
+    {
+      "order_id": "114-6127240-6641804",
       "date": "2026-11-10",
       "month": "2026-11",
       "status": "pending",
@@ -160,6 +217,63 @@
       "shipping_fee": null,
       "shipment_numbers": [],
       "profit": 43.27,
+      "complete": false
+    },
+    {
+      "order_id": "113-8491533-8425008",
+      "date": "2026-11-10",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 18.35,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 21.64,
+      "complete": false
+    },
+    {
+      "order_id": "113-8305029-8905850",
+      "date": "2026-11-10",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 2
+      },
+      "units": 2,
+      "sales": 259.98,
+      "referral_fee": 36.71,
+      "referral_estimated": true,
+      "cogs": 180.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 43.27,
+      "complete": false
+    },
+    {
+      "order_id": "113-8130364-0351441",
+      "date": "2026-11-10",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 18.35,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 21.64,
       "complete": false
     },
     {
@@ -201,7 +315,7 @@
       "complete": false
     },
     {
-      "order_id": "113-3909342-5534647",
+      "order_id": "112-6114086-6214644",
       "date": "2026-11-10",
       "month": "2026-11",
       "status": "pending",
@@ -220,41 +334,22 @@
       "complete": false
     },
     {
-      "order_id": "113-1883596-7098641",
+      "order_id": "111-4754852-0309016",
       "date": "2026-11-10",
       "month": "2026-11",
       "status": "pending",
       "skus": {
-        "MC7072": 3
+        "OC100": 1
       },
-      "units": 3,
-      "sales": 389.97,
-      "referral_fee": 55.06,
+      "units": 1,
+      "sales": 69.99,
+      "referral_fee": 10.5,
       "referral_estimated": true,
-      "cogs": 270.0,
+      "cogs": 25.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 64.91,
-      "complete": false
-    },
-    {
-      "order_id": "111-6417726-6144222",
-      "date": "2026-11-10",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 2
-      },
-      "units": 2,
-      "sales": 259.98,
-      "referral_fee": 36.71,
-      "referral_estimated": true,
-      "cogs": 180.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 43.27,
+      "profit": 34.49,
       "complete": false
     },
     {
@@ -277,7 +372,64 @@
       "complete": false
     },
     {
-      "order_id": "114-9099316-9696211",
+      "order_id": "111-3567645-4993059",
+      "date": "2026-11-10",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 5
+      },
+      "units": 5,
+      "sales": 649.95,
+      "referral_fee": 91.77,
+      "referral_estimated": true,
+      "cogs": 450.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 108.18,
+      "complete": false
+    },
+    {
+      "order_id": "111-2794754-8163435",
+      "date": "2026-11-10",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 2
+      },
+      "units": 2,
+      "sales": 259.98,
+      "referral_fee": 36.71,
+      "referral_estimated": true,
+      "cogs": 180.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 43.27,
+      "complete": false
+    },
+    {
+      "order_id": "114-8372871-1014638",
+      "date": "2026-11-09",
+      "month": "2026-11",
+      "status": "settled",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 19.5,
+      "referral_estimated": false,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 20.49,
+      "complete": false
+    },
+    {
+      "order_id": "114-4043947-8067410",
       "date": "2026-11-09",
       "month": "2026-11",
       "status": "pending",
@@ -315,44 +467,6 @@
       "complete": false
     },
     {
-      "order_id": "114-1560048-7941812",
-      "date": "2026-11-09",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
-      "order_id": "113-9621590-8341828",
-      "date": "2026-11-09",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
       "order_id": "113-9583395-8030601",
       "date": "2026-11-09",
       "month": "2026-11",
@@ -362,32 +476,13 @@
       },
       "units": 4,
       "sales": 519.96,
-      "referral_fee": 73.41,
+      "referral_fee": 73.42,
       "referral_estimated": true,
       "cogs": 360.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 86.55,
-      "complete": false
-    },
-    {
-      "order_id": "113-4654804-4847427",
-      "date": "2026-11-09",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
+      "profit": 86.54,
       "complete": false
     },
     {
@@ -448,22 +543,22 @@
       "complete": false
     },
     {
-      "order_id": "111-5911934-8078637",
+      "order_id": "111-6810109-4529804",
       "date": "2026-11-09",
       "month": "2026-11",
       "status": "pending",
       "skus": {
-        "MC7072": 1
+        "MC7072": 6
       },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
+      "units": 6,
+      "sales": 779.94,
+      "referral_fee": 110.12,
       "referral_estimated": true,
-      "cogs": 90.0,
+      "cogs": 540.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 21.64,
+      "profit": 129.82,
       "complete": false
     },
     {
@@ -505,22 +600,22 @@
       "complete": false
     },
     {
-      "order_id": "111-2627005-6814662",
+      "order_id": "111-1357116-0439404",
       "date": "2026-11-09",
       "month": "2026-11",
       "status": "pending",
       "skus": {
-        "MC7072": 10
+        "MC7072": 1
       },
-      "units": 10,
-      "sales": 1299.9,
-      "referral_fee": 183.53,
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 18.35,
       "referral_estimated": true,
-      "cogs": 900.0,
+      "cogs": 90.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 216.37,
+      "profit": 21.64,
       "complete": false
     },
     {
@@ -654,25 +749,6 @@
       "shipping_fee": null,
       "shipment_numbers": [],
       "profit": 81.96,
-      "complete": false
-    },
-    {
-      "order_id": "114-4436997-0326639",
-      "date": "2026-11-07",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 4
-      },
-      "units": 4,
-      "sales": 519.96,
-      "referral_fee": 73.41,
-      "referral_estimated": true,
-      "cogs": 360.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 86.55,
       "complete": false
     },
     {
@@ -866,25 +942,6 @@
       "complete": false
     },
     {
-      "order_id": "113-1256409-1613803",
-      "date": "2026-11-07",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
       "order_id": "112-7006388-3385005",
       "date": "2026-11-07",
       "month": "2026-11",
@@ -980,25 +1037,6 @@
       "complete": false
     },
     {
-      "order_id": "114-6409129-5256239",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
       "order_id": "114-2755748-4097867",
       "date": "2026-11-06",
       "month": "2026-11",
@@ -1037,25 +1075,6 @@
       "complete": false
     },
     {
-      "order_id": "113-8728192-5839433",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
       "order_id": "113-7845619-7486650",
       "date": "2026-11-06",
       "month": "2026-11",
@@ -1075,25 +1094,6 @@
       "complete": false
     },
     {
-      "order_id": "113-7620015-9922619",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 3
-      },
-      "units": 3,
-      "sales": 389.97,
-      "referral_fee": 55.06,
-      "referral_estimated": true,
-      "cogs": 270.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 64.91,
-      "complete": false
-    },
-    {
       "order_id": "113-5903734-8973829",
       "date": "2026-11-06",
       "month": "2026-11",
@@ -1110,25 +1110,6 @@
       "shipping_fee": null,
       "shipment_numbers": [],
       "profit": 20.49,
-      "complete": false
-    },
-    {
-      "order_id": "113-5566266-4660215",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
       "complete": false
     },
     {
@@ -1227,25 +1208,6 @@
       "complete": false
     },
     {
-      "order_id": "111-7793094-5857042",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
-      },
-      "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
-      "referral_estimated": true,
-      "cogs": 90.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 21.64,
-      "complete": false
-    },
-    {
       "order_id": "111-6805110-5757815",
       "date": "2026-11-06",
       "month": "2026-11",
@@ -1303,41 +1265,22 @@
       "complete": false
     },
     {
-      "order_id": "111-0815131-1893026",
-      "date": "2026-11-06",
+      "order_id": "114-9802699-3242628",
+      "date": "2026-11-05",
       "month": "2026-11",
       "status": "pending",
       "skus": {
-        "MC7072": 3
-      },
-      "units": 3,
-      "sales": 530.54,
-      "referral_fee": 74.91,
-      "referral_estimated": true,
-      "cogs": 270.0,
-      "cogs_missing": [],
-      "shipping_fee": null,
-      "shipment_numbers": [],
-      "profit": 185.63,
-      "complete": false
-    },
-    {
-      "order_id": "111-0407686-8353010",
-      "date": "2026-11-06",
-      "month": "2026-11",
-      "status": "pending",
-      "skus": {
-        "MC7072": 1
+        "OC200": 1
       },
       "units": 1,
-      "sales": 129.99,
-      "referral_fee": 18.35,
+      "sales": 73.99,
+      "referral_fee": 11.1,
       "referral_estimated": true,
-      "cogs": 90.0,
+      "cogs": 28.5,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 21.64,
+      "profit": 34.39,
       "complete": false
     },
     {
@@ -1457,6 +1400,25 @@
       "complete": false
     },
     {
+      "order_id": "112-9811112-2460258",
+      "date": "2026-11-05",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 18.35,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 21.64,
+      "complete": false
+    },
+    {
       "order_id": "112-9738714-9882649",
       "date": "2026-11-05",
       "month": "2026-11",
@@ -1549,6 +1511,25 @@
       "shipping_fee": null,
       "shipment_numbers": [],
       "profit": 20.49,
+      "complete": false
+    },
+    {
+      "order_id": "111-2538027-5673820",
+      "date": "2026-11-05",
+      "month": "2026-11",
+      "status": "pending",
+      "skus": {
+        "MC7072": 1
+      },
+      "units": 1,
+      "sales": 129.99,
+      "referral_fee": 18.35,
+      "referral_estimated": true,
+      "cogs": 90.0,
+      "cogs_missing": [],
+      "shipping_fee": null,
+      "shipment_numbers": [],
+      "profit": 21.64,
       "complete": false
     },
     {
@@ -2798,13 +2779,13 @@
       },
       "units": 7,
       "sales": 909.93,
-      "referral_fee": 128.47,
+      "referral_fee": 128.48,
       "referral_estimated": true,
       "cogs": 630.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 151.46,
+      "profit": 151.45,
       "complete": false
     },
     {
@@ -3445,13 +3426,13 @@
       },
       "units": 4,
       "sales": 519.96,
-      "referral_fee": 73.41,
+      "referral_fee": 73.42,
       "referral_estimated": true,
       "cogs": 360.0,
       "cogs_missing": [],
       "shipping_fee": null,
       "shipment_numbers": [],
-      "profit": 86.55,
+      "profit": 86.54,
       "complete": false
     },
     {
