@@ -1,7 +1,7 @@
 {
   "_sample": false,
   "_sample_columns": [],
-  "_synced_at": "2026-11-25T20:22:33+00:00",
+  "_synced_at": "2026-11-26T19:59:20+00:00",
   "_sync": {
     "listings": "ok (32 listings)",
     "catalog": "ok (31 ASINs)",
@@ -47,7 +47,7 @@
       "last_cogs": 20.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 59.99,
-      "amazon_fees": 24.88,
+      "amazon_fees": 25.57,
       "fees_source": "realized"
     },
     {
@@ -72,8 +72,8 @@
       "title": "7\" Black Combs - 144 Combs per Order - 0.18c per Comb - Bulk Combs Perfect for Gyms, Fitness Centers, Spa's, Hairdressers",
       "image_url": "https://m.media-amazon.com/images/I/41CyI4tV4lL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -105,8 +105,8 @@
       "title": "Stainless Steel Standing Wipe Dispenser | Top Wipe Dispenser with Trash Section | Perfect For Gyms and Fitness Facilities",
       "image_url": "https://m.media-amazon.com/images/I/61rXRxwpS6L.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -122,8 +122,8 @@
       "title": "2XL Wipes | Force2 Disinfectant Wipes, Heavy Duty Cleaning Wipes I 220 Wipes Per Canister, 12 Canisters/CSE",
       "image_url": "https://m.media-amazon.com/images/I/41DGsN2PbZS.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -180,7 +180,7 @@
       "last_cogs": 90.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 138.01,
-      "amazon_fees": 16.26,
+      "amazon_fees": 16.15,
       "fees_source": "realized"
     },
     {
@@ -189,8 +189,8 @@
       "title": "2XL L36 7 x 8 White Rainforest Scent Gym Wipes Roll of 900 (Case of 4)",
       "image_url": "https://m.media-amazon.com/images/I/51A5N11Q8eL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -303,15 +303,15 @@
       "title": "PetrA-1 Wall Mounted Gym Wipes Dispenser with Anti Roping Technology | Charcoal Wipe Dispenser That Prevents Roping | Simple Design with Economical Efficiency",
       "image_url": "https://m.media-amazon.com/images/I/31woGNtrIHL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 39.99,
-      "amazon_fees": 3.0,
+      "amazon_fees": 6.0,
       "fees_source": "realized"
     },
     {
@@ -360,7 +360,7 @@
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 10.37,
+      "amazon_fees": 10.24,
       "fees_source": "realized"
     },
     {
@@ -393,7 +393,7 @@
       "last_cogs": 28.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 73.99,
-      "amazon_fees": 10.74,
+      "amazon_fees": 10.56,
       "fees_source": "realized"
     },
     {
@@ -402,8 +402,8 @@
       "title": "Oceania Wholesale Body Wash (4 X 1 Gal/Case) | Coconut Lime Fragrance | Deep Cleansing and Moisturizing Body Wash Perfect For Fitness Facilities",
       "image_url": "https://m.media-amazon.com/images/I/41GvjoXWxWL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -504,12 +504,12 @@
         "BUYABLE",
         "DISCOVERABLE"
       ],
-      "amazon_qty": 104,
+      "amazon_qty": 102,
       "warehouse_qty": null,
       "last_cogs": 5.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 29.99,
-      "amazon_fees": 16.13,
+      "amazon_fees": 16.96,
       "fees_source": "realized"
     },
     {
@@ -542,7 +542,7 @@
       "last_cogs": 4.6,
       "cogs_date": "2026-11-16",
       "amazon_price": 24.99,
-      "amazon_fees": 24.5,
+      "amazon_fees": 24.71,
       "fees_source": "realized"
     }
   ]
