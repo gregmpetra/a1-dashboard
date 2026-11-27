@@ -1,7 +1,7 @@
 {
   "_sample": false,
   "_sample_columns": [],
-  "_synced_at": "2026-11-26T19:59:20+00:00",
+  "_synced_at": "2026-11-27T19:48:09+00:00",
   "_sync": {
     "listings": "ok (32 listings)",
     "catalog": "ok (31 ASINs)",
@@ -30,7 +30,7 @@
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 24.99,
-      "amazon_fees": 8.35,
+      "amazon_fees": 12.52,
       "fees_source": "realized"
     },
     {
@@ -180,7 +180,7 @@
       "last_cogs": 90.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 138.01,
-      "amazon_fees": 16.15,
+      "amazon_fees": 16.21,
       "fees_source": "realized"
     },
     {
@@ -230,7 +230,7 @@
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 29.99,
-      "amazon_fees": 4.72,
+      "amazon_fees": 4.61,
       "fees_source": "realized"
     },
     {
@@ -311,7 +311,7 @@
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 39.99,
-      "amazon_fees": 6.0,
+      "amazon_fees": 3.0,
       "fees_source": "realized"
     },
     {
@@ -360,7 +360,7 @@
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 10.24,
+      "amazon_fees": 10.01,
       "fees_source": "realized"
     },
     {
@@ -393,7 +393,7 @@
       "last_cogs": 28.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 73.99,
-      "amazon_fees": 10.56,
+      "amazon_fees": 10.91,
       "fees_source": "realized"
     },
     {
@@ -410,7 +410,7 @@
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 10.08,
+      "amazon_fees": 9.88,
       "fees_source": "realized"
     },
     {
@@ -509,7 +509,7 @@
       "last_cogs": 5.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 29.99,
-      "amazon_fees": 16.96,
+      "amazon_fees": 15.92,
       "fees_source": "realized"
     },
     {
@@ -537,12 +537,12 @@
         "BUYABLE",
         "DISCOVERABLE"
       ],
-      "amazon_qty": 225,
+      "amazon_qty": 220,
       "warehouse_qty": null,
       "last_cogs": 4.6,
       "cogs_date": "2026-11-16",
       "amazon_price": 24.99,
-      "amazon_fees": 24.71,
+      "amazon_fees": 24.3,
       "fees_source": "realized"
     }
   ]
