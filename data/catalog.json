@@ -1,7 +1,7 @@
 {
   "_sample": false,
   "_sample_columns": [],
-  "_synced_at": "2026-11-27T19:48:09+00:00",
+  "_synced_at": "2026-11-28T18:39:47+00:00",
   "_sync": {
     "listings": "ok (32 listings)",
     "catalog": "ok (31 ASINs)",
@@ -22,15 +22,15 @@
       "title": "Golden Gem Queen Size Fleece Blanket (90 x 90) \u2013 300 GSM Luxury Plush Microfiber Blanket, Platinum Grey, Soft Fuzzy Throw for Bed, Sofa & Couch, Warm Lightweight Anti-Static Cozy Blanket",
       "image_url": "https://m.media-amazon.com/images/I/41ukBeSPiWL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 2,
       "warehouse_qty": null,
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 24.99,
-      "amazon_fees": 12.52,
+      "amazon_fees": 8.35,
       "fees_source": "realized"
     },
     {
@@ -39,8 +39,8 @@
       "title": "FlexWipes Disinfecting Wipes 800 Count Roll (2 Pack) \u2013 EPA Registered Disinfectant Wipes, Antibacterial Sanitizing Wipes for Gym Equipment, Fitness Centers & Commercial Use \u2013 Large 8\u201d x 6\u201d Wipes",
       "image_url": "https://m.media-amazon.com/images/I/61aWZogVvsL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 63,
       "warehouse_qty": null,
@@ -72,8 +72,8 @@
       "title": "7\" Black Combs - 144 Combs per Order - 0.18c per Comb - Bulk Combs Perfect for Gyms, Fitness Centers, Spa's, Hairdressers",
       "image_url": "https://m.media-amazon.com/images/I/41CyI4tV4lL.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -105,8 +105,8 @@
       "title": "Stainless Steel Standing Wipe Dispenser | Top Wipe Dispenser with Trash Section | Perfect For Gyms and Fitness Facilities",
       "image_url": "https://m.media-amazon.com/images/I/61rXRxwpS6L.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -122,8 +122,8 @@
       "title": "2XL Wipes | Force2 Disinfectant Wipes, Heavy Duty Cleaning Wipes I 220 Wipes Per Canister, 12 Canisters/CSE",
       "image_url": "https://m.media-amazon.com/images/I/41DGsN2PbZS.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -139,8 +139,8 @@
       "title": "2XL Force2 Disinfectant Wipes Canisters | Heavy Duty Disinfectant Wipes | Surface Cleaning Wipes | 220/CT (6 Pack)",
       "image_url": "https://m.media-amazon.com/images/I/41TwHfAX35L.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 240,
       "warehouse_qty": null,
@@ -172,15 +172,15 @@
       "title": "GymWipes Antibacterial Wipes by 2XL Corporation, Towelettes Bucket Refill, 4 Rolls (Pack of 4) - Clean, Deodorize & Kills Bacteria, Viruses & Fungi",
       "image_url": "https://m.media-amazon.com/images/I/412+dxVR6GL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": 90.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 138.01,
-      "amazon_fees": 16.21,
+      "amazon_fees": 16.08,
       "fees_source": "realized"
     },
     {
@@ -189,8 +189,8 @@
       "title": "2XL L36 7 x 8 White Rainforest Scent Gym Wipes Roll of 900 (Case of 4)",
       "image_url": "https://m.media-amazon.com/images/I/51A5N11Q8eL.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -222,15 +222,15 @@
       "title": "Gym Equipment Wipe Dispenser for Fitness Facilities & Commercial Use | Wall Mount or Floor Stand Compatible Wipe Holder, Fits Most Refill Rolls | Easy to Use, Lockable, No Touch Sanitizing Dispenser",
       "image_url": "https://m.media-amazon.com/images/I/211qqx0W7sL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 29.99,
-      "amazon_fees": 4.61,
+      "amazon_fees": 4.72,
       "fees_source": "realized"
     },
     {
@@ -303,15 +303,15 @@
       "title": "PetrA-1 Wall Mounted Gym Wipes Dispenser with Anti Roping Technology | Charcoal Wipe Dispenser That Prevents Roping | Simple Design with Economical Efficiency",
       "image_url": "https://m.media-amazon.com/images/I/31woGNtrIHL.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": null,
       "cogs_date": null,
       "amazon_price": 39.99,
-      "amazon_fees": 3.0,
+      "amazon_fees": 6.0,
       "fees_source": "realized"
     },
     {
@@ -352,15 +352,15 @@
       "title": "Oceania Moisturizing Bulk Shampoo Refill, Coconut Lime, Sulfate & Paraben Free, Vegan, Aloe Vera + Kelp, For All Hair Types, 4 x 1 Gallon Case for Gyms, Hotels, Spas & Locker Rooms",
       "image_url": "https://m.media-amazon.com/images/I/414P+u5EjmL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 10.01,
+      "amazon_fees": 10.5,
       "fees_source": "realized"
     },
     {
@@ -385,15 +385,15 @@
       "title": "Oceania Conditioner (4 x 1 Gallon)| Coconut Lime Fragranced, For Softer & Strong Hair Perfect For Gyms, Fitness Centers & Hotels",
       "image_url": "https://m.media-amazon.com/images/I/41sYlPaePrL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": 28.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 73.99,
-      "amazon_fees": 10.91,
+      "amazon_fees": 10.74,
       "fees_source": "realized"
     },
     {
@@ -402,15 +402,15 @@
       "title": "Oceania Wholesale Body Wash (4 X 1 Gal/Case) | Coconut Lime Fragrance | Deep Cleansing and Moisturizing Body Wash Perfect For Fitness Facilities",
       "image_url": "https://m.media-amazon.com/images/I/41GvjoXWxWL.jpg",
       "status": [
-        "DISCOVERABLE",
-        "BUYABLE"
+        "BUYABLE",
+        "DISCOVERABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
       "last_cogs": 25.0,
       "cogs_date": "2026-11-16",
       "amazon_price": 69.99,
-      "amazon_fees": 9.88,
+      "amazon_fees": 10.29,
       "fees_source": "realized"
     },
     {
@@ -435,8 +435,8 @@
       "title": "Oceania Wholesale Moisturizing Lotion (4 X 1 Gal/Case) | Coconut Lime Fragrance Moisturizer",
       "image_url": "https://m.media-amazon.com/images/I/41x4opCruBL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -452,8 +452,8 @@
       "title": "White Fabric Shower Curtain Liner, 72x72 Inch, 12 Pack Case \u2013 Waterproof PU Coated 65GSM Cloth, Rustproof Grommets, Hotel & Rental Property Bulk Bathroom Liners, Machine Washable",
       "image_url": "https://m.media-amazon.com/images/I/3104JoRkOFL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
       "amazon_qty": 0,
       "warehouse_qty": null,
@@ -501,15 +501,15 @@
       "title": "Gym Wipes For Equipment Cleaning - 1000 Count HealthEwipes Antiseptic Wipe Refill Roll - Alcohol Free Fitness Equipment Wipes For Gyms, Studios and Home Use",
       "image_url": "https://m.media-amazon.com/images/I/31JrobIzH2L.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
-      "amazon_qty": 102,
+      "amazon_qty": 101,
       "warehouse_qty": null,
       "last_cogs": 5.5,
       "cogs_date": "2026-11-16",
       "amazon_price": 29.99,
-      "amazon_fees": 15.92,
+      "amazon_fees": 16.2,
       "fees_source": "realized"
     },
     {
@@ -534,15 +534,15 @@
       "title": "CLUBwipes Gym Equipment Cleaning Wipes \u2013 1200 Count Roll | Bulk Gym Wipes for Equipment, Fitness Centers & Hotels | Antiseptic Wipes Refill Roll for Workout Equipment",
       "image_url": "https://m.media-amazon.com/images/I/31GxBLkhDHL.jpg",
       "status": [
-        "BUYABLE",
-        "DISCOVERABLE"
+        "DISCOVERABLE",
+        "BUYABLE"
       ],
-      "amazon_qty": 220,
+      "amazon_qty": 217,
       "warehouse_qty": null,
       "last_cogs": 4.6,
       "cogs_date": "2026-11-16",
       "amazon_price": 24.99,
-      "amazon_fees": 24.3,
+      "amazon_fees": 24.0,
       "fees_source": "realized"
     }
   ]
